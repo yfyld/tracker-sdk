@@ -1,10 +1,12 @@
 import * as decoratorTools from "./decoratiors/decoratorTools"
 import PageTracker from "./core/pageTracker"
 import PageTimeTracker from "./core/pageTimeTracker"
-import {getConfig} from './core/config'
-import {sendCookieData,sendStorageData,sendAsyncData} from "./core/send"
+import {getConfig,setConfig} from './core/config'
+import {sendCookieData,sendStorageData,sendAsyncData,send,syncSend} from "./core/send"
 import hijackHistoryEvent from "./utils/hijackHistoryEvent"
+
 import {SEND_TYPE} from './constant'
+
 
 hijackHistoryEvent()
 
@@ -48,4 +50,16 @@ window.addEventListener('DOMContentLoaded', ()=>{
 
 
 
-export {decoratorTools,PageTimeTracker,PageTracker}
+export {
+  decoratorTools,
+  PageTimeTracker,
+  PageTracker,
+  setConfig,
+  getConfig,
+  sendCookieData,
+  sendStorageData,
+  sendAsyncData,
+  send,
+  syncSend,
+
+}

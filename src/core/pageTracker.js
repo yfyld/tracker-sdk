@@ -2,12 +2,14 @@ import {send} from "./send"
 
 class PageTracker{
 
-  url=location.origin
-
-  tracker(pageId=null){
+  tracker(info={}){
     let data={
-      url:this.url,
-      pageId
+      type:"tracker-page",
+      url:location.origin,
+      host:location.host,
+      path:location.pathname,
+      hash:location.hash,
+      ...info
     }
     send(data)
   }

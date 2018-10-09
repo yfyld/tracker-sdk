@@ -5,7 +5,6 @@ const Base64 = {
   // public method for encoding
 
   encode: function(input) {
-    return input
     var output = "";
 
     var chr1,
@@ -156,7 +155,7 @@ const Base64 = {
 
     var i = 0;
 
-    var c = c1 = c2 = 0;
+    var c =0, c1 =0, c2 = 0;
 
     while (i < utftext.length) {
 

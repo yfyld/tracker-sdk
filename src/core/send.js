@@ -1,5 +1,5 @@
 import http from "../utils/http"
-
+import trackerInfo from "./trackerInfo"
 import clientInfo from "./clientInfo"
 import {getConfig} from "./config"
 import {setCookie,getCookie} from "../utils/util"
@@ -84,6 +84,7 @@ function _wrapperData(data,config){
   return {
     data:data,
     clientInfo,
+    lib:trackerInfo,
     timeStamp:Date.now(),
     uid:config.projectId+Date.now(),
     projectId:config.projectId,
