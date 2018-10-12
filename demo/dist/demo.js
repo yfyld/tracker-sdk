@@ -127,7 +127,7 @@ var demo = (_dec = (0, _tracker.track)("iiidd"), _dec2 = (0, _tracker.track)(fun
 }), _dec3 = (0, _tracker.track)((0, _tracker.after)(function () {
   console.log(this);
   console.log("a1");
-})), _dec4 = (0, _tracker.track)((0, _tracker.after)(function () {
+})), _dec4 = (0, _tracker.track)((0, _tracker.before)(function () {
   console.log("a2");
   return { a2: 1 };
 })), _dec5 = (0, _tracker.track)((0, _tracker.after)(function () {
@@ -7304,9 +7304,9 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		DEVELOPMENT: 'development'
 	};
 	var ACTION_TYPE = {
-		EVENT: TRACK_EVENT,
-		PAGE: TRACK_PAGE,
-		TIME: TRACK_PAGE_TIME
+		EVENT: "TRACK_EVENT",
+		PAGE: "TRACK_PAGE",
+		TIME: "TRACK_PAGE_TIME"
 	};
 
 	var Base64 = {
@@ -8224,7 +8224,6 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 	exports.trackEvent = trackEvent;
 	exports.install = install;
 	exports.pageTimeTracker = instance;
-	exports.pageTracker = pageTracker;
 	exports.actionTracker = actionTracker;
 	exports.setConfig = setConfig;
 	exports.getConfig = getConfig;

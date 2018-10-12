@@ -35,7 +35,6 @@ export {
 
   //tracker
   pageTimeTracker,
-  pageTracker,
   actionTracker,
 
   setConfig,

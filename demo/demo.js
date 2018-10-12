@@ -1,4 +1,4 @@
-import {track,after} from "../dist/tracker.min"
+import {track,after,before} from "../dist/tracker.min"
 
 
 
@@ -27,7 +27,7 @@ class demo{
     console.log("a11")
   }
 
-  @track(after(()=>{
+  @track(before(()=>{
     console.log("a2")
     return {a2:1}
   }))
