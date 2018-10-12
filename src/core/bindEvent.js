@@ -4,8 +4,7 @@ import {getConfig,setConfig} from './config'
 import {sendCookieData,sendStorageData,sendAsyncData,send,sendSync} from "./send"
 import hijackHistoryEvent from "../utils/hijackHistoryEvent"
 import {SEND_TYPE} from '../constant'
-hijackHistoryEvent()
-
+import {getFlag,setFlag} from "../utils/util"
 
 
 function routeChange(e){
@@ -13,6 +12,10 @@ function routeChange(e){
 }
 
 const install=function(conf){
+  if(getFlag("install"))return;
+  setFlag("install")
+
+  hijackHistoryEvent()
   if(conf){
     setConfig(cof)
   }

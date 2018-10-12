@@ -7278,17 +7278,18 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 	function isEmpty(binding) {
 		return binding.value === '' || binding.value === undefined || binding.value === null;
 	}
+	function setFlag(key) {
+		var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+		window._trackerFlag = window._trackerFlag || {};
+		window._trackerFlag[key] = value;
+	}
+	function getFlag(key) {
+		window._trackerFlag = window._trackerFlag || {};
+		return window._trackerFlag[key] || false;
+	}
 	function getLocationHref() {
 		if (typeof document === 'undefined' || document.location == null) return '';
 		return document.location.href;
-	}
-	function setFlag(key, value) {
-		window._tryCatch = window._tryCatch || {};
-		window._tryCatch[key] = value;
-	}
-	function getFlag(key) {
-		window._tryCatch = window._tryCatch || {};
-		return window._tryCatch[key];
 	}
 
 	var SERVER_URL = "http://127.0.0.1:7001/event/track.gif";
@@ -8112,13 +8113,15 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		setFlag('historyInjected', true);
 	}
 
-	hijackHistoryEvent();
-
 	function routeChange(e) {
 		instance.change();
 	}
 
 	var install = function install(conf) {
+		if (getFlag("install")) return;
+		setFlag("install");
+		hijackHistoryEvent();
+
 		if (conf) {
 			setConfig(cof);
 		}

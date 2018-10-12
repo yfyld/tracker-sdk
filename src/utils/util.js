@@ -79,6 +79,17 @@ export function isEmpty (binding) {
 }
 
 
+export function setFlag (key, value=true) {
+  window._trackerFlag =    window._trackerFlag || {};
+    window._trackerFlag[key] = value;
+}
+
+export function getFlag (key) {
+    window._trackerFlag =    window._trackerFlag || {};
+  return    window._trackerFlag[key]||false;
+}
+
+
 
 
 
@@ -105,16 +116,4 @@ export function oneOf (one, all) {
     }
   }
   return false;
-}
-
-
-
-export function setFlag (key, value) {
-  window._tryCatch =    window._tryCatch || {};
-    window._tryCatch[key] = value;
-}
-
-export function getFlag (key) {
-    window._tryCatch =    window._tryCatch || {};
-  return    window._tryCatch[key];
 }
