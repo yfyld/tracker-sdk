@@ -1,0 +1,14 @@
+type
+uid
+id
+time
+ua     os   browser version networktype
+地址 country province city
+model  手机
+version
+lib_version
+app_version
+is_login
+ip
+screenhight
+screenwidth

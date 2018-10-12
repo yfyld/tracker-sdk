@@ -5,15 +5,18 @@ import Base64 from './base64'
 export default function http(data,isAjax=false,isSendBeacon=true){
   return new Promise((resolve,reject)=>{
     data=Base64.encode(JSON.stringify(data));
-    if(isSendBeacon&&window.navigator.sendBeacon) {
-      const formData = new FormData();
-      formData.append(data,data);
-      const success=window.navigator.sendBeacon(SERVER_URL, formData);
+    if(isSendBeacon&&typeof window.navigator.sendBeacon==='function'&&typeof Blob==='function') {
+
+      const headers = {
+        type: "text/plain; charset=UTF-8"
+      }
+      const blob = new Blob([data], headers);
+      const success=window.navigator.sendBeacon(SERVER_URL, blob);
       if(success){
         resolve()
         return;
       }
-    }else if(isAjax){
+    }else if(isAjax||data.length>8000){
       const xhr = new XMLHttpRequest();
       xhr.withCredentials = true;
       xhr.addEventListener("readystatechange", function () {

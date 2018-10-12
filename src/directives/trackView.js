@@ -1,5 +1,5 @@
-import trackPage from '../index'
-import { notChanged, isEmpty } from './utils'
+import actionTracker from '../core/actionTracker'
+import { notChanged, isEmpty } from '../utils/util'
 
 export let watch = []
 
@@ -25,7 +25,7 @@ const trackPageview = {
       args = binding.value.split(',')
       args.forEach((arg, i) => (arg[i] = arg.trim()))
     }
-    trackPage(...args)
+    actionTracker.trackPageview(...args)
   },
   unbind (el, binding) {
     let index = watch.findIndex(element => element === el)

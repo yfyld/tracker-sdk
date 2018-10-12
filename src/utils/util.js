@@ -1,4 +1,33 @@
+import isFunction from 'lodash/fp/isFunction'
+import curry from 'lodash/fp/curry'
+import curryN from 'lodash/fp/curryN'
+import attempt from 'lodash/fp/attempt'
+import isError from 'lodash/fp/isError'
+import isArray from 'lodash/fp/isArray'
+import once from 'lodash/fp/once'
+import reduce from 'lodash/fp/reduce'
+import memoize from 'lodash/fp/memoize'
+import mapValues from 'lodash/fp/mapValues'
+import propSet from 'lodash/fp/set'
 
+import isEqual from 'lodash/fp/isEqual'
+
+export{
+  propSet,
+  curryN,
+  attempt,
+  isError,
+  isFunction,
+  isArray,
+  once,
+  reduce,
+  memoize,
+  mapValues,
+}
+
+export function isThenable (f) {
+    return f && isFunction(f.then)
+}
 
 
 export function getCookie(name) {
@@ -30,17 +59,10 @@ export function setCookie(name, value, expires=9999999, path='/', domain) {
 }
 
 
-
-
-
-
-/**
- * if the binding value is equal to oldeValue
- */
 export function notChanged (binding) {
   if (binding.oldValue !== undefined) {
     if (typeof binding.value === 'object') {
-      return deepEqual(binding.value, binding.oldValue)
+      return isEqual(binding.value, binding.oldValue)
     } else {
       return binding.value === binding.oldValue
     }
@@ -55,6 +77,11 @@ export function notChanged (binding) {
 export function isEmpty (binding) {
   return binding.value === '' || binding.value === undefined || binding.value === null
 }
+
+
+
+
+
 
 
 export function isString (value) {

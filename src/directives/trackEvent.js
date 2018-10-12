@@ -1,5 +1,5 @@
-import trackEvent from '../index'
-import { notChanged, isEmpty } from './utils'
+import actionTracker from '../core/actionTracker'
+import { notChanged, isEmpty } from '../utils/util'
 
 export default function (el, binding) {
   if (notChanged(binding) || isEmpty(binding)) {
@@ -17,8 +17,8 @@ export default function (el, binding) {
     let value = binding.value
     if (value.category) args.push(value.category)
     if (value.action) args.push(value.action)
-    if (value.desc) args.push(value.desc)
-    if (value.value) args.push(value.value)
+    if (value.opt_label) args.push(value.opt_label)
+    if (value.opt_value) args.push(value.opt_value)
   } else if (typeof binding.value === 'string') {
     args = binding.value.split(',')
     args.forEach((arg, i) => (args[i] = arg.trim()))
@@ -27,6 +27,6 @@ export default function (el, binding) {
   if (!events.length) events.push('click') // default  listen click
 
   events.forEach((event) => {
-    el.addEventListener(event, () => trackEvent(...args), false)
+    el.addEventListener(event, () => actionTracker.track(...args), false)
   })
 }

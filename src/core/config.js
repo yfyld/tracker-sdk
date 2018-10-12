@@ -2,16 +2,18 @@ import {SEND_TYPE,ENVIRONMENT} from '../constant'
 import Base64 from "../utils/base64"
 //default config
 let config={
-  pageTime:false,
+  pageTime:false,  //是否记录页面停留时间
   env:ENVIRONMENT.PRODUCTION,
   projectId:null,
   token:null,
   version:null,
   domain:'',
-  sendType:SEND_TYPE.ASYNC,
+  sendType:SEND_TYPE.ASYNC,  //发送日志方式 (存cookie下次发,同步发,异步延迟发,关闭浏览器前发送)
   delayTime:1000,
   autoSendCookie:true,
   autoTrakerPage:true,
+  autoTrakerClick:true,//自动埋点a,button,input
+  autoInstall:true
 }
 
 //script tracker-key  config

@@ -30,7 +30,7 @@ export function send(data){
 }
 
 
-export function syncSend(data){
+export function sendSync(data){
   const config=getConfig();
   data=_wrapperData(data,config);
   _sendToServer([data])

@@ -1,65 +1,49 @@
-import * as decoratorTools from "./decoratiors/decoratorTools"
-import PageTracker from "./core/pageTracker"
-import PageTimeTracker from "./core/pageTimeTracker"
+import track from "./decoratiors/track"
+import actionTracker from "./core/actionTracker"
+import pageTimeTracker from "./core/pageTimeTracker"
 import {getConfig,setConfig} from './core/config'
-import {sendCookieData,sendStorageData,sendAsyncData,send,syncSend} from "./core/send"
-import hijackHistoryEvent from "./utils/hijackHistoryEvent"
-
-import {SEND_TYPE} from './constant'
-
-
-hijackHistoryEvent()
+import {sendCookieData,sendStorageData,sendAsyncData,send,sendSync} from "./core/send"
+import {after,before} from "./decoratiors/tools"
+import trackView from "./directives/trackView"
+import trackEvent from "./directives/trackEvent"
+import install from "./core/bindEvent"
 
 
-
-function routeChange(e){
-  PageTimeTracker.change()
-}
-
-window.addEventListener('DOMContentLoaded', ()=>{
-  const config=getConfig();
-
-  if(config.autoSendCookie){
-    sendCookieData()
+//自动开始埋点
+window.addEventListener('load',()=>{
+  const config=getConfig()
+  if(config.autoInstall){
+    install()
   }
-
-  if(config.autoTrakerPage){
-    PageTracker.tracker()
-  }
-
-  if(config.pageTime){
-    PageTimeTracker.start()
-    if (typeof window.onpopstate === 'undefined') {
-      window.addEventListener('hashchange', routeChange)
-    }
-    window.addEventListener('historyPushState', routeChange)
-    window.addEventListener('historyPopstate', routeChange)
-  }
-
-  window.addEventListener('beforeunload',()=>{
-    if(config.pageTime){
-      PageTimeTracker.end()
-    }
-    sendAsyncData(0,true)
-    if(config.sendType===SEND_TYPE.UNLOAD){
-      sendStorageData()
-    }
-  })
-
 })
 
 
 
+
+
+
 export {
-  decoratorTools,
-  PageTimeTracker,
-  PageTracker,
+  //装饰器
+  before,
+  after,
+  track,
+  //指令
+  trackView,
+  trackEvent,
+
+  install,
+
+  //tracker
+  pageTimeTracker,
+  pageTracker,
+  actionTracker,
+
   setConfig,
   getConfig,
+
   sendCookieData,
   sendStorageData,
   sendAsyncData,
   send,
-  syncSend,
-
+  sendSync,
 }
