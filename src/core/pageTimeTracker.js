@@ -2,6 +2,7 @@ import {send} from "./send"
 
 
 class PageTimeTracker{
+  static instance=null;
   startTime=Date.now()
   endTime=Date.now()
   pageTimes=[]
@@ -9,6 +10,13 @@ class PageTimeTracker{
   invalidEndTime=Date.now()
   totalInvalidTime=0
   url=location.origin
+  
+  static getInstance() {
+    if (!PageTimeTracker.instance) {
+        PageTimeTracker.instance = new PageTimeTracker();
+    }
+    return PageTimeTracker.instance;
+}
 
   start(){
     this.startTime=Date.now();
@@ -41,6 +49,7 @@ class PageTimeTracker{
   change(){
     this.pageTimes.push({
       url:this.url,
+      href: location.href,
       startTime:this.endTime,
       invalidTime:this.invalidEndTime-this.invalidStartTime,
       endTime:Date.now()
@@ -49,6 +58,6 @@ class PageTimeTracker{
   }
 }
 
-let instance=new PageTimeTracker()
+let instance=PageTimeTracker.getInstance();
 
 export default instance
