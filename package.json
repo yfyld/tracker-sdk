@@ -1,8 +1,8 @@
 {
-  "name": "newtelescope",
+  "name": "tracker-web",
   "version": "1.0.0",
   "description": "",
-  "main": "rollup.config.js",
+  "main": "dist/tracker.min.js",
   "dependencies": {
     "lodash": "^4.17.11"
   },
@@ -34,6 +34,9 @@
     "dev": "rollup -c -w",
     "build": "rollup -c --environment NODE_ENV:production"
   },
+  "files": [
+		"dist"
+	],
   "author": "yufangyang",
   "license": "ISC"
 }

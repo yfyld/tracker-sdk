@@ -3,7 +3,7 @@ import { notChanged, isEmpty } from '../utils/util'
 
 export let watch = []
 
-const trackPageview = {
+const trackView = {
   bind (el, binding) {
     let index = watch.findIndex(element => element === el)
     let isWatched = index !== -1
@@ -16,16 +16,15 @@ const trackPageview = {
 
     if (!isWatched && (notChanged(binding) || isEmpty(binding))) return
 
-    let args = []
+    let info = {}
 
     if (typeof binding.value === 'object') {
-      let value = binding.value
-      if (value.pageURL) args.push(value.pageURL)
+      info = binding.value
+      //if (value.pageURL) args.push(value.pageURL)
     } else if (typeof binding.value === 'string' && binding.value) {
-      args = binding.value.split(',')
-      args.forEach((arg, i) => (arg[i] = arg.trim()))
+      info.trackId = binding.value
     }
-    actionTracker.trackPageview(...args)
+    actionTracker.trackPage(info)
   },
   unbind (el, binding) {
     let index = watch.findIndex(element => element === el)
@@ -33,6 +32,6 @@ const trackPageview = {
   }
 }
 
-trackPageview.update = trackPageview.bind
+trackView.update = trackView.bind
 
-export default trackPageview
+export default trackView

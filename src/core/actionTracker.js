@@ -19,6 +19,20 @@ class ActionTracker{
     send(data)
   }
 
+  trackEvent(info={}){
+    let data={
+      type:ACTION_TYPE.PAGE,
+      url:location.origin,
+      host:location.host,
+      path:location.pathname,
+      hash:location.hash,
+      ...info
+    }
+    this.pageId=data.pageId;
+        console.log(data)
+    send(data)
+  }
+
   track(info={}){
     let data={
       type:ACTION_TYPE.EVENT,
@@ -34,22 +48,31 @@ class ActionTracker{
     send(data)
   }
 
-  trackLink(info={}){
-    let data={
-      type:ACTION_TYPE.EVENT,
-      event:'CLICK',
-      url:location.origin,
-      host:location.host,
-      path:location.pathname,
-      hash:location.hash,
-      ...info
+  trackLink(linkDom,info){
+    linkDom.addEventListener('click',function(e){
+      e.preventDefault()
+      setTimeout(()=>{
+        linkDom.click()
+      },300)
+    },false)
+    if(info){
+      let data={
+        type:ACTION_TYPE.EVENT,
+        event:'CLICK',
+        url:location.origin,
+        host:location.host,
+        path:location.pathname,
+        hash:location.hash,
+        ...info
+      }
+          console.log(data)
+      send(data)
     }
-        console.log(data)
-    send(data)
+
   }
 
-  trackByDomAttr(dom){
-    let info={
+  trackDom(dom,info){
+    let trackInfo={
       domId:dom.id,
       domClass:dom.className,
       domHref:dom.href||"",
@@ -62,11 +85,14 @@ class ActionTracker{
     let track=dom.dataset.track;
 
     if(track&&track.search(/^\{[\S\s]*\}$/)>=0){
-      info={...info,...JSON.parse(track)}
+      trackInfo={...trackInfo,...JSON.parse(track)}
     }else{
-      info.trackId=track||""
+      trackInfo.trackId=track||""
     }
-    this.track(info)
+    if(info){
+      trackInfo={...trackInfo,...info}
+    }
+    this.track(trackInfo)
   }
 }
 

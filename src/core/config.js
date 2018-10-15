@@ -13,7 +13,9 @@ let config={
   autoSendCookie:true,
   autoTrakerPage:true,
   autoTrakerClick:true,//自动埋点a,button,input
-  autoInstall:true
+  autoInstall:true,
+  delayLink:true,
+  delayLinkTime:200,
 }
 
 //script tracker-key  config

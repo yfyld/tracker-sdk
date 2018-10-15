@@ -1,6 +1,9 @@
-import {track,after,before} from "../dist/tracker.min"
+import {track,after,before,setConfig} from "../dist/tracker.min"
 
-
+setConfig({
+  projectId:12,
+  token:"12131313"
+})
 
 class demo{
   constructor(){

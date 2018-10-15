@@ -49,19 +49,28 @@ const install=function(conf){
   })
 
   document.addEventListener('click',(e)=>{
-    if(!e.path){
+    if(!e.path||!e.isTrusted){
       return
     }
+
     for(let target of e.path){
       if(target.tagName==='BODY'||!target.dataset){
         break;
       }
-      if(target.dataset.track||config.autoTrakerClick&&(target.tagName==="A"||target.tagName==="BUTTON"||target.tagName==="INPUT")){
-        console.log(e)
-        actionTracker.trackByDomAttr(target)
+
+      if(target.dataset.track||config.autoTrakerClick&&(target.tagName==="A"||target.tagName==="BUTTON"||target.tagName==="INPUT")&&!target._isWatchTrack){
+        if(e.target.tagName==='A'&&config.delayLink&&e.target.href){
+          e.preventDefault()
+          setTimeout(()=>{
+            actionTracker.trackDom(target)
+            e.target.click()
+          },config.delayLinkTime)
+        }else{
+          actionTracker.trackDom(target)
+        }
       }
     }
-  })
+  },false)
 }
 
 export default install
