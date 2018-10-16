@@ -7279,6 +7279,16 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 			return v.toString(16);
 		});
 	}
+	function getDomPath(dom) {
+		var path = [dom.id ? "#" + dom.id : dom.tagName.toLowerCase()];
+
+		while (dom.parentNode && dom.parentNode.tagName !== 'BODY') {
+			dom = dom.parentNode;
+			path.unshift(dom.id ? "#" + dom.id : dom.tagName.toLowerCase());
+		}
+
+		return path.join('>');
+	}
 	function getLocationHref() {
 		if (typeof document === 'undefined' || document.location == null) return '';
 		return document.location.href;
@@ -7419,13 +7429,14 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		var isSendBeacon = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 		return new Promise(function (resolve, reject) {
 			data = Base64.encode(JSON.stringify(data));
+			var url = "".concat(SERVER_URL, "?time=").concat(Date.now());
 
 			if (isSendBeacon && typeof window.navigator.sendBeacon === 'function' && typeof Blob === 'function') {
 				var headers = {
 					type: "text/plain; charset=UTF-8"
 				};
 				var blob = new Blob([data], headers);
-				var success = window.navigator.sendBeacon(SERVER_URL, blob);
+				var success = window.navigator.sendBeacon(url, blob);
 
 				if (success) {
 					resolve();
@@ -7441,7 +7452,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 						resolve();
 					}
 				});
-				xhr.open('POST', SERVER_URL, true);
+				xhr.open('POST', url, true);
 				xhr.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
 				xhr.withCredentials = true;
 				xhr.send(data);
@@ -7452,7 +7463,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 					resolve();
 				};
 
-				img.src = "".concat(SERVER_URL, "?data=").concat(data);
+				img.src = "".concat(url, "&data=").concat(data);
 			}
 		});
 	} // {
@@ -7479,8 +7490,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 	function clientInfo() {
 		return {
-			cleintWidth: window.screen.height,
-			cleintHeight: window.screen.width,
+			clientWidth: window.screen.height,
+			clientHeight: window.screen.width,
 			title: document.title || '',
 			referrer: document.referrer || '',
 			domain: document.domain || ''
@@ -7505,7 +7516,10 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		//自动埋点a,button,input
 		autoInstall: true,
 		delayLink: true,
-		delayLinkTime: 200 //script tracker-key  config
+		delayLinkTime: 200,
+		useServerTime: true,
+		corssSubdomain: true //false 域名不同认作为两个用户
+		//script tracker-key  config
 
 	};
 	var scriptDom = document.querySelector('script[tracker-key]');
@@ -7603,7 +7617,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 	function _wrapperData(data, config) {
 		index++;
 		return _objectSpread({}, data, clientInfo(), trackerInfo, {
-			timeStamp: Date.now(),
+			trackTime: Date.now(),
+			useServerTime: config.useServerTime,
 			identify: getCookie(config.identify || TRACKER_IDENTIFY),
 			projectId: config.projectId,
 			version: config.version,
@@ -7617,7 +7632,9 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		function ActionTracker() {
 			_classCallCheck(this, ActionTracker);
 
-			_defineProperty(this, "pageId", null);
+			_defineProperty(this, "pageId", (document.querySelector('meta[name="tracker-id"]') || {
+				content: null
+			}).content);
 		}
 
 		_createClass(ActionTracker, [{
@@ -7630,7 +7647,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 					url: location.origin,
 					host: location.host,
 					path: location.pathname,
-					hash: location.hash
+					hash: location.hash,
+					pageId: this.pageId
 				}, info);
 
 				this.pageId = data.pageId;
@@ -7703,6 +7721,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 					domName: dom.name || "",
 					domTag: dom.tagName,
 					domContent: dom.textContent.substr(0, 20),
+					domPath: getDomPath(dom),
 					pageId: this.pageId
 				};
 				var track = dom.dataset.track;
@@ -7719,12 +7738,23 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 				this.track(trackInfo);
 			}
+		}], [{
+			key: "getInstance",
+			value: function getInstance() {
+				if (!ActionTracker.instance) {
+					ActionTracker.instance = new ActionTracker();
+				}
+
+				return ActionTracker.instance;
+			}
 		}]);
 
 		return ActionTracker;
 	}();
 
-	var actionTracker = new ActionTracker();
+	_defineProperty(ActionTracker, "instance", null);
+
+	var instance = ActionTracker.getInstance();
 
 	var track = function track(partical, key, descriptor) {
 		if (isFunction$1(partical)) {
@@ -7744,7 +7774,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 						if (_typeof(fn) === 'object') {
 							var data = _objectSpread({}, fn);
 
-							actionTracker.track(data);
+							instance.track(data);
 						}
 
 						return descriptor.value.apply(this, arguments);
@@ -7773,7 +7803,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 					var data = {
 						trackId: partical
 					};
-					actionTracker.track(data);
+					instance.track(data);
 					return oldValue.apply(this, arguments);
 				};
 
@@ -7786,7 +7816,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 				descriptor.value = function () {
 					var data = _objectSpread({}, partical);
 
-					actionTracker.track(data);
+					instance.track(data);
 					return oldValue.apply(this, arguments);
 				};
 
@@ -7825,7 +7855,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 				this.startTime = Date.now();
 				this.pageTimes = [];
-				this.pageId = actionTracker.pageId;
+				this.pageId = instance.pageId;
 				window.addEventListener('visibilitychange', function () {
 					var isHidden = document.hidden;
 
@@ -7858,7 +7888,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		}, {
 			key: "change",
 			value: function change() {
-				this.pageId = actionTracker.pageId;
+				this.pageId = instance.pageId;
 				this.pageTimes.push({
 					url: this.url,
 					href: location.href,
@@ -7885,7 +7915,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 	_defineProperty(PageTimeTracker, "instance", null);
 
-	var instance = PageTimeTracker.getInstance();
+	var instance$1 = PageTimeTracker.getInstance();
 
 	var before$1 = curryN(2, function (trackFn, fn) {
 		return function () {
@@ -7898,18 +7928,18 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 					var result = trackFn.apply(this, args);
 
 					if (_typeof(result) === 'object') {
-						actionTracker.track(result);
+						instance.track(result);
 					}
 				} catch (e) {
 					console.error(e);
 				}
 			} else if (_typeof(trackFn) === 'object') {
-				actionTracker.track(trackFn);
+				instance.track(trackFn);
 			} else if (typeof trackFn === 'string') {
 				var data = {
 					trackId: trackFn
 				};
-				actionTracker.track(data);
+				instance.track(data);
 			}
 
 			return fn.apply(this, args);
@@ -7931,18 +7961,18 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 						var result = trackFn.apply(_this, args);
 
 						if (_typeof(result) === 'object') {
-							actionTracker.track(result);
+							instance.track(result);
 						}
 					} catch (e) {
 						console.error(e);
 					}
 				} else if (_typeof(trackFn) === 'object') {
-					actionTracker.track(trackFn);
+					instance.track(trackFn);
 				} else if (typeof trackFn === 'string') {
 					var data = {
 						trackId: trackFn
 					};
-					actionTracker.track(data);
+					instance.track(data);
 				}
 			};
 
@@ -8040,7 +8070,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 				info.trackId = binding.value;
 			}
 
-			actionTracker.trackPage(info);
+			instance.trackPage(info);
 		},
 		unbind: function unbind(el, binding) {
 			var index = watch.findIndex(function (element) {
@@ -8053,7 +8083,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 	function handleEvent(e) {
 		this._trackerInfo.event = e.type.toUpperCase();
-		actionTracker.trackDom(this, this._trackerInfo);
+		instance.trackDom(this, this._trackerInfo);
 	}
 
 	function trackEvent(el, binding) {
@@ -8140,7 +8170,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 	}
 
 	function routeChange(e) {
-		instance.change();
+		instance$1.change();
 	}
 
 	var install = function install(conf) {
@@ -8159,11 +8189,11 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		}
 
 		if (config.autoTrakerPage) {
-			actionTracker.trackPage();
+			instance.trackPage();
 		}
 
 		if (config.pageTime) {
-			instance.start();
+			instance$1.start();
 
 			if (typeof window.onpopstate === 'undefined') {
 				window.addEventListener('hashchange', routeChange);
@@ -8175,7 +8205,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 		window.addEventListener('beforeunload', function () {
 			if (config.pageTime) {
-				instance.end();
+				instance$1.end();
 			}
 
 			sendAsyncData(0, true);
@@ -8205,11 +8235,11 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 						if (e.target.tagName === 'A' && config.delayLink && e.target.href) {
 							e.preventDefault();
 							setTimeout(function () {
-								actionTracker.trackDom(target);
+								instance.trackDom(target);
 								e.target.click();
 							}, config.delayLinkTime);
 						} else {
-							actionTracker.trackDom(target);
+							instance.trackDom(target);
 						}
 					}
 				};
@@ -8265,8 +8295,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 	exports.trackView = trackView;
 	exports.trackEvent = trackEvent;
 	exports.install = install;
-	exports.pageTimeTracker = instance;
-	exports.actionTracker = actionTracker;
+	exports.pageTimeTracker = instance$1;
+	exports.actionTracker = instance;
 	exports.setConfig = setConfig;
 	exports.getConfig = getConfig;
 	exports.sendCookieData = sendCookieData;

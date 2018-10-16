@@ -16,6 +16,8 @@ let config={
   autoInstall:true,
   delayLink:true,
   delayLinkTime:200,
+  useServerTime:true,
+  corssSubdomain:true,  //false 域名不同认作为两个用户
 }
 
 //script tracker-key  config

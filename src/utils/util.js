@@ -96,6 +96,14 @@ export function getUUID(){
   });
 }
 
+export function getDomPath(dom){
+  let path=[dom.id?"#"+dom.id:dom.tagName.toLowerCase()]
+  while(dom.parentNode&&dom.parentNode.tagName!=='BODY'){
+    dom=dom.parentNode
+    path.unshift(dom.id?"#"+dom.id:dom.tagName.toLowerCase())
+  }
+  return path.join('>')
+}
 
 
 

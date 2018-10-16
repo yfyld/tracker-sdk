@@ -1,9 +1,16 @@
 import {send} from "./send"
 import {ACTION_TYPE} from "../constant"
+import {getDomPath} from "../utils/util"
 
 class ActionTracker{
-
-  pageId=null;
+  pageId=(document.querySelector('meta[name="tracker-id"]')||{content:null}).content;
+  static instance=null;
+  static getInstance() {
+      if (!ActionTracker.instance) {
+          ActionTracker.instance = new ActionTracker();
+      }
+      return ActionTracker.instance;
+  }
 
   trackPage(info={}){
     let data={
@@ -12,10 +19,11 @@ class ActionTracker{
       host:location.host,
       path:location.pathname,
       hash:location.hash,
+      pageId:this.pageId,
       ...info
     }
     this.pageId=data.pageId;
-        
+
     send(data)
   }
 
@@ -30,7 +38,7 @@ class ActionTracker{
       ...info
     }
     this.pageId=data.pageId;
-        
+
     send(data)
   }
 
@@ -45,7 +53,7 @@ class ActionTracker{
       hash:location.hash,
       ...info
     }
-        
+
     send(data)
   }
 
@@ -66,11 +74,13 @@ class ActionTracker{
         hash:location.hash,
         ...info
       }
-          
+
       send(data)
     }
 
   }
+
+
 
   trackDom(dom,info){
     let trackInfo={
@@ -80,6 +90,7 @@ class ActionTracker{
       domName:dom.name||"",
       domTag:dom.tagName,
       domContent:dom.textContent.substr(0,20),
+      domPath:getDomPath(dom),
       pageId:this.pageId
     }
 
@@ -97,4 +108,6 @@ class ActionTracker{
   }
 }
 
-export default new ActionTracker()
+let instance=ActionTracker.getInstance();
+
+export default instance

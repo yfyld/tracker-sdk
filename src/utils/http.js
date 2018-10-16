@@ -5,13 +5,14 @@ import Base64 from './base64'
 export default function http(data,isAjax=false,isSendBeacon=true){
   return new Promise((resolve,reject)=>{
     data=Base64.encode(JSON.stringify(data));
+    const url=`${SERVER_URL}?time=${Date.now()}`
     if(isSendBeacon&&typeof window.navigator.sendBeacon==='function'&&typeof Blob==='function') {
 
       const headers = {
         type: "text/plain; charset=UTF-8"
       }
       const blob = new Blob([data], headers);
-      const success=window.navigator.sendBeacon(SERVER_URL, blob);
+      const success=window.navigator.sendBeacon(url, blob);
       if(success){
         resolve()
         return;
@@ -26,7 +27,7 @@ export default function http(data,isAjax=false,isSendBeacon=true){
           resolve();
         }
       });
-      xhr.open('POST', SERVER_URL, true);
+      xhr.open('POST', url, true);
       xhr.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
       xhr.withCredentials = true;
       xhr.send(data);
@@ -35,7 +36,7 @@ export default function http(data,isAjax=false,isSendBeacon=true){
       img.onload=()=>{
         resolve();
       }
-      img.src=`${SERVER_URL}?data=${data}`
+      img.src=`${url}&data=${data}`
     }
 
   })
