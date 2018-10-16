@@ -16,7 +16,9 @@ export default function http(data,isAjax=false,isSendBeacon=true){
         resolve()
         return;
       }
-    }else if(isAjax||data.length>8000){
+    }
+
+    if(isAjax||data.length>8000){
       const xhr = new XMLHttpRequest();
       xhr.withCredentials = true;
       xhr.addEventListener("readystatechange", function () {

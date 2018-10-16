@@ -35,7 +35,7 @@ export function getCookie(name) {
   for (let i in cookies) {
     let arr = cookies[i].split("=");
     if (name == arr[0]) {
-      return unescape(arr[1]);
+      return unescape(arr[1]).replace(/&&&&/g,";");
     }
   }
   return null;
@@ -43,7 +43,7 @@ export function getCookie(name) {
 
 
 export function setCookie(name, value, expires=9999999, path='/', domain) {
-  document.cookie = name + "=" + value + ((expires)
+  document.cookie = name + "=" + value.replace(/;/g,"&&&&") + ((expires)
     ? "; expires=" + getExpires(expires)
     : "") + ((path)
     ? "; path=" + path
@@ -89,7 +89,12 @@ export function getFlag (key) {
   return    window._trackerFlag[key]||false;
 }
 
-
+export function getUUID(){
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+    return v.toString(16);
+  });
+}
 
 
 

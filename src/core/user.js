@@ -1,23 +1,20 @@
 
-export function login(){
 
+
+export function login(userId){
+  //identify
 }
 
 
 
 export function logout(){
+  //identify
+}
+
+export function getIdentify(){
 
 }
 
-
-export function creatUUID(){
-
-}
-
-export function getUUID(){
-
-}
-
-export function changeUUID(){
+export function changeIdentify(){
 
 }

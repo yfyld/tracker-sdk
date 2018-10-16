@@ -2,12 +2,13 @@ import http from "../utils/http"
 import trackerInfo from "./trackerInfo"
 import clientInfo from "./clientInfo"
 import {getConfig} from "./config"
-import {setCookie,getCookie} from "../utils/util"
-import {TRACKER_DATA_KEY,SEND_TYPE} from '../constant'
+import {setCookie,getCookie,getUUID} from "../utils/util"
+import {TRACKER_DATA_KEY,SEND_TYPE,TRACKER_IDENTIFY} from '../constant'
 
 const allData=[];
 let timer=null;
-
+let uuid=getUUID()
+let index=0;
 
 export function send(data){
   const config=getConfig();
@@ -15,10 +16,11 @@ export function send(data){
 
   data=_wrapperData(data,config);
 
-  if(sendType===SEND_TYPE.COOKIE){
-    let oldData=JSON.parse(getCookie(TRACKER_DATA_KEY)||'[]')
-    setCookie(TRACKER_DATA_KEY,JSON.stringify(oldData.concat(data)))
-  }else if(sendType===SEND_TYPE.UNLOAD){
+  if(config.console){
+    console.log(data)
+  }
+
+  if(sendType===SEND_TYPE.UNLOAD){
     let oldData=JSON.parse(localStorage.getItem(TRACKER_DATA_KEY)||'[]')
     localStorage.setItem(TRACKER_DATA_KEY,JSON.stringify(oldData.concat(data)))
   }else if(sendType===SEND_TYPE.SYNC){
@@ -80,14 +82,19 @@ function _sendToServer(data,isAjax){
 }
 
 
+
+
+
 function _wrapperData(data,config){
+  index++
   return {
-    data:data,
-    clientInfo,
-    lib:trackerInfo,
+    ...data,
+    ...clientInfo(),
+    ...trackerInfo,
     timeStamp:Date.now(),
-    uid:config.projectId+Date.now(),
+    identify:getCookie(config.identify||TRACKER_IDENTIFY),
     projectId:config.projectId,
-    version:config.version
+    version:config.version,
+    uuid:uuid+"-"+index
   }
 }

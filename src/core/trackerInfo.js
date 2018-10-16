@@ -1,6 +1,4 @@
-export default function () {
-		return {
-			version:'1.0.0',
-      type:'js'
-		}
+export default {
+	libVersion:'1.0.0',
+	libType:'js'
 }

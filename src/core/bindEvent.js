@@ -3,7 +3,7 @@ import pageTimeTracker from "./pageTimeTracker"
 import {getConfig,setConfig} from './config'
 import {sendCookieData,sendStorageData,sendAsyncData,send,sendSync} from "./send"
 import hijackHistoryEvent from "../utils/hijackHistoryEvent"
-import {SEND_TYPE} from '../constant'
+import {SEND_TYPE,TRACKER_DATA_KEY} from '../constant'
 import {getFlag,setFlag} from "../utils/util"
 
 
@@ -21,8 +21,9 @@ const install=function(conf){
   }
   const config=getConfig();
 
-  if(config.autoSendCookie){
-    sendCookieData()
+  if(config.sendType===SEND_TYPE.UNLOAD){
+    sendStorageData()
+    //localStorage.removeItem(TRACKER_DATA_KEY)
   }
 
   if(config.autoTrakerPage){

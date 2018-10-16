@@ -7227,7 +7227,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 			var arr = cookies[i].split("=");
 
 			if (name == arr[0]) {
-				return unescape(arr[1]);
+				return unescape(arr[1]).replace(/&&&&/g, ";");
 			}
 		}
 
@@ -7237,7 +7237,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		var expires = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 9999999;
 		var path = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '/';
 		var domain = arguments.length > 4 ? arguments[4] : undefined;
-		document.cookie = name + "=" + value + (expires ? "; expires=" + getExpires(expires) : "") + (path ? "; path=" + path : "") + (domain ? "; domain=" + domain : "");
+		document.cookie = name + "=" + value.replace(/;/g, "&&&&") + (expires ? "; expires=" + getExpires(expires) : "") + (path ? "; path=" + path : "") + (domain ? "; domain=" + domain : "");
 
 		function getExpires(hours) {
 			var date = new Date();
@@ -7272,6 +7272,13 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		window._trackerFlag = window._trackerFlag || {};
 		return window._trackerFlag[key] || false;
 	}
+	function getUUID() {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+			var r = Math.random() * 16 | 0,
+			    v = c == 'x' ? r : r & 0x3 | 0x8;
+			return v.toString(16);
+		});
+	}
 	function getLocationHref() {
 		if (typeof document === 'undefined' || document.location == null) return '';
 		return document.location.href;
@@ -7279,6 +7286,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 	var SERVER_URL = "http://127.0.0.1:7001/event/track.gif";
 	var TRACKER_DATA_KEY = "TRACKER_DATA_KEY";
+	var TRACKER_IDENTIFY = 'TRACKER_IDENTIFY';
 	var SEND_TYPE = {
 		COOKIE: "COOKIE",
 		SYNC: "SYNC",
@@ -7290,9 +7298,9 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		DEVELOPMENT: 'development'
 	};
 	var ACTION_TYPE = {
-		EVENT: "TRACK_EVENT",
-		PAGE: "TRACK_PAGE",
-		TIME: "TRACK_PAGE_TIME"
+		EVENT: "EVENT",
+		PAGE: "PAGE",
+		TIME: "PAGE_TIME"
 	};
 
 	var Base64 = {
@@ -7423,7 +7431,9 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 					resolve();
 					return;
 				}
-			} else if (isAjax || data.length > 8000) {
+			}
+
+			if (isAjax || data.length > 8000) {
 				var xhr = new XMLHttpRequest();
 				xhr.withCredentials = true;
 				xhr.addEventListener("readystatechange", function () {
@@ -7462,38 +7472,35 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 	//
 	// }
 
-	function trackerInfo() {
-		return {
-			version: '1.0.0',
-			type: 'js'
-		};
-	}
+	var trackerInfo = {
+		libVersion: '1.0.0',
+		libType: 'js'
+	};
 
 	function clientInfo() {
 		return {
-			ua: navigator.userAgent,
 			cleintWidth: window.screen.height,
 			cleintHeight: window.screen.width,
 			title: document.title || '',
 			referrer: document.referrer || '',
-			url: document.URL || '',
 			domain: document.domain || ''
 		};
 	}
 
 	var config = {
-		pageTime: false,
+		pageTime: true,
 		//是否记录页面停留时间
 		env: ENVIRONMENT.PRODUCTION,
+		console: true,
 		projectId: null,
 		token: null,
 		version: null,
 		domain: '',
-		sendType: SEND_TYPE.ASYNC,
+		sendType: SEND_TYPE.UNLOAD,
 		//发送日志方式 (存cookie下次发,同步发,异步延迟发,关闭浏览器前发送)
 		delayTime: 1000,
-		autoSendCookie: true,
-		autoTrakerPage: true,
+		//延迟发送的时间
+		autoTrakerPage: false,
 		autoTrakerClick: true,
 		//自动埋点a,button,input
 		autoInstall: true,
@@ -7520,18 +7527,20 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 	var allData = [];
 	var timer = null;
+	var uuid = getUUID();
+	var index = 0;
 	function send(data) {
 		var config = getConfig();
 		var sendType = config.sendType;
 		data = _wrapperData(data, config);
 
-		if (sendType === SEND_TYPE.COOKIE) {
-			var oldData = JSON.parse(getCookie(TRACKER_DATA_KEY) || '[]');
-			setCookie(TRACKER_DATA_KEY, JSON.stringify(oldData.concat(data)));
-		} else if (sendType === SEND_TYPE.UNLOAD) {
-			var _oldData = JSON.parse(localStorage.getItem(TRACKER_DATA_KEY) || '[]');
+		if (config.console) {
+			console.log(data);
+		}
 
-			localStorage.setItem(TRACKER_DATA_KEY, JSON.stringify(_oldData.concat(data)));
+		if (sendType === SEND_TYPE.UNLOAD) {
+			var oldData = JSON.parse(localStorage.getItem(TRACKER_DATA_KEY) || '[]');
+			localStorage.setItem(TRACKER_DATA_KEY, JSON.stringify(oldData.concat(data)));
 		} else if (sendType === SEND_TYPE.SYNC) {
 			_sendToServer([data]);
 		} else if (sendType === SEND_TYPE.ASYNC) {
@@ -7592,15 +7601,14 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 	}
 
 	function _wrapperData(data, config) {
-		return {
-			data: data,
-			clientInfo: clientInfo,
-			lib: trackerInfo,
+		index++;
+		return _objectSpread({}, data, clientInfo(), trackerInfo, {
 			timeStamp: Date.now(),
-			uid: config.projectId + Date.now(),
+			identify: getCookie(config.identify || TRACKER_IDENTIFY),
 			projectId: config.projectId,
-			version: config.version
-		};
+			version: config.version,
+			uuid: uuid + "-" + index
+		});
 	}
 
 	var ActionTracker =
@@ -7618,7 +7626,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 				var info = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 				var data = _objectSpread({
-					type: ACTION_TYPE.PAGE,
+					actionType: ACTION_TYPE.PAGE,
 					url: location.origin,
 					host: location.host,
 					path: location.pathname,
@@ -7626,7 +7634,6 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 				}, info);
 
 				this.pageId = data.pageId;
-				console.log(data);
 				send(data);
 			}
 		}, {
@@ -7635,7 +7642,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 				var info = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 				var data = _objectSpread({
-					type: ACTION_TYPE.PAGE,
+					actionType: ACTION_TYPE.PAGE,
+					eventName: "CLICK",
 					url: location.origin,
 					host: location.host,
 					path: location.pathname,
@@ -7643,7 +7651,6 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 				}, info);
 
 				this.pageId = data.pageId;
-				console.log(data);
 				send(data);
 			}
 		}, {
@@ -7652,8 +7659,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 				var info = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 				var data = _objectSpread({
-					type: ACTION_TYPE.EVENT,
-					event: 'CLICK',
+					actionType: ACTION_TYPE.EVENT,
+					eventName: 'CLICK',
 					pageId: this.pageId,
 					url: location.origin,
 					host: location.host,
@@ -7661,7 +7668,6 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 					hash: location.hash
 				}, info);
 
-				console.log(data);
 				send(data);
 			}
 		}, {
@@ -7676,15 +7682,14 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 				if (info) {
 					var data = _objectSpread({
-						type: ACTION_TYPE.EVENT,
-						event: 'CLICK',
+						actionType: ACTION_TYPE.EVENT,
+						eventName: 'CLICK',
 						url: location.origin,
 						host: location.host,
 						path: location.pathname,
 						hash: location.hash
 					}, info);
 
-					console.log(data);
 					send(data);
 				}
 			}
@@ -7809,6 +7814,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 			_defineProperty(this, "totalInvalidTime", 0);
 
 			_defineProperty(this, "url", location.origin);
+
+			_defineProperty(this, "pageId", null);
 		}
 
 		_createClass(PageTimeTracker, [{
@@ -7818,6 +7825,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 				this.startTime = Date.now();
 				this.pageTimes = [];
+				this.pageId = actionTracker.pageId;
 				window.addEventListener('visibilitychange', function () {
 					var isHidden = document.hidden;
 
@@ -7834,6 +7842,12 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 			value: function end() {
 				this.change();
 				var data = {
+					actionType: ACTION_TYPE.TIME,
+					url: location.origin,
+					host: location.host,
+					path: location.pathname,
+					hash: location.hash,
+					pageId: this.pageId,
 					startTime: this.startTime,
 					endTime: this.endTime,
 					pageTimes: this.pageTimes,
@@ -7844,9 +7858,11 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		}, {
 			key: "change",
 			value: function change() {
+				this.pageId = actionTracker.pageId;
 				this.pageTimes.push({
 					url: this.url,
 					href: location.href,
+					pageId: this.pageId,
 					startTime: this.endTime,
 					invalidTime: this.invalidEndTime - this.invalidStartTime,
 					endTime: Date.now()
@@ -8138,8 +8154,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 		var config = getConfig();
 
-		if (config.autoSendCookie) {
-			sendCookieData();
+		if (config.sendType === SEND_TYPE.UNLOAD) {
+			sendStorageData(); //localStorage.removeItem(TRACKER_DATA_KEY)
 		}
 
 		if (config.autoTrakerPage) {

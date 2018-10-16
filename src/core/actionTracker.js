@@ -7,7 +7,7 @@ class ActionTracker{
 
   trackPage(info={}){
     let data={
-      type:ACTION_TYPE.PAGE,
+      actionType:ACTION_TYPE.PAGE,
       url:location.origin,
       host:location.host,
       path:location.pathname,
@@ -15,13 +15,14 @@ class ActionTracker{
       ...info
     }
     this.pageId=data.pageId;
-        console.log(data)
+        
     send(data)
   }
 
   trackEvent(info={}){
     let data={
-      type:ACTION_TYPE.PAGE,
+      actionType:ACTION_TYPE.PAGE,
+      eventName:"CLICK",
       url:location.origin,
       host:location.host,
       path:location.pathname,
@@ -29,14 +30,14 @@ class ActionTracker{
       ...info
     }
     this.pageId=data.pageId;
-        console.log(data)
+        
     send(data)
   }
 
   track(info={}){
     let data={
-      type:ACTION_TYPE.EVENT,
-      event:'CLICK',
+      actionType:ACTION_TYPE.EVENT,
+      eventName:'CLICK',
       pageId:this.pageId,
       url:location.origin,
       host:location.host,
@@ -44,7 +45,7 @@ class ActionTracker{
       hash:location.hash,
       ...info
     }
-        console.log(data)
+        
     send(data)
   }
 
@@ -57,15 +58,15 @@ class ActionTracker{
     },false)
     if(info){
       let data={
-        type:ACTION_TYPE.EVENT,
-        event:'CLICK',
+        actionType:ACTION_TYPE.EVENT,
+        eventName:'CLICK',
         url:location.origin,
         host:location.host,
         path:location.pathname,
         hash:location.hash,
         ...info
       }
-          console.log(data)
+          
       send(data)
     }
 
