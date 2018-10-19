@@ -71,6 +71,7 @@ export function notChanged (binding) {
   }
 }
 
+
 /**
  * if the binding value is empty
  */
@@ -105,6 +106,12 @@ export function getDomPath(dom){
   return path.join('>')
 }
 
+export function noop () { }
+
+
+
+
+
 
 
 
@@ -118,7 +125,7 @@ export function getLocationHref () {
   return document.location.href;
 }
 
-export function noop () { }
+
 
 
 

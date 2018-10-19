@@ -2,7 +2,7 @@ import actionTracker from '../core/actionTracker'
 import { notChanged, isEmpty } from '../utils/util'
 
 function handleEvent(e){
-  this._trackerInfo.event=e.type.toUpperCase();
+  this._trackerInfo.eventName=e.type.toUpperCase();
   actionTracker.trackDom(this,this._trackerInfo)
 }
 
@@ -12,10 +12,12 @@ export default function (el, binding) {
   }
 
   let info = {}
-  if (typeof binding.value === 'object') {
+  if (typeof binding.value === 'object'&&binding.value) {
     info = binding.value
   } else if (typeof binding.value === 'string') {
     info.trackId=binding.value
+  } else if (typeof binding.value === 'number') {
+    info.trackId=binding.value+""
   }
   el._trackerInfo=info;
   el._isWatchTrack=true;//去除自动点击埋点

@@ -26,6 +26,17 @@ const install=function(conf){
     //localStorage.removeItem(TRACKER_DATA_KEY)
   }
 
+  if(config.analyseScript){
+    let trackerToken=window.name.match(/\{trackerToken:.*\}/)
+    if(trackerToken){
+      const oHead = document.getElementsByTagName('head').item(0);
+      const oScript= document.createElement("script");
+      oScript.type = "text/javascript";
+      oScript.src=config.analyseScript;
+      oHead.appendChild( oScript);
+    }
+  }
+
   if(config.autoTrakerPage){
     actionTracker.trackPage()
   }

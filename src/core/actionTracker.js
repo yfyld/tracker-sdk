@@ -23,7 +23,7 @@ class ActionTracker{
       ...info
     }
     this.pageId=data.pageId;
-
+    window._trackerPageId=this.pageId;
     send(data)
   }
 

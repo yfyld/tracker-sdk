@@ -3,6 +3,7 @@ import trackerInfo from "./trackerInfo"
 import clientInfo from "./clientInfo"
 import {getConfig} from "./config"
 import {setCookie,getCookie,getUUID} from "../utils/util"
+import {getUserInfo} from "./user"
 import {TRACKER_DATA_KEY,SEND_TYPE,TRACKER_IDENTIFY} from '../constant'
 
 const allData=[];
@@ -91,6 +92,7 @@ function _wrapperData(data,config){
     ...data,
     ...clientInfo(),
     ...trackerInfo,
+    ...getUserInfo(),
     trackTime:Date.now(),
     useServerTime:config.useServerTime,
     identify:getCookie(config.identify||TRACKER_IDENTIFY),
