@@ -1,5 +1,5 @@
 import {send} from "./send"
-import {ACTION_TYPE} from "../constant"
+import {ACTION_TYPE} from "@/constant"
 import {getDomPath} from "../utils/util"
 
 class ActionTracker{

@@ -3,7 +3,7 @@ import pageTimeTracker from "./pageTimeTracker"
 import {getConfig,setConfig} from './config'
 import {sendCookieData,sendStorageData,sendAsyncData,send,sendSync} from "./send"
 import hijackHistoryEvent from "../utils/hijackHistoryEvent"
-import {SEND_TYPE,TRACKER_DATA_KEY} from '../constant'
+import {SEND_TYPE,TRACKER_DATA_KEY} from '@/constant'
 import {getFlag,setFlag} from "../utils/util"
 
 

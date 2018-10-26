@@ -1,6 +1,6 @@
 import {send} from "./send"
 import actionTracker from "./actionTracker"
-import {ACTION_TYPE} from "../constant"
+import {ACTION_TYPE} from "@/constant"
 class PageTimeTracker{
   static instance=null;
   startTime=Date.now()

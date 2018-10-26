@@ -1,4 +1,4 @@
-import {ACTION_TYPE} from "../constant"
+import {ACTION_TYPE} from "@/constant"
 
 export let userInfo = {
   userId: null

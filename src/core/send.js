@@ -4,7 +4,7 @@ import clientInfo from "./clientInfo"
 import {getConfig} from "./config"
 import {setCookie,getCookie,getUUID} from "../utils/util"
 import {getUserInfo} from "./user"
-import {TRACKER_DATA_KEY,SEND_TYPE,TRACKER_IDENTIFY} from '../constant'
+import {TRACKER_DATA_KEY,SEND_TYPE,TRACKER_IDENTIFY} from '@/constant'
 
 const allData=[];
 let timer=null;

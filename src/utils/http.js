@@ -1,4 +1,4 @@
-import {SERVER_URL} from '../constant'
+import {SERVER_URL} from '@/constant'
 import Base64 from './base64'
 
 
