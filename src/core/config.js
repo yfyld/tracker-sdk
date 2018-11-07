@@ -1,4 +1,4 @@
-import {SEND_TYPE,ENVIRONMENT} from '@/constant'
+import {SEND_TYPE,ENVIRONMENT} from '../constant'
 import Base64 from "../utils/base64"
 //default config
 let config={

@@ -56,7 +56,7 @@ const track = (partical,key,descriptor)=>{
       return descriptor
     }
   }else if(typeof partical==='object'){
-    
+
     return (target, key, descriptor) =>{
       var oldValue = descriptor.value;
       descriptor.value=function(){
