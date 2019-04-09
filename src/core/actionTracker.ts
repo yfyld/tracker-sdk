@@ -1,0 +1,97 @@
+import {send} from "./send"
+import {ACTION_TYPE} from "../constant"
+import {getDomPath} from "../utils/util"
+import { TrackerData } from "@/types";
+import { pageTimeTracker } from '@/internal';
+import { getConfig } from './config';
+
+
+
+class ActionTracker{
+  pageId = document.querySelector('meta[name="tracker-id"]').content||null;
+  static instance:ActionTracker=null;
+  static getInstance() {
+      if (!ActionTracker.instance) {
+          ActionTracker.instance = new ActionTracker();
+      }
+      return ActionTracker.instance;
+  }
+
+  trackPage(info:TrackerData={}){
+    let data:TrackerData={
+      actionType:ACTION_TYPE.PAGE,
+      ...info
+    }
+    pageTimeTracker.info=data;
+    const config = getConfig()
+    if(!config.pageTime){
+      send(data)
+    }
+  }
+
+  trackEvent(info:TrackerData={}){
+    let data:TrackerData={
+      actionType:ACTION_TYPE.EVENT,
+      eventName:"CLICK",
+      ...info
+    }
+    send(data)
+  }
+
+  track(info:TrackerData={}){
+    if(info.actionType===ACTION_TYPE.PAGE){
+      this.trackPage(info)
+    }else{
+      this.trackEvent(info)
+    }
+  }
+
+  trackLink(linkDom:HTMLElement,info:TrackerData={}){
+    linkDom.addEventListener('click',function(e){
+      e.preventDefault()
+      setTimeout(()=>{
+        linkDom.click()
+      },300)
+    },false)
+    if(info){
+      let data={
+        actionType:ACTION_TYPE.EVENT,
+        eventName:'CLICK',
+        ...info
+      }
+
+      send(data)
+    }
+
+  }
+
+
+
+  trackDom(dom:HTMLLinkElement&HTMLInputElement,info:TrackerData={}){
+    let trackInfo:TrackerData={
+      domId:dom.id,
+      domClass:dom.className,
+      domHref:dom.href||"",
+      domName:dom.name||"",
+      domTag:dom.tagName,
+      domContent:dom.textContent.substr(0,20),
+      domPath:getDomPath(dom)
+    }
+
+    let track=dom.dataset.track;
+
+    if(track&&track.search(/^\{[\S\s]*\}$/)>=0){
+      trackInfo={...trackInfo,...JSON.parse(track)}
+    }else{
+      trackInfo.trackId=track||""
+    }
+    if(info){
+      trackInfo={...trackInfo,...info}
+    }
+    this.track(trackInfo)
+  }
+}
+
+let instance=ActionTracker.getInstance();
+
+export default instance

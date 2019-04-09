@@ -1,44 +1,24 @@
-import babel from 'rollup-plugin-babel'
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import json from 'rollup-plugin-json';
-import debug from 'debug';
+import typescript from 'rollup-plugin-typescript2';
 import replace from 'rollup-plugin-replace';
 import {uglify} from 'rollup-plugin-uglify';
-import serve from 'rollup-plugin-serve';
-
-
-import pkg from './package.json';
-console.log( `running version ${pkg.version}` );
-
-const env = process.env.NODE_ENV
-
+const env = process.env.NODE_ENV;
 
 export default {
-  input: './src/analyse/index.js',
+  entry: './src/analyse/index.ts',
   output: {
     file: './dist/analyse.min.js',
-    name:'analyse',
+    name: 'tracker',
     format: 'umd',
-    minify:true,
-    sourcemap:true
+    minify: true,
+    sourcemap: true
   },
   plugins: [
-    resolve({
-      jsnext: true,
-      main: true,
-      browser: true
+    typescript({
+      tsconfig: "tsconfig.json"
     }),
-    babel({
-      exclude: 'node_modules/**'
-    }),
-    commonjs(),
-
-    json(),
-
     replace({
       ENV: JSON.stringify(env|| 'development')
     }),
     (env === 'production' && uglify())
   ]
-}
+};

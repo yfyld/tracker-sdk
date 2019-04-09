@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="tracker-id" content="vue-demo">
+  <title>Document</title>
+  <link rel="stylesheet" href="//unpkg.com/element-ui@2.4.8/lib/theme-chalk/index.css">
+  <script src="../dist/tracker.min.js" tracker-key="eyJwcm9qZWN0SWQiOjEyLCJ0b2tlbiI6MTIzMTIzfQ=="></script>
+<style>
+
+
+
+
+</style>
+</head>
+<body>
+  <script src="./vue.js"></script>
+  <script src="//unpkg.com/element-ui@2.4.8/lib/index.js"></script>
+  <div id="app">
+  <template>
+    <a  href="http://0.0.0.0:10002/demo/vue.html#aaaa">asdfasdfasd</a>
+    <el-button @click="value6++" type="primary" id="aaa" v-track-event.focus="value6" >event</el-button>
+    <el-button @click="value7=!value7;value6++"  >asdfasdfasdf</el-button>
+    <el-button  id="bbb"  v-track-view="{pageId:'pid2'}" v-if="value7">show</el-button>
+    <el-button  v-track-view="{pageId:'pid3'}" v-show="value7">11show</el-button>
+    <el-button data-track="aaa"  @click="methodName"></el-button>
+
+  </template>
+  </div>
+  <!-- <div class='tracker-analyse-console-wrapper'>
+
+  </div> -->
+</body>
+<script>
+
+tracker.setConfig({autoTrakerClick:true})
+tracker.login(1234)
+Vue.directive('track-event', tracker.trackEvent)
+Vue.directive('track-view', tracker.trackView)
+var Main = {
+  data() {
+    return {
+      value6: 0,
+      value7: 0
+    }
+  },
+  methods: {
+    methodName(e) {
+      tracker.actionTracker.trackDom(e.target)
+    }
+  }
+}
+var Ctor = Vue.extend(Main)
+new Ctor().$mount('#app')
+</script>
+</html>
