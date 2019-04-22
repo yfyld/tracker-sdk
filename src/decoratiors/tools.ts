@@ -1,18 +1,13 @@
 import {
-  isThenable,
-  curryN,
-  attempt,
-  isError,
-  isFunction,
-  isArray,
-  once,
-  reduce,
-  memoize,
-  mapValues,
+  isThenable
 } from "../utils/util"
+import isFunction from 'lodash-es/isFunction';
+import curry from 'lodash-es/curry';
+import propSet from 'lodash-es/set';
+
 import actionTracker from "../core/actionTracker"
 
-const before = curryN(2, (trackFn:Function|string|Object, fn:Function) => function (...args:any) {
+const before = curry((trackFn:Function|string|Object, fn:Function) => function (...args:any) {
   if(isFunction(trackFn)){
     try {
       let result=trackFn.apply(this, args)
@@ -36,7 +31,7 @@ const before = curryN(2, (trackFn:Function|string|Object, fn:Function) => functi
 
 
 
-const after = curryN(2, (trackFn:Function|string|Object, fn:Function) => function (...args:any) {
+const after = curry((trackFn:Function|string|Object, fn:Function) => function (...args:any) {
   const r:Promise<any> = fn.apply(this, args)
 
   const evalF = () => {

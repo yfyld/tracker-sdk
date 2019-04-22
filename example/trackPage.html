@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../dist/tracker.min.js" tracker-key="eyJwcm9qZWN0SWQiOjEyLCJ0b2tlbiI6MTIzMTIzfQ=="></script>
+</head>
+<body>
+    <div id="aaa">
+      <h1>hash</h1>
+      <a href="#/page1">page1</a>
+      <a href="#/page2">page2</a>
+      <a href="#/page3">page3</a>
+      <a href="#/page4">page4</a>
+      <h1>history</h1>
+      <button onclick="window.history.pushState(null, null, 'profile');">push</button>
+    </div>
+</body>
+<script>
+tracker.actionTracker.trackPage({trackId:"qaz"})
+</script>
+</html>

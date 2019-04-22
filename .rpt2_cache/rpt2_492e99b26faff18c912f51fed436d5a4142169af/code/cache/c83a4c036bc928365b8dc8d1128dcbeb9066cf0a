@@ -1,0 +1,1 @@
+{"code":"export default {\r\n    libVersion: '1.0.0',\r\n    libType: 'js'\r\n};\r\n//# sourceMappingURL=trackerInfo.js.map","map":"{\"version\":3,\"file\":\"trackerInfo.js\",\"sourceRoot\":\"\",\"sources\":[\"../../../../src/core/trackerInfo.ts\"],\"names\":[],\"mappings\":\"AAAA,eAAe;IACd,UAAU,EAAC,OAAO;IAClB,OAAO,EAAC,IAAI;CACZ,CAAA\"}"}

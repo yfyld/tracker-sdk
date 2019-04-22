@@ -1,0 +1,10 @@
+21:10:19.474 INFO [GridLauncherV3.parse] - Selenium server version: 3.141.59, revision: e82be7d358
+21:10:19.575 INFO [GridLauncherV3.lambda$buildLaunchers$3] - Launching a standalone Selenium Server on port 9090
+2019-04-22 21:10:19.654:INFO::main: Logging initialized @550ms to org.seleniumhq.jetty9.util.log.StdErrLog
+21:10:19.996 INFO [WebDriverServlet.<init>] - Initialising WebDriverServlet
+21:10:20.360 INFO [ActiveSessionFactory.apply] - Capabilities are: {
+  "acceptSslCerts": true,
+  "browserName": "firefox",
+  "name": "Track Dom"
+}
+21:10:20.364 INFO [ActiveSessionFactory.lambda$apply$11] - Matched factory org.openqa.selenium.grid.session.remote.ServicedSession$Factory (provider: org.openqa.selenium.firefox.GeckoDriverService)

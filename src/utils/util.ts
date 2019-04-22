@@ -1,29 +1,7 @@
-import { isFunction } from 'lodash/fp'
-// import curry from 'lodash/fp/curry'
-import { curryN } from 'lodash/fp'
-import { attempt } from 'lodash/fp'
-import { isError } from 'lodash/fp'
-import { isArray } from 'lodash/fp'
-import { once } from 'lodash/fp'
-import { reduce } from 'lodash/fp'
-import { memoize } from 'lodash/fp'
-import { mapValues } from 'lodash/fp'
-import { set as propSet } from 'lodash/fp'
+import isEqual from 'lodash-es/isEqual';
+import isFunction from 'lodash-es/isFunction';
 
-import { isEqual } from 'lodash/fp'
 
-export {
-  propSet,
-  curryN,
-  attempt,
-  isError,
-  isFunction,
-  isArray,
-  once,
-  reduce,
-  memoize,
-  mapValues
-}
 
 export function isThenable(f: any) {
   return f && isFunction(f.then)

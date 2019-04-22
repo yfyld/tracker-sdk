@@ -40,9 +40,16 @@ const install=function(conf?:Config){
     actionTracker.trackPage();
   }
 
+  if(config.performance){
+    actionTracker.trackPerformance(); 
+  }
+
 
   if(config.pageTime){
     pageTimeTracker.start();
+  }
+
+  if(config.watchHistoryAndHash){
     if (typeof window.onpopstate === 'undefined') {
       window.addEventListener('hashchange', routeChange);
     }
@@ -82,6 +89,16 @@ const install=function(conf?:Config){
       }
     }
   },false);
+
 };
+
+
+
+window.addEventListener('load',()=>{
+  const config=getConfig()
+  if(config.autoInstall){
+    install()
+  }
+})
 
 export default install;

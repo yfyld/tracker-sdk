@@ -1,8 +1,6 @@
-import {
-  propSet,
-  isArray,
-  isFunction,
-} from "../utils/util"
+import isFunction from 'lodash-es/isFunction';
+import propSet from 'lodash-es/set';
+
 
 import actionTracker from "../core/actionTracker"
 
@@ -30,7 +28,7 @@ const track = (partical:any,key:string,descriptor:PropertyDescriptor)=>{
       //     }
       //   }, descriptor);
       // }
-      return propSet('value', value, descriptor)
+      return propSet(descriptor,'value', value)
     }
   }else if(typeof partical==='object'&&typeof partical.constructor==='function'){
     //无参数,默认使用属性名作为trackID
@@ -39,7 +37,7 @@ const track = (partical:any,key:string,descriptor:PropertyDescriptor)=>{
         trackId:key,
       }
       actionTracker.track(data)
-      return propSet('value', value, descriptor)
+      return propSet(descriptor,'value', value)
     }
     return descriptor
   }else if(typeof partical==='object'){

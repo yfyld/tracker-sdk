@@ -2,13 +2,13 @@ import {send} from "./send"
 import {ACTION_TYPE} from "../constant"
 import {getDomPath} from "../utils/util"
 import { TrackerData } from "@/types";
-import { pageTimeTracker } from '@/internal';
+import pageTimeTracker from './pageTimeTracker';
 import { getConfig } from './config';
+import performanceTracker from './performanceTracker'
 
 
 
 class ActionTracker{
-  pageId = document.querySelector('meta[name="tracker-id"]').content||null;
   static instance:ActionTracker=null;
   static getInstance() {
       if (!ActionTracker.instance) {
@@ -46,23 +46,23 @@ class ActionTracker{
     }
   }
 
-  trackLink(linkDom:HTMLElement,info:TrackerData={}){
+  trackLink(linkDom:HTMLLinkElement,info:TrackerData={}){
     linkDom.addEventListener('click',function(e){
       e.preventDefault()
       setTimeout(()=>{
         linkDom.click()
       },300)
     },false)
-    if(info){
-      let data={
-        actionType:ACTION_TYPE.EVENT,
-        eventName:'CLICK',
-        ...info
-      }
-
-      send(data)
+    let trackInfo={
+      href:linkDom.href||"",
+      domId:linkDom.id,
+      domClass:linkDom.className,
+      domTag:linkDom.tagName,
+      domContent:linkDom.textContent.substr(0,20),
+      domPath:getDomPath(linkDom),
+      ...info
     }
-
+    this.trackEvent(trackInfo)
   }
 
 
@@ -88,7 +88,22 @@ class ActionTracker{
     if(info){
       trackInfo={...trackInfo,...info}
     }
-    this.track(trackInfo)
+    this.trackEvent(trackInfo)
+  }
+
+  trackPerformance(){
+    const info=performanceTracker.getRenderTiming();
+    if(info.loadPage<=0){
+      setTimeout(()=>{
+        this.trackPerformance();
+      },300)
+      return;
+    }
+    let data:TrackerData={
+      actionType:ACTION_TYPE.PERFORMANCE,
+      ...info
+    }
+    send(data)
   }
 }
 

@@ -1,10 +1,11 @@
 import typescript from 'rollup-plugin-typescript2';
 import replace from 'rollup-plugin-replace';
 import {uglify} from 'rollup-plugin-uglify';
+import resolve from 'rollup-plugin-node-resolve';
 const env = process.env.NODE_ENV;
 
 export default {
-  entry: './src/index.ts',
+  input: './src/index.ts',
   output: {
     file: './dist/tracker.min.js',
     name: 'tracker',
@@ -13,6 +14,7 @@ export default {
     sourcemap: true
   },
   plugins: [
+    resolve(),
     typescript({
       tsconfig: "tsconfig.json"
     }),

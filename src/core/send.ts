@@ -6,6 +6,7 @@ import {setCookie,getCookie,getUUID} from "../utils/util"
 import {getUserInfo} from "./user"
 import {TRACKER_DATA_KEY,SEND_TYPE,TRACKER_IDENTIFY, ACTION_TYPE} from '../constant/index'
 import { Config,TrackerData} from '@/types';
+import isArray from 'lodash-es/isArray';
 
 
 const allData:TrackerData[]=[];
@@ -18,9 +19,6 @@ const pageTimeData:TrackerData[]=[]
 export function send(data:TrackerData){
   const config=getConfig();
   const {sendType}=config;
-  if(config.console){
-    console.log(data)
-  }
   if(sendType===SEND_TYPE.SYNC){
     sendSync(data)
   }else if(sendType===SEND_TYPE.ASYNC){
@@ -32,14 +30,14 @@ export function send(data:TrackerData){
 export function sendSync(data:TrackerData){
   const config=getConfig();
   data=_wrapperData(data,config);
-  _sendToServer(JSON.stringify([data]))
+  _sendToServer(data)
 }
 
 
 export function sendAsync(data?:TrackerData){
   if(!data){
     if(allData.length>0){
-      _sendToServer(JSON.stringify(allData))
+      _sendToServer(allData)
       allData.length=0;
     }
     clearTimeout(timer)
@@ -51,15 +49,20 @@ export function sendAsync(data?:TrackerData){
   allData.push(data);
   clearTimeout(timer)
   timer=setTimeout(()=>{
-    _sendToServer(JSON.stringify(allData))
+    _sendToServer(allData)
     allData.length=0;
   },config.delayTime);
 }
 
 
 
-function _sendToServer(data:string|string[],isAjax?:boolean){
-  return http(data,isAjax)
+function _sendToServer(data:TrackerData|TrackerData[],isAjax?:boolean){
+  console.log(JSON.stringify(data,null,2))
+  if(!isArray(data)){
+    data=[data];
+  }
+  
+  return http(JSON.stringify(data),isAjax)
 }
 
 

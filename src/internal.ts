@@ -10,13 +10,7 @@ import install from "./core/bindEvent"
 import {login,logout} from "./core/user"
 
 
-//自动开始埋点
-window.addEventListener('load',()=>{
-  const config=getConfig()
-  if(config.autoInstall){
-    install()
-  }
-})
+
 
 
 
@@ -34,7 +28,6 @@ export {
   //tracker
   pageTimeTracker,
   actionTracker,
-
   //config
   setConfig,
   getConfig,

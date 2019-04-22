@@ -34,6 +34,7 @@ class PageTimeTracker {
   }
 
   end() {
+    this.endTime = Date.now();
     let data = {
       actionType: ACTION_TYPE.PAGE,
       startTime: this.startTime,
@@ -47,10 +48,11 @@ class PageTimeTracker {
   }
 
   change() {
+    this.invalidEndTime = this.invalidStartTime = this.endTime = Date.now();
     let data = {
       actionType: ACTION_TYPE.PAGE,
-      startTime: this.endTime,
-      endTime: Date.now(),
+      startTime: this.startTime,
+      endTime: this.endTime,
       trackId:this.info.trackId,
       durationTime: this.endTime - this.startTime - this.totalInvalidTime,
       ...this.info
@@ -59,7 +61,7 @@ class PageTimeTracker {
       send(data)
       this.info={};
     }
-    this.invalidEndTime = this.invalidStartTime = this.endTime = Date.now()
+    this.startTime = this.endTime;
   }
 }
 
