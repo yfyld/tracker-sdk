@@ -6,6 +6,7 @@ import {sendAsync,send,sendSync} from "./core/send"
 import {after,before} from "./decoratiors/tools"
 import trackView from "./directives/trackView"
 import trackEvent from "./directives/trackEvent"
+import trackPage from "./directives/trackPage"
 import install from "./core/bindEvent"
 import {login,logout} from "./core/user"
 
@@ -22,6 +23,7 @@ export {
   //指令
   trackView,
   trackEvent,
+  trackPage,
   //
   install,
 

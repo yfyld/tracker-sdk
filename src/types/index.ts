@@ -39,6 +39,11 @@ export interface Config {
   performance?: boolean
 }
 
+export interface VisSenseConfig{
+  percentageLimit?:number
+  timeLimit?:number
+  interval?:number
+}
 export interface UserInfo {
   userId?: string
 }

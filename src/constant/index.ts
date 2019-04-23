@@ -20,6 +20,6 @@ export const ENVIRONMENT={
 export const ACTION_TYPE={
   EVENT:"EVENT",
   PAGE:"PAGE",
-  TIME:"PAGE_TIME",
+  VIEW:"VIEW",
   PERFORMANCE:'PERFORMANCE'
 }

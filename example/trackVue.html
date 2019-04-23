@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="tracker-id" content="vue-demo">
+  <title>Document</title>
+  <link rel="stylesheet" href="./lib/element.css">
+  <script src="../dist/tracker.min.js" tracker-key="eyJwcm9qZWN0SWQiOjEyLCJ0b2tlbiI6MTIzMTIzfQ=="></script>
+<style>
+
+
+
+
+</style>
+</head>
+<body>
+  <script src="./lib/vue.js"></script>
+  <script src="./lib/element.js"></script>
+  <div id="app">
+  <template>
+      <div v-track-page="{trackId:'pageId'}">
+          <el-card id="a" class="box-card" v-track-view="{trackId:'pid2'}" v-show="value7">
+            <div v-for="o in 4" :key="o" class="text item">
+                v-show文本
+            </div>
+          </el-card>
+            <p  v-track-view="{trackId:'pid3'}" v-if="value7">v-if文本文本文本文本文本</p>
+        
+          <el-button @click="value7=!value7" type="primary">切换显示</el-button>
+          <el-button type="primary" id="aaa" v-track-event.focus="{trackId:'123'}" >focus</el-button>
+          <el-button type="primary" id="bbbb" v-track-event.click="'123'" >click</el-button>
+          <el-button type="primary" id="bbbb" v-track-event="trackId" >click</el-button>
+          <br>
+          <br>
+          <br>
+          <br>
+    
+          <br>
+          <br>
+          <br>
+          <br>
+    
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+      </div>
+      
+  </template>
+  </div>
+  <!-- <div class='tracker-analyse-console-wrapper'>
+
+  </div> -->
+</body>
+<script>
+
+
+
+Vue.directive('track-event', tracker.trackEvent)
+Vue.directive('track-view', tracker.trackView)
+Vue.directive('track-page', tracker.trackPage)
+tracker.setConfig({autoTrakerClick:false})
+
+tracker.login(1234)
+var Main = {
+  data() {
+    return {
+      trackId: 'dsd',
+      value7:false
+    }
+  }
+}
+var Ctor = Vue.extend(Main)
+new Ctor().$mount('#app')
+</script>
+</html>

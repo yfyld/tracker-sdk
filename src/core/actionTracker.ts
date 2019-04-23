@@ -1,11 +1,11 @@
 import {send} from "./send"
 import {ACTION_TYPE} from "../constant"
 import {getDomPath} from "../utils/util"
-import { TrackerData } from "@/types";
+import { TrackerData, VisSenseConfig } from "@/types";
 import pageTimeTracker from './pageTimeTracker';
 import { getConfig } from './config';
 import performanceTracker from './performanceTracker'
-
+import VisSense  from "./viewTracker";
 
 
 class ActionTracker{
@@ -38,12 +38,29 @@ class ActionTracker{
     send(data)
   }
 
-  track(info:TrackerData={}){
-    if(info.actionType===ACTION_TYPE.PAGE){
-      this.trackPage(info)
-    }else{
-      this.trackEvent(info)
+  trackView(dom:HTMLElement,info:TrackerData&VisSenseConfig={}){
+    let data:TrackerData={
+      actionType:ACTION_TYPE.VIEW,
+      domId:dom.id,
+      domClass:dom.className,
+      domTag:dom.tagName,
+      domContent:dom.textContent.substr(0,20),
+      domPath:getDomPath(dom),
+      ...info
     }
+
+    var visobj = VisSense(dom);
+    visobj.onPercentageTimeTestPassed(function() {
+      send(data);
+    }, {
+      percentageLimit: info.percentageLimit ||0.5,
+      timeLimit: info.timeLimit ||1000,
+      interval: 200
+    });    
+  }
+
+  track(info:TrackerData={}){
+    send(info)
   }
 
   trackLink(linkDom:HTMLLinkElement,info:TrackerData={}){
