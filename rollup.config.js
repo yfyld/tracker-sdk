@@ -17,7 +17,8 @@ export default {
   plugins: [
     resolve(),
     commonjs({
-      include: /node_modules/
+      include: /node_modules/,
+      exclude: /lodash-es/
     }),
     typescript({
       tsconfig: "tsconfig.json"

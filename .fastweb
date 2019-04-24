@@ -2,14 +2,12 @@
 {
   "hash":false,
   "mini":false,
-  "del":"./demo/dist",
-
+  "del":"./example/dist",
   "module":{
-    "src":"./demo/demo.js",
-    "dest":"./demo/dist/demo.js",
-    "style":"./demo/css/style.css",
-    "name":"demo",
+    "src":"./example/src/oneClass.js",
+    "dest":"./example/dist/oneClass.js",
+    "style":"./example/css/style.css",
+    "name":"oneClass",
     "type":"webpack"
   }
-
 }

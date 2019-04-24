@@ -1,0 +1,1 @@
+{"code":"import generate from './generate';\r\nexport default generate('PAGE');\r\n//# sourceMappingURL=trackPage.js.map","map":"{\"version\":3,\"file\":\"trackPage.js\",\"sourceRoot\":\"\",\"sources\":[\"../../../../src/directives/trackPage.ts\"],\"names\":[],\"mappings\":\"AAAA,OAAO,QAAQ,MAAM,YAAY,CAAC;AAElC,eAAe,QAAQ,CAAC,MAAM,CAAC,CAAA\"}"}

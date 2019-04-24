@@ -21,7 +21,7 @@ export function getCookie(name: string) {
 export function setCookie(
   name: string,
   value: string,
-  expires: number = 9999999,
+  expires: number = 99999999999999,
   path: string = '/',
   domain?: string
 ) {

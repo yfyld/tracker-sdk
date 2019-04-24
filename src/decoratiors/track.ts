@@ -1,6 +1,5 @@
 import isFunction from 'lodash-es/isFunction';
-import propSet from 'lodash-es/set';
-
+import propSet from 'lodash/fp/set';
 
 import actionTracker from "../core/actionTracker"
 
@@ -15,7 +14,7 @@ const track = (partical:any,key:string,descriptor:PropertyDescriptor)=>{
         }else{//普通函数
           if(typeof fn==='object'){
             const data={...fn}
-            actionTracker.track(data)
+            actionTracker.trackEvent(data)
           }
           return descriptor.value.apply(this, arguments);
         }
@@ -28,18 +27,8 @@ const track = (partical:any,key:string,descriptor:PropertyDescriptor)=>{
       //     }
       //   }, descriptor);
       // }
-      return propSet(descriptor,'value', value)
+      return propSet('value', value,descriptor)
     }
-  }else if(typeof partical==='object'&&typeof partical.constructor==='function'){
-    //无参数,默认使用属性名作为trackID
-    const value=function(){
-      const data={
-        trackId:key,
-      }
-      actionTracker.track(data)
-      return propSet(descriptor,'value', value)
-    }
-    return descriptor
   }else if(typeof partical==='object'){
 
     return (target:any, key:string, descriptor:PropertyDescriptor) =>{
@@ -48,7 +37,7 @@ const track = (partical:any,key:string,descriptor:PropertyDescriptor)=>{
         const data={
           ...partical
         }
-        actionTracker.track(data)
+        actionTracker.trackEvent(data)
         return oldValue.apply(this, arguments);
       }
       return descriptor
@@ -61,7 +50,7 @@ const track = (partical:any,key:string,descriptor:PropertyDescriptor)=>{
         const data={
           trackId:partical,
         }
-        actionTracker.track(data)
+        actionTracker.trackEvent(data)
         return oldValue.apply(this, arguments);
       }
       return descriptor

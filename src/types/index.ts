@@ -45,7 +45,8 @@ export interface VisSenseConfig{
   interval?:number
 }
 export interface UserInfo {
-  userId?: string
+  userId?: string,
+  identify?:string
 }
 
 export interface EventParam<T> {
