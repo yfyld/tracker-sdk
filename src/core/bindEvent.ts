@@ -33,6 +33,11 @@ const install=function(conf?:Config){
       oScript.src=config.analyseScript;
       oHead.appendChild(oScript);
     }
+    const oHead = document.getElementsByTagName('head').item(0);
+      const oScript= document.createElement("script");
+      oScript.type = "text/javascript";
+      oScript.src=config.analyseScript;
+      oHead.appendChild(oScript);
   }
 
 

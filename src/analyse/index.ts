@@ -1,5 +1,5 @@
 import Tooltip from "./tooltip"
-import {debounce} from "lodash"
+import {debounce} from "lodash-es"
 
 
 const styleStr:string=`

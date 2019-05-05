@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script>
+class Node{
+  data=null;
+  leftC=null;
+  rightC=null;
+  constructor(data) {
+    this.data=data;
+  }
+}
+
+class Er{
+  root=null
+  setRoot(data){
+    this.root=new Node(data);
+  }
+  addLeftC(data,parent){
+    parent.leftC=new Node(data);
+  }
+  addRightC(data,parent){
+    parent.rightC=new Node(data);
+  }
+  preOrder(node) {
+    if (node == null) {
+        return;
+    }
+    console.log(node.data);
+    this.preOrder(node.leftC);
+    this.preOrder(node.rightC);
+  }
+
+  inOrder(node) {
+    if (node == null) {
+        return;
+    }
+    this.inOrder(node.leftC);
+    console.log(node.data);
+    this.inOrder(node.rightC);
+}
+
+postOrder(node) {
+  if (node == null) {
+      return;
+  }
+  this.postOrder(node.leftC);
+  this.postOrder(node.rightC);
+  console.log(node.data);
+}
+};
+
+
+const tree = new Er();
+tree.setRoot("A");
+const root = tree.root;
+tree.addLeftC("B", root);
+
+tree.addRightC("C", root);
+
+tree.addLeftC("D", root.leftC);
+
+
+tree.addRightC("E", root.leftC);
+
+tree.addRightC("F", root.rightC);
+
+tree.addLeftC("K", root.rightC);
+
+
+tree.addLeftC("G", root.leftC.leftC);
+
+
+tree.addRightC("H", root.leftC.leftC);
+
+tree.addLeftC("I", root.rightC.rightC);
+
+
+tree.addRightC("J", root.rightC.rightC.leftC);
+
+tree.preOrder(root)
+
+console.log('--------')
+
+tree.inOrder(root)
+
+console.log('--------')
+tree.postOrder(root)
+
+console.log('--------')
+
+</script>
+</html>

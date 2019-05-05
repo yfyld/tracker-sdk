@@ -1,5 +1,5 @@
 import  Popper from 'popper.js';
-import {isFunction} from '../utils/util';
+import {isFunction} from 'lodash-es';
 
 const DEFAULT_OPTIONS = {
   container: false,
