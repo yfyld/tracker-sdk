@@ -17,7 +17,7 @@ export interface TrackerData {
 }
 
 export interface Config {
-  watchHistoryAndHash?:boolean
+  watchHistoryAndHash?: boolean
   pageTime?: boolean
   env?: string
   console?: boolean
@@ -39,14 +39,14 @@ export interface Config {
   performance?: boolean
 }
 
-export interface VisSenseConfig{
-  percentageLimit?:number
-  timeLimit?:number
-  interval?:number
+export interface VisSenseConfig {
+  percentageLimit?: number
+  timeLimit?: number
+  interval?: number
 }
 export interface UserInfo {
-  userId?: string,
-  identify?:string
+  userId?: string
+  identify?: string
 }
 
 export interface EventParam<T> {
@@ -68,9 +68,8 @@ export interface PerformanceTime {
   connect: number
 }
 
-
-export interface PerformanceEntryFilterOptions{
-  name:string,
-  entryType:string,
-  initiatorType:string
+export interface PerformanceEntryFilterOptions {
+  name: string
+  entryType: string
+  initiatorType: string
 }

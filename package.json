@@ -1,8 +1,9 @@
 {
-  "name": "tracker-js",
-  "version": "1.0.0",
+  "name": "tracker-sdk",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/tracker.min.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "rollup -c -w",
     "dev-analyse": "rollup -c ./rollup.analyse.config.js -w",
