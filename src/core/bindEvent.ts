@@ -38,7 +38,7 @@ const install = function(conf?: Config) {
     oHead.appendChild(oScript)
   }
 
-  if (config.autoTrakerPage) {
+  if (config.autoTrackPage) {
     actionTracker.trackPage()
   }
 
@@ -79,7 +79,7 @@ const install = function(conf?: Config) {
 
         if (
           target.dataset.track ||
-          (config.autoTrakerClick &&
+          (config.autoTrackClick &&
             (target.tagName === 'A' || target.tagName === 'BUTTON' || target.tagName === 'INPUT') &&
             !target._isWatchTrack)
         ) {

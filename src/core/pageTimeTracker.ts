@@ -42,7 +42,7 @@ class PageTimeTracker {
       durationTime: this.endTime - this.startTime - this.totalInvalidTime,
       ...this.info
     }
-    if (this.config.autoTrakerPage) {
+    if (this.config.autoTrackPage) {
       send(data)
     }
   }
@@ -57,7 +57,7 @@ class PageTimeTracker {
       durationTime: this.endTime - this.startTime - this.totalInvalidTime,
       ...this.info
     }
-    if (this.config.autoTrakerPage || this.info.trackId) {
+    if (this.config.autoTrackPage || this.info.trackId) {
       send(data)
       this.info = {}
     }

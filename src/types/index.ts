@@ -27,8 +27,8 @@ export interface Config {
   domain?: string
   sendType?: string
   delayTime?: number
-  autoTrakerPage?: boolean
-  autoTrakerClick?: boolean
+  autoTrackPage?: boolean
+  autoTrackClick?: boolean
   autoInstall?: boolean
   delayLink?: boolean
   delayLinkTime?: number

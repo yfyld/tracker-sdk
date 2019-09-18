@@ -13,8 +13,8 @@ let config: Config = {
   domain: '',
   sendType: SEND_TYPE.ASYNC, //发送日志方式 (同步发,异步延迟发,关闭浏览器前发送)
   delayTime: 1000, //延迟发送的时间
-  autoTrakerPage: true,
-  autoTrakerClick: true, //自动埋点a,button,input
+  autoTrackPage: true,
+  autoTrackClick: true, //自动埋点a,button,input
   autoInstall: true,
   delayLink: true,
   delayLinkTime: 200,
