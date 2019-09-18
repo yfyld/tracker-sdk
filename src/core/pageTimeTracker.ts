@@ -1,7 +1,7 @@
 import { send } from './send'
 import { ACTION_TYPE } from '../constant'
 import { getConfig } from './config'
-import { Config, TrackerData } from '@/types'
+import { Config, TrackerData } from '../types'
 class PageTimeTracker {
   static instance: PageTimeTracker = null
   startTime = Date.now()
@@ -10,7 +10,7 @@ class PageTimeTracker {
   invalidEndTime = Date.now()
   totalInvalidTime = 0
   config: Config = null
-  info:TrackerData={}
+  info: TrackerData = {}
 
   static getInstance() {
     if (!PageTimeTracker.instance) {
@@ -34,7 +34,7 @@ class PageTimeTracker {
   }
 
   end() {
-    this.endTime = Date.now();
+    this.endTime = Date.now()
     let data = {
       actionType: ACTION_TYPE.PAGE,
       startTime: this.startTime,
@@ -48,20 +48,20 @@ class PageTimeTracker {
   }
 
   change() {
-    this.invalidEndTime = this.invalidStartTime = this.endTime = Date.now();
+    this.invalidEndTime = this.invalidStartTime = this.endTime = Date.now()
     let data = {
       actionType: ACTION_TYPE.PAGE,
       startTime: this.startTime,
       endTime: this.endTime,
-      trackId:this.info.trackId,
+      trackId: this.info.trackId,
       durationTime: this.endTime - this.startTime - this.totalInvalidTime,
       ...this.info
     }
-    if (this.config.autoTrakerPage||this.info.trackId) {
+    if (this.config.autoTrakerPage || this.info.trackId) {
       send(data)
-      this.info={};
+      this.info = {}
     }
-    this.startTime = this.endTime;
+    this.startTime = this.endTime
   }
 }
 

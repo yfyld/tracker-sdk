@@ -1,48 +1,44 @@
-import {ACTION_TYPE, TRACKER_IDENTIFY} from "../constant/index"
-import { UserInfo } from '@/types';
-import { getCookie, setCookie } from '@/utils/util';
-import { getConfig } from './config';
+import { ACTION_TYPE, TRACKER_IDENTIFY } from '../constant/index'
+import { UserInfo } from '../types'
+import { getCookie, setCookie } from '../utils/util'
+import { getConfig } from './config'
 
-let userInfo:UserInfo = {
+let userInfo: UserInfo = {
   userId: null,
-  identify:null
+  identify: null
 }
 
-export function setUserInfo(info:UserInfo){
-  const config=getConfig()
+export function setUserInfo(info: UserInfo) {
+  const config = getConfig()
   userInfo = {
     ...userInfo,
-    identify:getCookie(config.identify||TRACKER_IDENTIFY),
+    identify: getCookie(config.identify || TRACKER_IDENTIFY),
     ...info
-  };
+  }
 }
 
-export function getUserInfo(){
+export function getUserInfo() {
   return userInfo
 }
 
-export function login(info:UserInfo){
-  const config=getConfig()
-  let identify = localStorage.getItem(info.userId);
-  if(identify){
-    setCookie(config.identify||TRACKER_IDENTIFY,identify)
+export function login(info: UserInfo) {
+  const config = getConfig()
+  let identify = localStorage.getItem(info.userId)
+  if (identify) {
+    setCookie(config.identify || TRACKER_IDENTIFY, identify)
   }
-  setUserInfo(info);
+  setUserInfo(info)
 }
 
-export function logout(moment:boolean=true) {
-  const config=getConfig()
-  setCookie(config.identify||TRACKER_IDENTIFY,null)
-  if(moment&&userInfo.userId){
-    localStorage.setItem(userInfo.userId,userInfo.identify);
+export function logout(moment: boolean = true) {
+  const config = getConfig()
+  setCookie(config.identify || TRACKER_IDENTIFY, null)
+  if (moment && userInfo.userId) {
+    localStorage.setItem(userInfo.userId, userInfo.identify)
   }
-  userInfo = {};
+  userInfo = {}
 }
 
-export function getIdentify() {
+export function getIdentify() {}
 
-}
-
-export function changeIdentify() {
-
-}
+export function changeIdentify() {}

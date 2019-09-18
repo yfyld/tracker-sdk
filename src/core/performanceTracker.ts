@@ -1,5 +1,4 @@
-import {  PerformanceTime } from '@/types'
-
+import { PerformanceTime } from '../types'
 
 class PerformanceTracker {
   static instance: PerformanceTracker = null
@@ -30,7 +29,7 @@ class PerformanceTracker {
   getRenderTiming(): PerformanceTime {
     if (!this.performance) {
       console.log('你的浏览器不支持 performance 接口')
-      return null;
+      return null
     }
 
     const t = performance.timing

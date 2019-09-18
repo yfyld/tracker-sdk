@@ -5,7 +5,7 @@ const generate = function(type: string) {
   let watch: any[] = []
 
   const track = {
-    bind(el: HTMLElement, binding: any) {
+    bind(el: HTMLElement, binding: any,vnode:any) {
       let index = watch.findIndex(element => element === el)
       let isWatched = index !== -1
       if (el.style.display === 'none') {
@@ -35,7 +35,7 @@ const generate = function(type: string) {
       let index = watch.findIndex(element => element === el)
       if (index !== -1) watch.splice(index, 1)
     },
-    update(el: HTMLElement, binding: any) {}
+    update(el: HTMLElement, binding: any,vnode:any) {}
   }
 
   track.update = track.bind

@@ -1,9 +1,9 @@
-import typescript from 'rollup-plugin-typescript2';
-import replace from 'rollup-plugin-replace';
-import {uglify} from 'rollup-plugin-uglify';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-const env = process.env.NODE_ENV;
+import typescript from 'rollup-plugin-typescript2'
+import replace from 'rollup-plugin-replace'
+import { uglify } from 'rollup-plugin-uglify'
+import resolve from 'rollup-plugin-node-resolve'
+import commonjs from 'rollup-plugin-commonjs'
+const env = process.env.NODE_ENV
 
 export default {
   input: './src/index.ts',
@@ -18,14 +18,37 @@ export default {
     resolve(),
     commonjs({
       include: /node_modules/,
-      exclude: /lodash-es/
+      exclude: /lodash-es/,
+      namedExports: {
+        './src/index.ts': [
+          'before',
+          'after',
+          'track',
+          'trackView',
+          'trackEvent',
+          'trackPage',
+          'install',
+
+          'pageTimeTracker',
+          'actionTracker',
+          'setConfig',
+          'getConfig',
+
+          'sendAsync',
+          'send',
+          'sendSync',
+
+          'login',
+          'logout'
+        ]
+      }
     }),
     typescript({
-      tsconfig: "tsconfig.json"
+      tsconfig: 'tsconfig.json'
     }),
     replace({
-      ENV: JSON.stringify(env|| 'development')
+      ENV: JSON.stringify(env || 'development')
     }),
-    (env === 'production' && uglify())
+    env === 'production' && uglify()
   ]
-};
+}

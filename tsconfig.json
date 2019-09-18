@@ -6,7 +6,8 @@
     "target": "es5",
     "lib": ["es6", "dom", "es2017.object"],
     "sourceMap": true,
-    "allowJs": true,
+    "declaration": true,
+    "allowJs": false,
     "moduleResolution": "node",
     "rootDirs": ["src"],
     "forceConsistentCasingInFileNames": true,
@@ -14,13 +15,11 @@
     "noImplicitThis": false,
     "noImplicitAny": true,
     "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
     "strictNullChecks": false,
     "experimentalDecorators": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals":false,
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "noUnusedLocals": false
   },
   "exclude": ["node_modules", "dist"]
 }
