@@ -24,6 +24,7 @@ export function send(data: TrackerData) {
   }
 }
 
+
 export function sendSync(data: TrackerData) {
   const config = getConfig()
   data = _wrapperData(data, config)
@@ -55,8 +56,20 @@ function _sendToServer(data: TrackerData | TrackerData[], isAjax?: boolean) {
   if (!isArray(data)) {
     data = [data]
   }
+  return http(JSON.stringify(_commonData(data)), isAjax)
+}
 
-  return http(JSON.stringify(data), isAjax)
+function _commonData(data: TrackerData[]){
+  const config = getConfig()
+  index++
+  return {
+    data,
+    ...clientInfo(),
+    ...trackerInfo,
+    ...getUserInfo(),
+    projectId: config.projectId,
+    version: config.version
+  }
 }
 
 function _wrapperData(data: TrackerData, config: Config) {
@@ -67,14 +80,7 @@ function _wrapperData(data: TrackerData, config: Config) {
     path: location.pathname,
     hash: location.hash,
     ...data,
-    ...clientInfo(),
-    ...trackerInfo,
-    ...getUserInfo(),
     trackTime: Date.now(),
-    useServerTime: config.useServerTime,
-    identify: getCookie(config.identify || TRACKER_IDENTIFY),
-    projectId: config.projectId,
-    version: config.version,
     uuid: uuid + '-' + index
   }
 }

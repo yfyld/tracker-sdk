@@ -1,2 +1,2 @@
-declare const track: (partical: any, key: string, descriptor: PropertyDescriptor) => (target: any, key: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
+declare const track: (partical: any) => (target: string | Object | Function, key: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
 export default track;

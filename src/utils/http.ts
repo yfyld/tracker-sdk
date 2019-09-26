@@ -4,7 +4,8 @@ import Base64 from './base64'
 
 export default function http(data:string|string[],isAjax=false,isSendBeacon=true){
   return new Promise((resolve)=>{
-    const dataStr=Base64.encode(JSON.stringify(data));
+    //const dataStr=Base64.encode(JSON.stringify(data));
+    const dataStr=JSON.stringify(data);
     const url=`${SERVER_URL}?time=${Date.now()}`
     if(isSendBeacon&&typeof window.navigator.sendBeacon==='function'&&typeof Blob==='function') {
 

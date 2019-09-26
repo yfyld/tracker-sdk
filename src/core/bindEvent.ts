@@ -80,7 +80,9 @@ const install = function(conf?: Config) {
         if (
           target.dataset.track ||
           (config.autoTrackClick &&
-            (target.tagName === 'A' || target.tagName === 'BUTTON' || target.tagName === 'INPUT') &&
+            (target.tagName === 'A' ||
+              target.tagName === 'BUTTON' ||
+              target.tagName === 'INPUT') &&
             !target._isWatchTrack)
         ) {
           if (e.target.tagName === 'A' && config.delayLink && e.target.href) {
