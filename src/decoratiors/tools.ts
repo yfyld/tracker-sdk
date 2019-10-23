@@ -1,78 +1,74 @@
-import {
-  isThenable
-} from "../utils/util"
+import { isThenable } from '../utils/util';
 import isFunction from 'lodash-es/isFunction';
 import curryN from 'lodash/fp/curryN';
 
+import actionTracker from '../core/actionTracker';
 
-import actionTracker from "../core/actionTracker"
-
-const before = curryN(2,(trackFn:Function|string|Object, fn:Function) => function (...args:any) {
-  if(isFunction(trackFn)){
-    try {
-      let result=trackFn.apply(this, args)
-      if(typeof result==='object'){
-        actionTracker.track(result)
-      }
-    } catch(e) {
-      console.error(e)
-    }
-  }else if(typeof trackFn==='object'){
-    actionTracker.track(trackFn)
-  }else if(typeof trackFn==='string'){
-    const data={
-      trackId:trackFn
-    }
-    actionTracker.track(data)
-  }
-
-  return fn.apply(this, args)
-})
-
-
-
-const after = curryN(2,(trackFn:Function|string|Object, fn:Function) => function (...args:any) {
-  const r:Promise<any> = fn.apply(this, args)
-
-  const evalF = () => {
-    if(isFunction(trackFn)){
-      try {
-        let result=trackFn.apply(this, args)
-        if(typeof result==='object'){
-          actionTracker.track(result)
+const before = curryN(
+  2,
+  (trackFn: Function | string | Object, fn: Function) =>
+    function(...args: any) {
+      if (isFunction(trackFn)) {
+        try {
+          let result = trackFn.apply(this, args);
+          if (typeof result === 'object') {
+            actionTracker.track(result);
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch(e) {
-        console.error(e)
+      } else if (typeof trackFn === 'object') {
+        actionTracker.track(trackFn);
+      } else if (typeof trackFn === 'string') {
+        const data = {
+          trackId: trackFn
+        };
+        actionTracker.track(data);
       }
-    }else if(typeof trackFn==='object'){
-      actionTracker.track(trackFn)
-    }else if(typeof trackFn==='string'){
-      const data={
-        trackId:trackFn
-      }
-      actionTracker.track(data)
+
+      return fn.apply(this, args);
     }
-  }
+);
 
-  if (isThenable(r)) {
-    return r.then(rr => {
-      evalF()
-      return rr
-    })
-  }
+const after = curryN(
+  2,
+  (trackFn: Function | string | Object, fn: Function) =>
+    function(...args: any) {
+      const r: Promise<any> = fn.apply(this, args);
 
-  evalF()
-  return r
-})
+      const evalF = () => {
+        if (isFunction(trackFn)) {
+          try {
+            let result = trackFn.apply(this, args);
+            if (typeof result === 'object') {
+              actionTracker.track(result);
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        } else if (typeof trackFn === 'object') {
+          actionTracker.track(trackFn);
+        } else if (typeof trackFn === 'string') {
+          const data = {
+            trackId: trackFn
+          };
+          actionTracker.track(data);
+        }
+      };
 
+      if (isThenable(r)) {
+        return r.then(rr => {
+          evalF();
+          return rr;
+        });
+      }
 
-export {
-  before,
-  after
-}
+      evalF();
+      return r;
+    }
+);
 
-
-
+export { before, after };
 
 // export const composeWith = curry((convergeFn, ops) => {
 //   if (isFunction (ops)) {

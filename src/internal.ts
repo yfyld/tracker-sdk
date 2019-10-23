@@ -1,19 +1,14 @@
-import track from "./decoratiors/track"
-import actionTracker from "./core/actionTracker"
-import pageTimeTracker from "./core/pageTimeTracker"
-import {getConfig,setConfig} from './core/config'
-import {sendAsync,send,sendSync} from "./core/send"
-import {after,before} from "./decoratiors/tools"
-import trackView from "./directives/trackView"
-import trackEvent from "./directives/trackEvent"
-import trackPage from "./directives/trackPage"
-import install from "./core/bindEvent"
-import {login,logout} from "./core/user"
-
-
-
-
-
+import track from './decoratiors/track';
+import actionTracker from './core/actionTracker';
+import pageTimeTracker from './core/pageTimeTracker';
+import { getConfig, setConfig } from './core/config';
+import { sendAsync, send, sendSync } from './core/send';
+import { after, before } from './decoratiors/tools';
+import trackView from './directives/trackView';
+import trackEvent from './directives/trackEvent';
+import trackPage from './directives/trackPage';
+import install from './core/bindEvent';
+import { login, logout } from './core/user';
 
 export {
   //装饰器
@@ -26,20 +21,17 @@ export {
   trackPage,
   //
   install,
-
   //tracker
   pageTimeTracker,
   actionTracker,
   //config
   setConfig,
   getConfig,
-
   //send
   sendAsync,
   send,
   sendSync,
-
   //user
   login,
   logout
-}
+};

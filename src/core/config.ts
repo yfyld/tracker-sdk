@@ -1,6 +1,6 @@
-import { SEND_TYPE, ENVIRONMENT } from '../constant'
-import Base64 from '../utils/base64'
-import { Config } from '../types'
+import { SEND_TYPE, ENVIRONMENT } from '../constant';
+import Base64 from '../utils/base64';
+import { Config } from '../types';
 //default config
 let config: Config = {
   pageTime: true, //是否记录页面停留时间
@@ -22,21 +22,21 @@ let config: Config = {
   corssSubdomain: true, //false 域名不同认作为两个用户
   analyseScript: '../dist/analyse.min.js',
   performance: true
-}
+};
 
 //script tracker-key  config
-let scriptDom = document.querySelector('script[tracker-key]')
+let scriptDom = document.querySelector('script[tracker-key]');
 if (scriptDom) {
-  let newConfig = Base64.decode(scriptDom.getAttribute('tracker-key') || '')
+  let newConfig = Base64.decode(scriptDom.getAttribute('tracker-key') || '');
   if (newConfig) {
-    config = { ...config, ...JSON.parse(newConfig) }
+    config = { ...config, ...JSON.parse(newConfig) };
   }
 }
 
 export function getConfig() {
-  return config
+  return config;
 }
 
 export function setConfig(data: Config) {
-  config = { ...config, ...data }
+  config = { ...config, ...data };
 }

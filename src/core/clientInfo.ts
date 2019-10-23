@@ -5,5 +5,5 @@ export default function() {
     title: document.title || '',
     referrer: document.referrer || '',
     domain: document.domain || ''
-  }
+  };
 }

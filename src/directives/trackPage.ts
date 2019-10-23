@@ -1,3 +1,3 @@
 import generate from './generate';
 
-export default generate('PAGE')
+export default generate('PAGE');

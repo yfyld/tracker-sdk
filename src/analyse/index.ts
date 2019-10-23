@@ -1,8 +1,7 @@
-import Tooltip from "./tooltip"
-import {debounce} from "lodash-es"
+import Tooltip from './tooltip';
+import { debounce } from 'lodash-es';
 
-
-const styleStr:string=`
+const styleStr: string = `
 .tracker-analyse-tooltip {
     position: absolute;
     background: #FFC107;
@@ -237,63 +236,64 @@ const styleStr:string=`
   .tracker-analyse-event-hide .tracker-analyse-event,.tracker-analyse-event-hide .tracker-analyse-tooltip{
     display: none!important;
   }
-`
+`;
 
-
-class Analyse{
-  static instance:Analyse=null;
+class Analyse {
+  static instance: Analyse = null;
   static getInstance() {
-      if (!Analyse.instance) {
-          Analyse.instance = new Analyse();
-      }
-      return Analyse.instance;
+    if (!Analyse.instance) {
+      Analyse.instance = new Analyse();
+    }
+    return Analyse.instance;
   }
-  style=styleStr;
-  data={
-    page:[{
-      url:"http://0.0.0.0:10002/demo/vue.html",
-      pageId:"pid3",
-      count:1212,
-    }],
-    event:[
+  style = styleStr;
+  data = {
+    page: [
       {
-        url:"http://0.0.0.0:10002/demo/vue.html",
-        name:"CLICK",
-        pageId:"pid3",
-        trackId:"asd",
-        domPath:"div",
-        domId:"aaa",
-        count:1233,
-        id:1,
+        url: 'http://0.0.0.0:10002/demo/vue.html',
+        pageId: 'pid3',
+        count: 1212
+      }
+    ],
+    event: [
+      {
+        url: 'http://0.0.0.0:10002/demo/vue.html',
+        name: 'CLICK',
+        pageId: 'pid3',
+        trackId: 'asd',
+        domPath: 'div',
+        domId: 'aaa',
+        count: 1233,
+        id: 1
       },
       {
-        url:"http://0.0.0.0:10002/demo/vue.html",
-        name:"CLICK",
-        pageId:"pid3",
-        trackId:"asd",
-        domPath:"div",
-        domId:"bbb",
-        count:1233,
-        id:2,
+        url: 'http://0.0.0.0:10002/demo/vue.html',
+        name: 'CLICK',
+        pageId: 'pid3',
+        trackId: 'asd',
+        domPath: 'div',
+        domId: 'bbb',
+        count: 1233,
+        id: 2
       }
     ]
-  }
+  };
 
-  elements={}
+  elements = {};
 
-  wrapper:HTMLElement = document.createElement('div')
+  wrapper: HTMLElement = document.createElement('div');
 
-  page:HTMLElement=document.createElement('div')
+  page: HTMLElement = document.createElement('div');
 
-  console:HTMLElement=document.createElement('div')
+  console: HTMLElement = document.createElement('div');
 
-  install(){
-    const style=document.createElement('style')
-    style.innerHTML=this.style;
+  install() {
+    const style = document.createElement('style');
+    style.innerHTML = this.style;
     document.head.appendChild(style);
-    this.wrapper.className="tracker-analyse-wrapper"
-    this.page.className="tracker-analyse-page"
-    this.wrapper.innerHTML=`
+    this.wrapper.className = 'tracker-analyse-wrapper';
+    this.page.className = 'tracker-analyse-page';
+    this.wrapper.innerHTML = `
       <div>
         <button class="tracker-analyse-console-btn">控制台</button>
         <div class="tracker-analyse-console-mask"></div>
@@ -317,188 +317,180 @@ class Analyse{
           </div>
         </div>
       </div>
-    `
-    const content:HTMLElement=this.wrapper.querySelector('.tracker-analyse-console-content')
-    const mask:HTMLElement=this.wrapper.querySelector('.tracker-analyse-console-mask')
-    const btn:HTMLElement=this.wrapper.querySelector('.tracker-analyse-console-btn')
-    const pageInput:HTMLElement=this.wrapper.querySelector('.tracker-analyse-console-input-page');
-    const eventInput:HTMLElement=this.wrapper.querySelector('.tracker-analyse-console-input-event');
-    const tooltipInput:HTMLElement=this.wrapper.querySelector('.tracker-analyse-console-input-tooltip');
-    this.wrapper.appendChild(this.page)
+    `;
+    const content: HTMLElement = this.wrapper.querySelector('.tracker-analyse-console-content');
+    const mask: HTMLElement = this.wrapper.querySelector('.tracker-analyse-console-mask');
+    const btn: HTMLElement = this.wrapper.querySelector('.tracker-analyse-console-btn');
+    const pageInput: HTMLElement = this.wrapper.querySelector('.tracker-analyse-console-input-page');
+    const eventInput: HTMLElement = this.wrapper.querySelector('.tracker-analyse-console-input-event');
+    const tooltipInput: HTMLElement = this.wrapper.querySelector('.tracker-analyse-console-input-tooltip');
+    this.wrapper.appendChild(this.page);
 
-    mask.onclick=()=>{
-      mask.style.display=content.style.display='none'
-    }
-    btn.onclick=()=>{
-      mask.style.display=content.style.display='block'
-    }
-    pageInput.onchange=(e:any)=>{
-      this.page.style.display=e.target.checked?'block':'none'
-    }
-    tooltipInput.onchange=(e:any)=>{
-      window._trackerAnalyseDisableDide=e.target.checked;
-      for(let i in this.elements){
-        if(e.target.checked){
-          this.elements[i].tooltip.show()
-        }else{
-          this.elements[i].tooltip.hide()
+    mask.onclick = () => {
+      mask.style.display = content.style.display = 'none';
+    };
+    btn.onclick = () => {
+      mask.style.display = content.style.display = 'block';
+    };
+    pageInput.onchange = (e: any) => {
+      this.page.style.display = e.target.checked ? 'block' : 'none';
+    };
+    tooltipInput.onchange = (e: any) => {
+      window._trackerAnalyseDisableDide = e.target.checked;
+      for (let i in this.elements) {
+        if (e.target.checked) {
+          this.elements[i].tooltip.show();
+        } else {
+          this.elements[i].tooltip.hide();
         }
       }
+    };
 
-    }
+    eventInput.onchange = (e: any) => {
+      document.body.className = e.target.checked
+        ? document.body.className.replace('tracker-analyse-event-hide', '')
+        : document.body.className + ' tracker-analyse-event-hide';
+    };
+    document.body.appendChild(this.wrapper);
 
-    eventInput.onchange=(e:any)=>{
-      document.body.className=e.target.checked?document.body.className.replace("tracker-analyse-event-hide",''):document.body.className+" tracker-analyse-event-hide"
-    }
-    document.body.appendChild(this.wrapper)
-
-    this.analyseEvent()
-    this.analysePage()
-    this.bind(this.analyseEvent)
+    this.analyseEvent();
+    this.analysePage();
+    this.bind(this.analyseEvent);
     if (typeof window.onpopstate === 'undefined') {
-      window.addEventListener('hashchange', this.analysePage)
+      window.addEventListener('hashchange', this.analysePage);
     }
-    window.addEventListener('historyPushState', this.analysePage)
-    window.addEventListener('historyPopstate', this.analysePage)
+    window.addEventListener('historyPushState', this.analysePage);
+    window.addEventListener('historyPopstate', this.analysePage);
   }
 
-  bind(fn:any){
-    fn=debounce(fn,100)
-    const cb=(records:any[])=>{
-      for(let i in records){
-        let result=this.wrapper.compareDocumentPosition(records[i].target)
-        if(result===20||result===0){
-          return
+  bind(fn: any) {
+    fn = debounce(fn, 100);
+    const cb = (records: any[]) => {
+      for (let i in records) {
+        let result = this.wrapper.compareDocumentPosition(records[i].target);
+        if (result === 20 || result === 0) {
+          return;
         }
       }
-      fn.call(this)
-    }
-    const observer = new MutationObserver(cb)
-    const body = document.body
+      fn.call(this);
+    };
+    const observer = new MutationObserver(cb);
+    const body = document.body;
     const options = {
-      'childList': true,
-      'attributes':true,
-      subtree:true
+      childList: true,
+      attributes: true,
+      subtree: true
     };
     observer.observe(body, options);
   }
 
-
-  analysePage(){
-    const url=location.href
-    let pageData=window._trackerPageId?this.data.page.find(item=>item.pageId===window._trackerPageId):null
-    if(!pageData){
-      pageData=this.data.page.find(item=>item.url===url)
+  analysePage() {
+    const url = location.href;
+    let pageData = window._trackerPageId ? this.data.page.find(item => item.pageId === window._trackerPageId) : null;
+    if (!pageData) {
+      pageData = this.data.page.find(item => item.url === url);
     }
-    if(!pageData){
-      this.page.innerHTML="当前页面未埋点"
-      return
+    if (!pageData) {
+      this.page.innerHTML = '当前页面未埋点';
+      return;
     }
 
-    this.page.innerHTML=`
+    this.page.innerHTML = `
       pageId:${pageData.pageId}
       url:${pageData.url}
       访问次数:${pageData.count}
-    `
+    `;
   }
 
-
-  analyseEvent(){
-    const url=location.href
-    this.data.event.filter(item=>{
-      const active=!item.trackId||!window._trackerPageId||item.trackId===window._trackerPageId||item.url===url;
-      if(this.elements[item.id]){
-        this.elements[item.id].cursor.style.display='none'
-
-      }
-      return active
-    }).forEach((item:any)=>{
-      let element=null;
-      if(item.domId){
-        element=document.getElementById(item.domId)
-      }else{
-        element=document.querySelectorAll(item.path)
-        element=element.length===1?element[0]:null;
-      }
-      if(!element||element.style.display==='none'){
-        if(this.elements[item.id]){
-          this.elements[item.id].tooltip.hide()
-          this.elements[item.id].cursor.style.display==='none'
+  analyseEvent() {
+    const url = location.href;
+    this.data.event
+      .filter(item => {
+        const active =
+          !item.trackId || !window._trackerPageId || item.trackId === window._trackerPageId || item.url === url;
+        if (this.elements[item.id]) {
+          this.elements[item.id].cursor.style.display = 'none';
         }
-        return
-      }
+        return active;
+      })
+      .forEach((item: any) => {
+        let element = null;
+        if (item.domId) {
+          element = document.getElementById(item.domId);
+        } else {
+          element = document.querySelectorAll(item.path);
+          element = element.length === 1 ? element[0] : null;
+        }
+        if (!element || element.style.display === 'none') {
+          if (this.elements[item.id]) {
+            this.elements[item.id].tooltip.hide();
+            this.elements[item.id].cursor.style.display === 'none';
+          }
+          return;
+        }
 
+        if (this.elements[item.id] && this.elements[item.id].el === element) {
+          this.elements[item.id].cursor.style.display = 'block';
+          this.elements[item.id].tooltip.updateTitleContent(item.count);
+          return;
+        }
 
+        let cursor: any = null;
 
-
-      if(this.elements[item.id]&&this.elements[item.id].el===element){
-        this.elements[item.id].cursor.style.display='block'
-        this.elements[item.id].tooltip.updateTitleContent(item.count)
-        return;
-      }
-
-      let cursor:any=null
-
-      if(this.elements[item.id]){
-        this.elements[item.id].tooltip.dispose()
-        cursor=this.elements[item.id].cursor
-        cursor.style.display='block'
-      }else{
-        cursor=document.createElement('div');
-        cursor.className="tracker-analyse-event"
-        cursor.style=`top:${element.offsetTop+element.offsetHeight/2-10}px;left:${element.offsetLeft+element.offsetWidth/2-10}px;`
-        cursor.innerHTML=`
+        if (this.elements[item.id]) {
+          this.elements[item.id].tooltip.dispose();
+          cursor = this.elements[item.id].cursor;
+          cursor.style.display = 'block';
+        } else {
+          cursor = document.createElement('div');
+          cursor.className = 'tracker-analyse-event';
+          cursor.style = `top:${element.offsetTop + element.offsetHeight / 2 - 10}px;left:${element.offsetLeft +
+            element.offsetWidth / 2 -
+            10}px;`;
+          cursor.innerHTML = `
         <i></i>
         <i></i>
         <i></i>
-        `
-        this.wrapper.appendChild(cursor)
-      }
+        `;
+          this.wrapper.appendChild(cursor);
+        }
 
-
-
-
-
-
-      const tooltip=new Tooltip(element, {
+        const tooltip = new Tooltip(element, {
           placement: 'top',
           title: item.count,
-          trigger: "hover",
-          container:this.wrapper||document.body,
-          popperOptions:{
-            onUpdate(e:any){
-              cursor.style=`top:${e.offsets.reference.top+e.offsets.reference.height/2-10}px;left:${e.offsets.reference.left+e.offsets.reference.width/2-10}px;`
+          trigger: 'hover',
+          container: this.wrapper || document.body,
+          popperOptions: {
+            onUpdate(e: any) {
+              cursor.style = `top:${e.offsets.reference.top + e.offsets.reference.height / 2 - 10}px;left:${e.offsets
+                .reference.left +
+                e.offsets.reference.width / 2 -
+                10}px;`;
             }
           },
-          html:true,
-          template:'<div class="tracker-analyse-tooltip" role="tooltip"><div class="tracker-analyse-tooltip-arrow"></div>点击次数<div class="tracker-analyse-tooltip-inner"></div></div>',
+          html: true,
+          template:
+            '<div class="tracker-analyse-tooltip" role="tooltip"><div class="tracker-analyse-tooltip-arrow"></div>点击次数<div class="tracker-analyse-tooltip-inner"></div></div>',
           arrowSelector: '.tracker-analyse-tooltip-arrow',
           innerSelector: '.tracker-analyse-tooltip-inner'
+        });
 
+        if (window._trackerAnalyseDisableDide) {
+          tooltip.show();
+        }
+
+        this.elements[item.id] = {
+          el: element,
+          tooltip,
+          show: true,
+          cursor
+        };
       });
-
-      if(window._trackerAnalyseDisableDide){
-        tooltip.show()
-      }
-
-      this.elements[item.id]={
-        el:element,
-        tooltip,
-        show:true,
-        cursor
-      }
-
-
-    })
-
-
-
   }
-
 }
 
-let instance=Analyse.getInstance();
+let instance = Analyse.getInstance();
 
-instance.install()
+instance.install();
 
-export default instance
+export default instance;

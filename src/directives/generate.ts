@@ -1,45 +1,45 @@
-import actionTracker from '../core/actionTracker'
-import { notChanged, isEmpty } from '../utils/util'
+import actionTracker from '../core/actionTracker';
+import { notChanged, isEmpty } from '../utils/util';
 
 const generate = function(type: string) {
-  let watch: any[] = []
+  let watch: any[] = [];
 
   const track = {
-    bind(el: HTMLElement, binding: any,vnode:any) {
-      let index = watch.findIndex(element => element === el)
-      let isWatched = index !== -1
+    bind(el: HTMLElement, binding: any, vnode: any) {
+      let index = watch.findIndex(element => element === el);
+      let isWatched = index !== -1;
       if (el.style.display === 'none') {
-        if (!isWatched) watch.push(el)
-        return
+        if (!isWatched) watch.push(el);
+        return;
       } else {
-        if (isWatched) watch.splice(index, 1)
+        if (isWatched) watch.splice(index, 1);
       }
 
-      if (!isWatched && (notChanged(binding) || isEmpty(binding))) return
+      if (!isWatched && (notChanged(binding) || isEmpty(binding))) return;
 
-      let info: any = {}
+      let info: any = {};
 
       if (typeof binding.value === 'object') {
-        info = binding.value
+        info = binding.value;
         //if (value.pageURL) args.push(value.pageURL)
       } else if (typeof binding.value === 'string' && binding.value) {
-        info.trackId = binding.value
+        info.trackId = binding.value;
       }
       if (type === 'PAGE') {
-        actionTracker.trackPage(info)
+        actionTracker.trackPage(info);
       } else {
-        actionTracker.trackView(el, info)
+        actionTracker.trackView(el, info);
       }
     },
     unbind(el: HTMLElement, binding: any) {
-      let index = watch.findIndex(element => element === el)
-      if (index !== -1) watch.splice(index, 1)
+      let index = watch.findIndex(element => element === el);
+      if (index !== -1) watch.splice(index, 1);
     },
-    update(el: HTMLElement, binding: any,vnode:any) {}
-  }
+    update(el: HTMLElement, binding: any, vnode: any) {}
+  };
 
-  track.update = track.bind
-  return track
-}
+  track.update = track.bind;
+  return track;
+};
 
-export default generate
+export default generate;

@@ -1,54 +1,54 @@
-import { send } from './send'
-import { ACTION_TYPE } from '../constant'
-import { getConfig } from './config'
-import { Config, TrackerData } from '../types'
+import { send } from './send';
+import { ACTION_TYPE } from '../constant';
+import { getConfig } from './config';
+import { Config, TrackerData } from '../types';
 class PageTimeTracker {
-  static instance: PageTimeTracker = null
-  startTime = Date.now()
-  endTime = Date.now()
-  invalidStartTime = Date.now()
-  invalidEndTime = Date.now()
-  totalInvalidTime = 0
-  config: Config = null
-  info: TrackerData = {}
+  static instance: PageTimeTracker = null;
+  startTime = Date.now();
+  endTime = Date.now();
+  invalidStartTime = Date.now();
+  invalidEndTime = Date.now();
+  totalInvalidTime = 0;
+  config: Config = null;
+  info: TrackerData = {};
 
   static getInstance() {
     if (!PageTimeTracker.instance) {
-      PageTimeTracker.instance = new PageTimeTracker()
+      PageTimeTracker.instance = new PageTimeTracker();
     }
-    return PageTimeTracker.instance
+    return PageTimeTracker.instance;
   }
 
   start() {
-    this.startTime = Date.now()
-    this.config = getConfig()
+    this.startTime = Date.now();
+    this.config = getConfig();
     window.addEventListener('visibilitychange', () => {
-      var isHidden = document.hidden
+      var isHidden = document.hidden;
       if (isHidden) {
-        this.invalidStartTime = Date.now()
+        this.invalidStartTime = Date.now();
       } else {
-        this.invalidEndTime = Date.now()
-        this.totalInvalidTime += this.invalidEndTime - this.invalidStartTime
+        this.invalidEndTime = Date.now();
+        this.totalInvalidTime += this.invalidEndTime - this.invalidStartTime;
       }
-    })
+    });
   }
 
   end() {
-    this.endTime = Date.now()
+    this.endTime = Date.now();
     let data = {
       actionType: ACTION_TYPE.PAGE,
       startTime: this.startTime,
       endTime: this.endTime,
       durationTime: this.endTime - this.startTime - this.totalInvalidTime,
       ...this.info
-    }
+    };
     if (this.config.autoTrackPage) {
-      send(data)
+      send(data);
     }
   }
 
   change() {
-    this.invalidEndTime = this.invalidStartTime = this.endTime = Date.now()
+    this.invalidEndTime = this.invalidStartTime = this.endTime = Date.now();
     let data = {
       actionType: ACTION_TYPE.PAGE,
       startTime: this.startTime,
@@ -56,14 +56,14 @@ class PageTimeTracker {
       trackId: this.info.trackId,
       durationTime: this.endTime - this.startTime - this.totalInvalidTime,
       ...this.info
-    }
+    };
     if (this.config.autoTrackPage || this.info.trackId) {
-      send(data)
-      this.info = {}
+      send(data);
+      this.info = {};
     }
-    this.startTime = this.endTime
+    this.startTime = this.endTime;
   }
 }
 
-let instance = PageTimeTracker.getInstance()
-export default instance
+let instance = PageTimeTracker.getInstance();
+export default instance;

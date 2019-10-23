@@ -1,15 +1,15 @@
-import { PerformanceTime } from '../types'
+import { PerformanceTime } from '../types';
 
 class PerformanceTracker {
-  static instance: PerformanceTracker = null
+  static instance: PerformanceTracker = null;
   static getInstance() {
     if (!PerformanceTracker.instance) {
-      PerformanceTracker.instance = new PerformanceTracker()
+      PerformanceTracker.instance = new PerformanceTracker();
     }
-    return PerformanceTracker.instance
+    return PerformanceTracker.instance;
   }
 
-  performance: Performance = window.performance
+  performance: Performance = window.performance;
 
   // getResourceTiming(filter?:PerformanceEntryFilterOptions):PerformanceTime{
   //   if (!this.performance) {
@@ -28,11 +28,11 @@ class PerformanceTracker {
 
   getRenderTiming(): PerformanceTime {
     if (!this.performance) {
-      console.log('你的浏览器不支持 performance 接口')
-      return null
+      console.log('你的浏览器不支持 performance 接口');
+      return null;
     }
 
-    const t = performance.timing
+    const t = performance.timing;
     const times: PerformanceTime = {
       //页面加载完成的时间
       loadPage: t.loadEventEnd - t.navigationStart,
@@ -54,11 +54,11 @@ class PerformanceTracker {
       unloadEvent: t.unloadEventEnd - t.unloadEventStart,
       // TCP 建立连接完成握手的时间
       connect: t.connectEnd - t.connectStart
-    }
+    };
 
-    return times
+    return times;
   }
 }
 
-let instance = PerformanceTracker.getInstance()
-export default instance
+let instance = PerformanceTracker.getInstance();
+export default instance;
