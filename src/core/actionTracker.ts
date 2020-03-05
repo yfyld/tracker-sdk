@@ -1,7 +1,8 @@
+import { ITrackerParam } from './../types/index';
 import { send } from './send';
 import { ACTION_TYPE } from '../constant';
 import { getDomPath } from '../utils/util';
-import { TrackerData, VisSenseConfig } from '../types';
+import { ITrackerData, VisSenseConfig } from '../types';
 import pageTimeTracker from './pageTimeTracker';
 import { getConfig } from './config';
 import performanceTracker from './performanceTracker';
@@ -16,11 +17,12 @@ class ActionTracker {
     return ActionTracker.instance;
   }
 
-  trackPage(info: TrackerData = {}) {
-    let data: TrackerData = {
+  trackPage(info: ITrackerParam = {}) {
+    let data: ITrackerData = {
       actionType: ACTION_TYPE.PAGE,
       ...info
     };
+
     pageTimeTracker.info = data;
     const config = getConfig();
     if (!config.pageTime) {
@@ -28,8 +30,8 @@ class ActionTracker {
     }
   }
 
-  trackEvent(info: TrackerData = {}) {
-    let data: TrackerData = {
+  trackEvent(info: ITrackerParam = {}) {
+    let data: ITrackerData = {
       actionType: ACTION_TYPE.EVENT,
       eventName: 'CLICK',
       ...info
@@ -37,8 +39,8 @@ class ActionTracker {
     send(data);
   }
 
-  trackView(dom: HTMLElement, info: TrackerData & VisSenseConfig = {}) {
-    let data: TrackerData = {
+  trackView(dom: HTMLElement, info: ITrackerParam, visSenseConfig: VisSenseConfig = {}) {
+    let data: ITrackerData = {
       actionType: ACTION_TYPE.VIEW,
       domId: dom.id,
       domClass: dom.className,
@@ -54,18 +56,18 @@ class ActionTracker {
         send(data);
       },
       {
-        percentageLimit: info.percentageLimit || 0.5,
-        timeLimit: info.timeLimit || 1000,
+        percentageLimit: visSenseConfig.percentageLimit || 0.5,
+        timeLimit: visSenseConfig.timeLimit || 1000,
         interval: 200
       }
     );
   }
 
-  track(info: TrackerData = {}) {
+  track(info: ITrackerData = {}) {
     send(info);
   }
 
-  trackLink(linkDom: HTMLLinkElement, info: TrackerData = {}) {
+  trackLink(linkDom: HTMLLinkElement, info: ITrackerData = {}) {
     linkDom.addEventListener(
       'click',
       function(e) {
@@ -76,30 +78,35 @@ class ActionTracker {
       },
       false
     );
-    let trackInfo = {
-      href: linkDom.href || '',
-      domId: linkDom.id,
-      domClass: linkDom.className,
-      domTag: linkDom.tagName,
-      domContent: linkDom.textContent.substr(0, 20),
-      domPath: getDomPath(linkDom),
-      ...info
-    };
-    this.trackEvent(trackInfo);
+    this.trackDom(linkDom, info);
   }
 
-  trackDom(dom: HTMLLinkElement & HTMLInputElement, info: TrackerData = {}) {
-    let trackInfo: TrackerData = {
+  trackDom(dom: HTMLLinkElement | HTMLInputElement | HTMLLinkElement, info: ITrackerData = {}) {
+    //防止频繁触发
+    const _dom: any = dom;
+    if (_dom.IS_TRACKED) {
+      clearTimeout(_dom.DELAY_TRACK_TIME);
+      _dom.DELAY_TRACK_TIME = setTimeout(() => {
+        _dom.IS_TRACKED = false;
+      }, 1000);
+      return;
+    }
+    _dom.IS_TRACKED = true;
+    _dom.DELAY_TRACK_TIME = setTimeout(() => {
+      _dom.IS_TRACKED = false;
+    }, 1000);
+
+    let trackInfo: ITrackerData = {
       domId: dom.id,
       domClass: dom.className,
-      domHref: dom.href || '',
-      domName: dom.name || '',
+      domHref: (dom as HTMLLinkElement).href || '',
+      domName: (dom as HTMLInputElement).name || '',
       domTag: dom.tagName,
       domContent: dom.textContent.substr(0, 20),
       domPath: getDomPath(dom)
     };
 
-    let track = dom.dataset.track;
+    let track = dom.getAttribute('data-track');
 
     if (track && track.search(/^\{[\S\s]*\}$/) >= 0) {
       trackInfo = { ...trackInfo, ...JSON.parse(track) };
@@ -120,7 +127,7 @@ class ActionTracker {
       }, 300);
       return;
     }
-    let data: TrackerData = {
+    let data: ITrackerData = {
       actionType: ACTION_TYPE.PERFORMANCE,
       ...info
     };

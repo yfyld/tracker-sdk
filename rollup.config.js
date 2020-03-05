@@ -1,15 +1,15 @@
-import typescript from 'rollup-plugin-typescript2'
-import replace from 'rollup-plugin-replace'
-import { uglify } from 'rollup-plugin-uglify'
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-const env = process.env.NODE_ENV
+import typescript from 'rollup-plugin-typescript2';
+import replace from 'rollup-plugin-replace';
+import { uglify } from 'rollup-plugin-uglify';
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+const env = process.env.NODE_ENV;
 
 export default {
   input: './src/index.ts',
   output: {
-    file: './dist/tracker.min.js',
-    name: 'tracker',
+    file: './dist/telescope.min.js',
+    name: 'telescope',
     format: 'umd',
     minify: true,
     sourcemap: true
@@ -51,4 +51,4 @@ export default {
     }),
     env === 'production' && uglify()
   ]
-}
+};

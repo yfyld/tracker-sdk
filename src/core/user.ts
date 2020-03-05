@@ -4,15 +4,13 @@ import { getCookie, setCookie } from '../utils/util';
 import { getConfig } from './config';
 
 let userInfo: UserInfo = {
-  userId: null,
-  identify: null
+  uid: null,
+  isLogin: false
 };
 
 export function setUserInfo(info: UserInfo) {
-  const config = getConfig();
   userInfo = {
     ...userInfo,
-    identify: getCookie(config.identify || TRACKER_IDENTIFY),
     ...info
   };
 }
@@ -23,22 +21,22 @@ export function getUserInfo() {
 
 export function login(info: UserInfo) {
   const config = getConfig();
-  let identify = localStorage.getItem(info.userId);
-  if (identify) {
-    setCookie(config.identify || TRACKER_IDENTIFY, identify);
+  if (info.uid) {
+    let utoken = localStorage.getItem(config.utokenKey + '__' + info.uid);
+    if (utoken) {
+      setCookie(config.utokenKey, utoken);
+    }
   }
-  setUserInfo(info);
+  setUserInfo({ ...info, isLogin: true });
 }
 
-export function logout(moment: boolean = true) {
+export function logout(moment: boolean = false) {
   const config = getConfig();
-  setCookie(config.identify || TRACKER_IDENTIFY, null);
-  if (moment && userInfo.userId) {
-    localStorage.setItem(userInfo.userId, userInfo.identify);
+  const utoken = getCookie(config.utokenKey);
+
+  if (moment) {
+    localStorage.setItem(config.utokenKey + '__' + (userInfo.uid || ''), utoken);
+    setCookie(config.utokenKey, null);
   }
-  userInfo = {};
+  userInfo = { uid: null, isLogin: false };
 }
-
-export function getIdentify() {}
-
-export function changeIdentify() {}

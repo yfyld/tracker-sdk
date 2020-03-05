@@ -1,4 +1,4 @@
-import { Config, TrackerData } from '../types';
+import { IConfig, ITrackerData } from '../types';
 declare class PageTimeTracker {
     static instance: PageTimeTracker;
     startTime: number;
@@ -6,8 +6,8 @@ declare class PageTimeTracker {
     invalidStartTime: number;
     invalidEndTime: number;
     totalInvalidTime: number;
-    config: Config;
-    info: TrackerData;
+    config: IConfig;
+    info: ITrackerData;
     static getInstance(): PageTimeTracker;
     start(): void;
     end(): void;

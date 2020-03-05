@@ -1,5 +1,5 @@
 import { isThenable } from '../utils/util';
-import isFunction from 'lodash-es/isFunction';
+import isFunction from 'lodash/fp/isFunction';
 import curryN from 'lodash/fp/curryN';
 
 import actionTracker from '../core/actionTracker';

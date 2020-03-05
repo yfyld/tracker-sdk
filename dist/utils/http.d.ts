@@ -1,1 +1,1 @@
-export default function http(data: string | string[], isAjax?: boolean, isSendBeacon?: boolean): Promise<{}>;
+export default function http(data: string | string[], isAjax?: boolean, isSendBeacon?: boolean): Promise<unknown>;

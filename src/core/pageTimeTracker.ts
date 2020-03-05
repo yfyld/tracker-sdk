@@ -1,7 +1,7 @@
 import { send } from './send';
 import { ACTION_TYPE } from '../constant';
 import { getConfig } from './config';
-import { Config, TrackerData } from '../types';
+import { IConfig, ITrackerData } from '../types';
 class PageTimeTracker {
   static instance: PageTimeTracker = null;
   startTime = Date.now();
@@ -9,8 +9,8 @@ class PageTimeTracker {
   invalidStartTime = Date.now();
   invalidEndTime = Date.now();
   totalInvalidTime = 0;
-  config: Config = null;
-  info: TrackerData = {};
+  config: IConfig = null;
+  info: ITrackerData = {};
 
   static getInstance() {
     if (!PageTimeTracker.instance) {

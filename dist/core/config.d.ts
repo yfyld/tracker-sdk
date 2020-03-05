@@ -1,3 +1,4 @@
-import { Config } from '../types';
-export declare function getConfig(): Config;
-export declare function setConfig(data: Config): void;
+import { ISetConfigParam } from './../types/index';
+import { IConfig } from '../types';
+export declare function getConfig(): IConfig;
+export declare function setConfig(data: ISetConfigParam): void;

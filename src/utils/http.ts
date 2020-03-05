@@ -6,7 +6,12 @@ export default function http(data: string | string[], isAjax = false, isSendBeac
     //const dataStr=Base64.encode(JSON.stringify(data));
     const dataStr = JSON.stringify(data);
     const url = `${SERVER_URL}?time=${Date.now()}`;
-    if (isSendBeacon && typeof window.navigator.sendBeacon === 'function' && typeof Blob === 'function') {
+    if (
+      window.location.protocol === 'https:' &&
+      isSendBeacon &&
+      typeof window.navigator.sendBeacon === 'function' &&
+      typeof Blob === 'function'
+    ) {
       const headers = {
         type: 'text/plain; charset=UTF-8'
       };

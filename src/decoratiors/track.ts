@@ -1,4 +1,4 @@
-import isFunction from 'lodash-es/isFunction';
+import isFunction from 'lodash/fp/isFunction';
 import propSet from 'lodash/fp/set';
 
 import actionTracker from '../core/actionTracker';

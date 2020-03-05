@@ -5,16 +5,16 @@ import { getConfig } from './config';
 import { setCookie, getCookie, getUUID } from '../utils/util';
 import { getUserInfo } from './user';
 import { TRACKER_DATA_KEY, SEND_TYPE, TRACKER_IDENTIFY, ACTION_TYPE } from '../constant/index';
-import { Config, TrackerData } from '../types';
-import isArray from 'lodash-es/isArray';
+import { IConfig, ITrackerData } from '../types';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 
-const allData: TrackerData[] = [];
+const allData: ITrackerData[] = [];
 let timer: any = null;
 const uuid = getUUID();
 let index = 0;
-const pageTimeData: TrackerData[] = [];
 
-export function send(data: TrackerData) {
+export function send(data: ITrackerData) {
   const config = getConfig();
   const { sendType } = config;
   if (sendType === SEND_TYPE.SYNC) {
@@ -24,13 +24,13 @@ export function send(data: TrackerData) {
   }
 }
 
-export function sendSync(data: TrackerData) {
+export function sendSync(data: ITrackerData) {
   const config = getConfig();
   data = _wrapperData(data, config);
   _sendToServer(data);
 }
 
-export function sendAsync(data?: TrackerData) {
+export function sendAsync(data?: ITrackerData) {
   if (!data) {
     if (allData.length > 0) {
       _sendToServer(allData);
@@ -50,7 +50,8 @@ export function sendAsync(data?: TrackerData) {
   }, config.delayTime);
 }
 
-function _sendToServer(data: TrackerData | TrackerData[], isAjax?: boolean) {
+//发送到服务器
+function _sendToServer(data: ITrackerData | ITrackerData[], isAjax?: boolean) {
   console.log(JSON.stringify(data, null, 2));
   if (!isArray(data)) {
     data = [data];
@@ -58,7 +59,7 @@ function _sendToServer(data: TrackerData | TrackerData[], isAjax?: boolean) {
   return http(JSON.stringify(_commonData(data)), isAjax);
 }
 
-function _commonData(data: TrackerData[]) {
+function _commonData(data: ITrackerData[]) {
   const config = getConfig();
   index++;
   return {
@@ -71,8 +72,15 @@ function _commonData(data: TrackerData[]) {
   };
 }
 
-function _wrapperData(data: TrackerData, config: Config) {
+function _wrapperData(data: ITrackerData, config: IConfig) {
   index++;
+  if (isObject(data.custom)) {
+    data.custom = Object.entries(data.custom)
+      .map(([key, val]) => {
+        return `@${key}:${val}`;
+      })
+      .join('');
+  }
   return {
     url: location.origin,
     host: location.host,
@@ -80,6 +88,6 @@ function _wrapperData(data: TrackerData, config: Config) {
     hash: location.hash,
     ...data,
     trackTime: Date.now(),
-    uuid: uuid + '-' + index
+    id: uuid + '-' + index
   };
 }

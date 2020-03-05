@@ -1,3 +1,3 @@
-import { Config } from '../types';
-declare const install: (conf?: Config) => void;
+import { ISetConfigParam } from './../types/index';
+declare const install: (conf?: ISetConfigParam) => void;
 export default install;

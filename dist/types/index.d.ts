@@ -1,4 +1,7 @@
-export interface TrackerData {
+export interface ITrackerData {
+    custom?: string | {
+        [prop: string]: string | number | boolean;
+    };
     actionType?: string;
     eventName?: string;
     url?: string;
@@ -15,7 +18,50 @@ export interface TrackerData {
     domPath?: string;
     trackId?: string;
 }
-export interface Config {
+export interface ITrackerParam {
+    custom?: string | {
+        [prop: string]: string | number | boolean;
+    };
+    actionType?: string;
+    eventName?: string;
+    pageId?: string;
+    trackId?: string;
+}
+export interface ITrackerDomData {
+    trackId: string;
+    actionType: string;
+    eventName: string;
+    domId: string;
+    domClass: string;
+    domHref: string;
+    domName: string;
+    domTag: string;
+    domContent: string;
+    domPath: string;
+}
+export interface IConfig {
+    serverUrl: string;
+    watchHistoryAndHash: boolean;
+    pageTime: boolean;
+    env: string;
+    console: boolean;
+    projectId: string;
+    version: string;
+    domain: string;
+    sendType: string;
+    delayTime: number;
+    autoTrackPage: boolean;
+    autoTrackClick: boolean;
+    autoInstall: boolean;
+    delayLink: boolean;
+    delayLinkTime: number;
+    useServerTime: boolean;
+    corssSubdomain: boolean;
+    analyseScript: string;
+    performance: boolean;
+    utokenKey: string;
+}
+export interface ISetConfigParam {
     watchHistoryAndHash?: boolean;
     pageTime?: boolean;
     env?: string;
@@ -43,8 +89,8 @@ export interface VisSenseConfig {
     interval?: number;
 }
 export interface UserInfo {
-    userId?: string;
-    identify?: string;
+    uid?: string;
+    isLogin: boolean;
 }
 export interface EventParam<T> {
     canBubbleArg: boolean;
