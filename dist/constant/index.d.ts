@@ -1,4 +1,4 @@
-export declare const SERVER_URL = "http://localhost:7000/log.gif";
+export declare const SERVER_URL = "http://frontlo-collection.qa.91jkys.com/log.gif";
 export declare const TRACKER_DATA_KEY = "TRACKER_DATA_KEY";
 export declare const TRACKER_IDENTIFY = "TRACKER_IDENTIFY";
 export declare const SEND_TYPE: {

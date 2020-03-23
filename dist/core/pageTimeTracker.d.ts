@@ -10,6 +10,7 @@ declare class PageTimeTracker {
     info: ITrackerData;
     static getInstance(): PageTimeTracker;
     start(): void;
+    resetStart(): void;
     end(): void;
     change(): void;
 }

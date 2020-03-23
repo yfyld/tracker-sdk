@@ -1,3 +1,4 @@
+import { setReferrerInfo } from './referrerInfo';
 import { ITrackerParam } from './../types/index';
 import { send } from './send';
 import { ACTION_TYPE } from '../constant';
@@ -8,6 +9,11 @@ import { getConfig } from './config';
 import performanceTracker from './performanceTracker';
 import VisSense from './viewTracker';
 
+/**
+ *埋点入口类
+ *
+ * @class ActionTracker
+ */
 class ActionTracker {
   static instance: ActionTracker = null;
   static getInstance() {
@@ -16,20 +22,35 @@ class ActionTracker {
     }
     return ActionTracker.instance;
   }
-
+  /**
+   * 埋点页面,如果需要埋页面时间重置时间 发送放pageChange发
+   * @memberof ActionTracker
+   */
   trackPage(info: ITrackerParam = {}) {
     let data: ITrackerData = {
       actionType: ACTION_TYPE.PAGE,
       ...info
     };
 
+    if (data.trackId) {
+      setReferrerInfo({ pageCode: data.trackId });
+    }
+
     pageTimeTracker.info = data;
     const config = getConfig();
     if (!config.pageTime) {
       send(data);
+    } else {
+      pageTimeTracker.resetStart();
     }
   }
 
+  /**
+   *
+   *事件埋点
+   * @param {ITrackerParam} [info={}]
+   * @memberof ActionTracker
+   */
   trackEvent(info: ITrackerParam = {}) {
     let data: ITrackerData = {
       actionType: ACTION_TYPE.EVENT,
@@ -39,6 +60,12 @@ class ActionTracker {
     send(data);
   }
 
+  /**
+   * 视窗埋点 暂时不启用
+   * @param dom
+   * @param info
+   * @param visSenseConfig
+   */
   trackView(dom: HTMLElement, info: ITrackerParam, visSenseConfig: VisSenseConfig = {}) {
     let data: ITrackerData = {
       actionType: ACTION_TYPE.VIEW,
@@ -63,10 +90,21 @@ class ActionTracker {
     );
   }
 
+  /**
+   *通用埋点入口 埋点类型自行控制
+   *
+   * @param {ITrackerData} [info={}]
+   * @memberof ActionTracker
+   */
   track(info: ITrackerData = {}) {
     send(info);
   }
 
+  /**
+   * a标签埋点 做300毫秒延迟跳转 确保埋点成功
+   * @param linkDom
+   * @param info
+   */
   trackLink(linkDom: HTMLLinkElement, info: ITrackerData = {}) {
     linkDom.addEventListener(
       'click',
@@ -81,6 +119,14 @@ class ActionTracker {
     this.trackDom(linkDom, info);
   }
 
+  /**
+   *埋点dom 做1秒防抖
+   *
+   * @param {(HTMLLinkElement | HTMLInputElement | HTMLLinkElement)} dom
+   * @param {ITrackerData} [info={}]
+   * @returns
+   * @memberof ActionTracker
+   */
   trackDom(dom: HTMLLinkElement | HTMLInputElement | HTMLLinkElement, info: ITrackerData = {}) {
     //防止频繁触发
     const _dom: any = dom;
@@ -119,6 +165,9 @@ class ActionTracker {
     this.trackEvent(trackInfo);
   }
 
+  /**
+   * 不启用
+   */
   trackPerformance() {
     const info = performanceTracker.getRenderTiming();
     if (info.loadPage <= 0) {

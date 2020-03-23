@@ -1,10 +1,12 @@
+import { ACTION_TYPE } from './../constant/index';
+import { getReferrerInfo, setReferrerInfo } from './referrerInfo';
 import http from '../utils/http';
 import trackerInfo from './trackerInfo';
 import clientInfo from './clientInfo';
 import { getConfig } from './config';
 import { setCookie, getCookie, getUUID } from '../utils/util';
 import { getUserInfo } from './user';
-import { TRACKER_DATA_KEY, SEND_TYPE, TRACKER_IDENTIFY, ACTION_TYPE } from '../constant/index';
+import { SEND_TYPE } from '../constant/index';
 import { IConfig, ITrackerData } from '../types';
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
@@ -26,7 +28,7 @@ export function send(data: ITrackerData) {
 
 export function sendSync(data: ITrackerData) {
   const config = getConfig();
-  data = _wrapperData(data, config);
+  data = _generateData(data, config);
   _sendToServer(data);
 }
 
@@ -41,7 +43,7 @@ export function sendAsync(data?: ITrackerData) {
   }
 
   const config = getConfig();
-  data = _wrapperData(data, config);
+  data = _generateData(data, config);
   allData.push(data);
   clearTimeout(timer);
   timer = setTimeout(() => {
@@ -52,14 +54,14 @@ export function sendAsync(data?: ITrackerData) {
 
 //发送到服务器
 function _sendToServer(data: ITrackerData | ITrackerData[], isAjax?: boolean) {
-  console.log(JSON.stringify(data, null, 2));
   if (!isArray(data)) {
     data = [data];
   }
-  return http(JSON.stringify(_commonData(data)), isAjax);
+  return http(JSON.stringify(_wrapperData(data)), isAjax);
 }
 
-function _commonData(data: ITrackerData[]) {
+function _wrapperData(data: ITrackerData[]) {
+  //console.log(JSON.stringify(data, null, 2));
   const config = getConfig();
   index++;
   return {
@@ -72,7 +74,7 @@ function _commonData(data: ITrackerData[]) {
   };
 }
 
-function _wrapperData(data: ITrackerData, config: IConfig) {
+function _generateData(data: ITrackerData, config: IConfig) {
   index++;
   if (isObject(data.custom)) {
     data.custom = Object.entries(data.custom)
@@ -81,13 +83,22 @@ function _wrapperData(data: ITrackerData, config: IConfig) {
       })
       .join('');
   }
-  return {
-    url: location.origin,
-    host: location.host,
-    path: location.pathname,
-    hash: location.hash,
+
+  const resutl = {
     ...data,
+    ...getReferrerInfo(),
     trackTime: Date.now(),
     id: uuid + '-' + index
   };
+
+  //单页面设置referrer
+  if (data.actionType === ACTION_TYPE.PAGE) {
+    setTimeout(() => {
+      setReferrerInfo({
+        referrerCode: data.trackId,
+        referrerUrl: data.url
+      });
+    }, 0);
+  }
+  return resutl;
 }

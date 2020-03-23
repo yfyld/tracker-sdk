@@ -1,4 +1,4 @@
-export const SERVER_URL = 'http://localhost:7000/log.gif';
+export const SERVER_URL = 'http://frontlo-collection.qa.91jkys.com/log.gif';
 
 export const TRACKER_DATA_KEY = 'TRACKER_DATA_KEY';
 

@@ -1,4 +1,5 @@
 import actionTracker from '../core/actionTracker';
+import pageTimeTracker from '../core/pageTimeTracker';
 import { notChanged, isEmpty } from '../utils/util';
 
 const generate = function(type: string) {
@@ -34,6 +35,7 @@ const generate = function(type: string) {
     unbind(el: HTMLElement, binding: any) {
       let index = watch.findIndex(element => element === el);
       if (index !== -1) watch.splice(index, 1);
+      pageTimeTracker.change();
     },
     update(el: HTMLElement, binding: any, vnode: any) {}
   };

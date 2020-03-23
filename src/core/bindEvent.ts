@@ -1,3 +1,4 @@
+import { getReferrerInfo } from './referrerInfo';
 import { ISetConfigParam } from './../types/index';
 import actionTracker from './actionTracker';
 import pageTimeTracker from './pageTimeTracker';
@@ -13,45 +14,29 @@ function routeChange() {
 const install = function(conf?: ISetConfigParam) {
   if (getFlag('install')) return;
   setFlag('install');
+  if (conf) {
+    setConfig(conf);
+  }
+  const config = getConfig();
 
   //注入history事件
   hijackHistoryEvent();
 
-  if (conf) {
-    setConfig(conf);
-  }
-
-  const config = getConfig();
-
-  // if (config.analyseScript) {
-  //   let trackerToken = window.name.match(/\{"trackerToken":.*\}/);
-  //   if (trackerToken) {
-  //     const oHead = document.getElementsByTagName('head').item(0);
-  //     const oScript = document.createElement('script');
-  //     oScript.type = 'text/javascript';
-  //     oScript.src = config.analyseScript;
-  //     oHead.appendChild(oScript);
-  //   }
-  //   const oHead = document.getElementsByTagName('head').item(0);
-  //   const oScript = document.createElement('script');
-  //   oScript.type = 'text/javascript';
-  //   oScript.src = config.analyseScript;
-  //   oHead.appendChild(oScript);
-  // }
-
+  //自动埋页面
   if (config.autoTrackPage) {
     actionTracker.trackPage();
   }
 
-  if (config.performance) {
-    actionTracker.trackPerformance();
-  }
+  // if (config.performance) {
+  //   actionTracker.trackPerformance();
+  // }
 
+  //页面时间start
   if (config.pageTime) {
     pageTimeTracker.start();
   }
 
-  //单页面应用
+  //单页面应用routerchange
   if (config.watchHistoryAndHash) {
     if (typeof window.onpopstate === 'undefined') {
       window.addEventListener('hashchange', routeChange);
@@ -101,14 +86,17 @@ const install = function(conf?: ISetConfigParam) {
             (target.tagName === 'A' || target.tagName === 'BUTTON' || target.tagName === 'INPUT') &&
             !target._isWatchTrack)
         ) {
-          //劫持a链接注入本页面的code
           if (element.tagName === 'A' && element.href) {
-            if (/\?.*=/.test(element.href)) {
-              element.href = element.href.replace(/\?/, '?aaaaaa=1&');
-            } else if (/\?/.test(element.href) === false) {
-              element.href += '?aaaaaaa=1';
-            } else {
-              element.href = element.href.replace(/\?/, '?aaaaaa=1');
+            //劫持a链接注入本页面的code
+            const { pageCode } = getReferrerInfo();
+            if (typeof pageCode === 'string') {
+              if (/\?.*=/.test(element.href)) {
+                element.href = element.href.replace(/\?/, `?refferer-code=${pageCode}&`);
+              } else if (/\?/.test(element.href) === false) {
+                element.href += `?refferer-code=${pageCode}`;
+              } else {
+                element.href = element.href.replace(/\?/, `?refferer-code=${pageCode}`);
+              }
             }
 
             //延迟跳转 加大上报成功率

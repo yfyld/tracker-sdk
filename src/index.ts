@@ -8,6 +8,7 @@ try {
   const g: any = typeof window !== 'undefined' ? window : global;
   if (typeof g.process === 'undefined') g.process = {};
   g.process.env = {};
+  g._TrackerGlobalData = { _trackerFlag: {} }; //挂载全局变量
 }
 
 export * from './internal';

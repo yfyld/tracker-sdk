@@ -33,6 +33,10 @@ class PageTimeTracker {
     });
   }
 
+  resetStart() {
+    this.invalidEndTime = this.invalidStartTime = this.startTime = Date.now();
+  }
+
   end() {
     this.endTime = Date.now();
     let data = {
@@ -42,7 +46,7 @@ class PageTimeTracker {
       durationTime: this.endTime - this.startTime - this.totalInvalidTime,
       ...this.info
     };
-    if (this.config.autoTrackPage) {
+    if (this.config.autoTrackPage || this.info.trackId) {
       send(data);
     }
   }

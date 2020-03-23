@@ -4,6 +4,7 @@ import Base64 from './base64';
 export default function http(data: string | string[], isAjax = false, isSendBeacon = true) {
   return new Promise(resolve => {
     //const dataStr=Base64.encode(JSON.stringify(data));
+
     const dataStr = JSON.stringify(data);
     const url = `${SERVER_URL}?time=${Date.now()}`;
     if (
@@ -40,7 +41,7 @@ export default function http(data: string | string[], isAjax = false, isSendBeac
       img.onload = () => {
         resolve();
       };
-      img.src = `${url}&data=${dataStr}`;
+      img.src = `${url}&data=${encodeURIComponent(dataStr)}`;
     }
   });
 }

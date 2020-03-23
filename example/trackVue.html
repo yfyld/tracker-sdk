@@ -66,11 +66,10 @@
   </div> -->
   </body>
   <script>
-    Vue.directive('track-event', telescope.trackEvent);
-    Vue.directive('track-view', telescope.trackView);
-    Vue.directive('track-page', telescope.trackPage);
+    Vue.directive('track-event', telescope.vTrackEvent);
+    Vue.directive('track-view', telescope.vTrackView);
+    Vue.directive('track-page', telescope.vTrackPage);
     telescope.setConfig({ autoTrakerClick: true });
-
     telescope.login(1234);
     var Main = {
       data() {

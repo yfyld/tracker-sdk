@@ -1,10 +1,44 @@
 import isEqual from 'lodash-es/isEqual';
 import isFunction from 'lodash-es/isFunction';
 
+/**
+ *判断promise
+ *
+ * @export
+ * @param {*} f
+ * @returns
+ */
 export function isThenable(f: any) {
   return f && isFunction(f.then);
 }
 
+/**
+ *获取url参数 兼容微信支付 window.location.search改成window.location.href
+ *
+ * @export
+ * @param {string} variable
+ * @returns
+ */
+export function getQueryVariable(variable: string) {
+  var query = window.location.href.match(/\?(.*)$/);
+  if (!query) return null;
+  var vars = query[1].split('&');
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split('=');
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  }
+  return null;
+}
+
+/**
+ *获取cookie
+ *
+ * @export
+ * @param {string} name
+ * @returns
+ */
 export function getCookie(name: string) {
   let cookies = document.cookie.split('; ');
   for (let i in cookies) {
@@ -16,6 +50,16 @@ export function getCookie(name: string) {
   return null;
 }
 
+/**
+ *设置cookie
+ *
+ * @export
+ * @param {string} name
+ * @param {string} value
+ * @param {number} [expires=99999999999999]
+ * @param {string} [path='/']
+ * @param {string} [domain]
+ */
 export function setCookie(
   name: string,
   value: string,
@@ -38,6 +82,13 @@ export function setCookie(
   }
 }
 
+/**
+ *
+ *
+ * @export
+ * @param {*} binding
+ * @returns
+ */
 export function notChanged(binding: any) {
   if (binding.oldValue !== undefined) {
     if (typeof binding.value === 'object') {
@@ -58,13 +109,13 @@ export function isEmpty(binding: any) {
 }
 
 export function setFlag(key: string, value = true) {
-  window._trackerFlag = window._trackerFlag || {};
-  window._trackerFlag[key] = value;
+  _TrackerGlobalData._trackerFlag = _TrackerGlobalData._trackerFlag || {};
+  _TrackerGlobalData._trackerFlag[key] = value;
 }
 
 export function getFlag(key: string) {
-  window._trackerFlag = window._trackerFlag || {};
-  return window._trackerFlag[key] || false;
+  _TrackerGlobalData._trackerFlag = _TrackerGlobalData._trackerFlag || {};
+  return _TrackerGlobalData._trackerFlag[key] || false;
 }
 
 export function getUUID() {
@@ -75,6 +126,13 @@ export function getUUID() {
   });
 }
 
+/**
+ *获取dom path
+ *
+ * @export
+ * @param {HTMLElement} dom
+ * @returns
+ */
 export function getDomPath(dom: HTMLElement) {
   let path = [dom.id ? '#' + dom.id : dom.tagName.toLowerCase()];
   while (dom.parentNode && (dom.parentNode as HTMLElement).tagName !== 'BODY') {

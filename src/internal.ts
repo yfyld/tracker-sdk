@@ -1,29 +1,42 @@
-import track from './decoratiors/track';
+import tracker from './decoratiors/tracker';
 import actionTracker from './core/actionTracker';
-import pageTimeTracker from './core/pageTimeTracker';
+import timeTracker from './core/pageTimeTracker';
 import { getConfig, setConfig } from './core/config';
 import { sendAsync, send, sendSync } from './core/send';
 import { after, before } from './decoratiors/tools';
-import trackView from './directives/trackView';
-import trackEvent from './directives/trackEvent';
-import trackPage from './directives/trackPage';
+import vTrackView from './directives/trackView';
+import vTrackEvent from './directives/trackEvent';
+import vTrackPage from './directives/trackPage';
 import install from './core/bindEvent';
 import { login, logout } from './core/user';
+
+const trackDom = actionTracker.trackDom;
+const trackPage = actionTracker.trackPage;
+const trackEvent = actionTracker.trackEvent;
+const trackView = actionTracker.trackView;
+const trackLink = actionTracker.trackLink;
+const track = actionTracker.track;
 
 export {
   //装饰器
   before,
   after,
-  track,
+  tracker,
   //指令
-  trackView,
-  trackEvent,
-  trackPage,
+  vTrackView,
+  vTrackEvent,
+  vTrackPage,
   //
   install,
   //tracker
-  pageTimeTracker,
   actionTracker,
+  timeTracker,
+  trackDom,
+  trackPage,
+  trackEvent,
+  trackView,
+  trackLink,
+  track,
   //config
   setConfig,
   getConfig,
