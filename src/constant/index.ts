@@ -5,7 +5,6 @@ export const TRACKER_DATA_KEY = 'TRACKER_DATA_KEY';
 export const TRACKER_IDENTIFY = 'TRACKER_IDENTIFY';
 
 export const SEND_TYPE = {
-  COOKIE: 'COOKIE',
   SYNC: 'SYNC',
   ASYNC: 'ASYNC',
   UNLOAD: 'UNLOAD'

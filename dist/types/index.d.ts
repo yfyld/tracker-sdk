@@ -4,10 +4,6 @@ export interface ITrackerData {
     };
     actionType?: string;
     eventName?: string;
-    url?: string;
-    host?: string;
-    path?: string;
-    hash?: string;
     pageId?: string;
     domId?: string;
     domClass?: string;
@@ -17,100 +13,24 @@ export interface ITrackerData {
     domContent?: string;
     domPath?: string;
     trackId?: string;
+    refferrCode?: string;
 }
-export interface ITrackerParam {
-    custom?: string | {
-        [prop: string]: string | number | boolean;
-    };
-    actionType?: string;
-    eventName?: string;
-    pageId?: string;
-    trackId?: string;
-}
-export interface ITrackerDomData {
-    trackId: string;
-    actionType: string;
-    eventName: string;
-    domId: string;
-    domClass: string;
-    domHref: string;
-    domName: string;
-    domTag: string;
-    domContent: string;
-    domPath: string;
-}
-export interface IConfig {
-    serverUrl: string;
-    watchHistoryAndHash: boolean;
-    pageTime: boolean;
-    env: string;
-    console: boolean;
-    projectId: string;
-    version: string;
+export interface ICleintInfo {
+    clientWidth: number;
+    clientHeight: number;
     domain: string;
-    sendType: string;
-    delayTime: number;
-    autoTrackPage: boolean;
-    autoTrackClick: boolean;
-    autoInstall: boolean;
-    delayLink: boolean;
-    delayLinkTime: number;
-    useServerTime: boolean;
-    corssSubdomain: boolean;
-    analyseScript: string;
-    performance: boolean;
-    utokenKey: string;
 }
-export interface ISetConfigParam {
-    watchHistoryAndHash?: boolean;
-    pageTime?: boolean;
-    env?: string;
-    console?: boolean;
-    projectId?: string;
-    token?: string;
-    version?: string;
-    domain?: string;
-    sendType?: string;
-    delayTime?: number;
-    autoTrackPage?: boolean;
-    autoTrackClick?: boolean;
-    autoInstall?: boolean;
-    delayLink?: boolean;
-    delayLinkTime?: number;
-    useServerTime?: boolean;
-    corssSubdomain?: boolean;
-    analyseScript?: string;
-    identify?: string;
-    performance?: boolean;
+export interface ILibInfo {
+    libType: string;
+    libVersion: string;
 }
 export interface VisSenseConfig {
     percentageLimit?: number;
     timeLimit?: number;
     interval?: number;
 }
-export interface UserInfo {
-    uid?: string;
-    isLogin: boolean;
-}
 export interface EventParam<T> {
     canBubbleArg: boolean;
     cancelableArg: boolean;
     detailArg: T;
-}
-export interface PerformanceTime {
-    loadPage: number;
-    domReady: number;
-    redirect: number;
-    lookupDomain: number;
-    ttfb: number;
-    request: number;
-    loadEvent: number;
-    appcache: number;
-    unloadEvent: number;
-    connect: number;
-}
-export interface PerformanceEntryFilterOptions {
-    name: string;
-    entryType: string;
-    initiatorType: string;
 }

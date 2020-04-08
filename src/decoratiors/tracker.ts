@@ -1,10 +1,8 @@
-import isFunction from 'lodash/fp/isFunction';
-import propSet from 'lodash/fp/set';
-
 import actionTracker from '../core/actionTracker';
-
+import prop from 'ramda/src/prop';
+import set from 'ramda/src/set';
 const track = (partical: any) => {
-  if (isFunction(partical)) {
+  if (typeof partical === 'function') {
     return (target: Function | Object | string, key: string, descriptor: PropertyDescriptor) => {
       const value = function(...args: any) {
         const fn = partical.call(this, descriptor.value, this);
@@ -28,7 +26,7 @@ const track = (partical: any) => {
       //     }
       //   }, descriptor);
       // }
-      return propSet('value', value, descriptor);
+      return set(prop('value', descriptor), value, descriptor);
     };
   } else if (typeof partical === 'object') {
     return (target: any, key: string, descriptor: PropertyDescriptor) => {

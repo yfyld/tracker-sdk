@@ -1,7 +1,7 @@
 import { send } from './send';
 import { ACTION_TYPE } from '../constant';
-import { getConfig } from './config';
-import { IConfig, ITrackerData } from '../types';
+import { getConfig, IConfig } from './config';
+import { ITrackerData } from '../types';
 class PageTimeTracker {
   static instance: PageTimeTracker = null;
   startTime = Date.now();

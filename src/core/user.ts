@@ -1,14 +1,17 @@
-import { ACTION_TYPE, TRACKER_IDENTIFY } from '../constant/index';
-import { UserInfo } from '../types';
 import { getCookie, setCookie } from '../utils/util';
 import { getConfig } from './config';
 
-let userInfo: UserInfo = {
+export interface IUserInfo {
+  uid?: string;
+  isLogin: boolean;
+}
+
+let userInfo: IUserInfo = {
   uid: null,
   isLogin: false
 };
 
-export function setUserInfo(info: UserInfo) {
+export function setUserInfo(info: IUserInfo) {
   userInfo = {
     ...userInfo,
     ...info
@@ -19,7 +22,7 @@ export function getUserInfo() {
   return userInfo;
 }
 
-export function login(info: UserInfo) {
+export function login(info: IUserInfo) {
   const config = getConfig();
   if (info.uid) {
     let utoken = localStorage.getItem(config.utokenKey + '__' + info.uid);

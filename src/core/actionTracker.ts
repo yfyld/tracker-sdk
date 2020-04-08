@@ -1,13 +1,45 @@
-import { setReferrerInfo } from './referrerInfo';
-import { ITrackerParam } from './../types/index';
+import { setPageInfo } from './pageInfo';
+
 import { send } from './send';
 import { ACTION_TYPE } from '../constant';
 import { getDomPath } from '../utils/util';
 import { ITrackerData, VisSenseConfig } from '../types';
 import pageTimeTracker from './pageTimeTracker';
 import { getConfig } from './config';
-import performanceTracker from './performanceTracker';
+
 import VisSense from './viewTracker';
+
+export type ITrackerParam = { actionType: string } & (ITrackerPageParam | ITrackerEventParam);
+
+export interface ITrackerPageParam {
+  custom?: string | { [prop: string]: string | number | boolean };
+  trackId?: string;
+}
+
+export interface ITrackerViewParam {
+  custom?: string | { [prop: string]: string | number | boolean };
+  trackId?: string;
+}
+
+export interface ITrackerEventParam {
+  custom?: string | { [prop: string]: string | number | boolean };
+  eventName?: string;
+  pageId?: string;
+  trackId?: string;
+}
+
+export interface ITrackerDomParam {
+  trackId: string;
+  actionType: string;
+  eventName: string;
+  domId: string;
+  domClass: string;
+  domHref: string;
+  domName: string;
+  domTag: string;
+  domContent: string;
+  domPath: string;
+}
 
 /**
  *埋点入口类
@@ -26,18 +58,21 @@ class ActionTracker {
    * 埋点页面,如果需要埋页面时间重置时间 发送放pageChange发
    * @memberof ActionTracker
    */
-  trackPage(info: ITrackerParam = {}) {
+  trackPage(info: ITrackerPageParam = {}) {
     let data: ITrackerData = {
       actionType: ACTION_TYPE.PAGE,
       ...info
     };
 
+    //修改当前pageCode
     if (data.trackId) {
-      setReferrerInfo({ pageCode: data.trackId });
+      setPageInfo({ pageCode: data.trackId });
     }
 
     pageTimeTracker.info = data;
     const config = getConfig();
+
+    //如果不计算pageTime 则直接发送日志
     if (!config.pageTime) {
       send(data);
     } else {
@@ -48,10 +83,8 @@ class ActionTracker {
   /**
    *
    *事件埋点
-   * @param {ITrackerParam} [info={}]
-   * @memberof ActionTracker
    */
-  trackEvent(info: ITrackerParam = {}) {
+  trackEvent(info: ITrackerEventParam = {}) {
     let data: ITrackerData = {
       actionType: ACTION_TYPE.EVENT,
       eventName: 'CLICK',
@@ -66,7 +99,7 @@ class ActionTracker {
    * @param info
    * @param visSenseConfig
    */
-  trackView(dom: HTMLElement, info: ITrackerParam, visSenseConfig: VisSenseConfig = {}) {
+  trackView(dom: HTMLElement, info: ITrackerViewParam, visSenseConfig: VisSenseConfig = {}) {
     let data: ITrackerData = {
       actionType: ACTION_TYPE.VIEW,
       domId: dom.id,
@@ -93,10 +126,18 @@ class ActionTracker {
   /**
    *通用埋点入口 埋点类型自行控制
    *
-   * @param {ITrackerData} [info={}]
-   * @memberof ActionTracker
    */
-  track(info: ITrackerData = {}) {
+  track(info: ITrackerParam) {
+    switch (info.actionType) {
+      case ACTION_TYPE.EVENT:
+        this.trackEvent(info);
+        break;
+      case ACTION_TYPE.PAGE:
+        this.trackPage(info);
+        break;
+      default:
+        break;
+    }
     send(info);
   }
 
@@ -105,7 +146,7 @@ class ActionTracker {
    * @param linkDom
    * @param info
    */
-  trackLink(linkDom: HTMLLinkElement, info: ITrackerData = {}) {
+  trackLink(linkDom: HTMLLinkElement, info: ITrackerEventParam = {}) {
     linkDom.addEventListener(
       'click',
       function(e) {
@@ -127,7 +168,7 @@ class ActionTracker {
    * @returns
    * @memberof ActionTracker
    */
-  trackDom(dom: HTMLLinkElement | HTMLInputElement | HTMLLinkElement, info: ITrackerData = {}) {
+  trackDom(dom: HTMLLinkElement | HTMLInputElement | HTMLLinkElement, info: ITrackerEventParam = {}) {
     //防止频繁触发
     const _dom: any = dom;
     if (_dom.IS_TRACKED) {
@@ -142,7 +183,8 @@ class ActionTracker {
       _dom.IS_TRACKED = false;
     }, 1000);
 
-    let trackInfo: ITrackerData = {
+    let trackInfo = {
+      trackId: '',
       domId: dom.id,
       domClass: dom.className,
       domHref: (dom as HTMLLinkElement).href || '',
@@ -163,24 +205,6 @@ class ActionTracker {
       trackInfo = { ...trackInfo, ...info };
     }
     this.trackEvent(trackInfo);
-  }
-
-  /**
-   * 不启用
-   */
-  trackPerformance() {
-    const info = performanceTracker.getRenderTiming();
-    if (info.loadPage <= 0) {
-      setTimeout(() => {
-        this.trackPerformance();
-      }, 300);
-      return;
-    }
-    let data: ITrackerData = {
-      actionType: ACTION_TYPE.PERFORMANCE,
-      ...info
-    };
-    send(data);
   }
 }
 

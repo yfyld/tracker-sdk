@@ -1,15 +1,62 @@
 import { TRACKER_IDENTIFY, SERVER_URL } from './../constant/index';
-import { ISetConfigParam } from './../types/index';
+
 import { SEND_TYPE, ENVIRONMENT } from '../constant';
 import Base64 from '../utils/base64';
-import { IConfig } from '../types';
+import { getGlobal } from 'src/utils/util';
+
+export interface IConfig {
+  serverUrl: string;
+  watchHistoryAndHash: boolean;
+  pageTime: boolean;
+  env: string;
+  console: boolean;
+  projectId: string;
+  version: string;
+  domain: string;
+  sendType: string;
+  delayTime: number;
+  autoTrackPage: boolean;
+  autoTrackClick: boolean;
+  autoInstall: boolean;
+  delayLink: boolean;
+  delayLinkTime: number;
+  useServerTime: boolean;
+  corssSubdomain: boolean;
+  analyseScript: string;
+  performance: boolean;
+  utokenKey: string;
+}
+
+export interface ISetConfigParam {
+  watchHistoryAndHash?: boolean;
+  pageTime?: boolean;
+  env?: string;
+  console?: boolean;
+  projectId?: string;
+  token?: string;
+  version?: string;
+  domain?: string;
+  sendType?: string;
+  delayTime?: number;
+  autoTrackPage?: boolean;
+  autoTrackClick?: boolean;
+  autoInstall?: boolean;
+  delayLink?: boolean;
+  delayLinkTime?: number;
+  useServerTime?: boolean;
+  corssSubdomain?: boolean;
+  analyseScript?: string;
+  identify?: string;
+  performance?: boolean;
+}
+
 //default config
 let config: IConfig = {
   serverUrl: SERVER_URL,
   pageTime: true, //是否记录页面停留时间
   watchHistoryAndHash: true, //单页面应用监听
   env: ENVIRONMENT.PRODUCTION,
-  console: true,
+  console: getGlobal().process.env === 'production',
   projectId: null,
   version: null,
   domain: '',

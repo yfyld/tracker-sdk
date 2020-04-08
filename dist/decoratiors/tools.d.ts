@@ -1,4 +1,3 @@
-/// <reference types="lodash" />
-declare const before: import("lodash").CurriedFunction2<string | Object | Function, Function, (...args: any) => any>;
-declare const after: import("lodash").CurriedFunction2<string | Object | Function, Function, (...args: any) => Promise<any>>;
+declare const before: (...a: readonly any[]) => any;
+declare const after: (...a: readonly any[]) => any;
 export { before, after };

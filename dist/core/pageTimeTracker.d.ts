@@ -1,4 +1,5 @@
-import { IConfig, ITrackerData } from '../types';
+import { IConfig } from './config';
+import { ITrackerData } from '../types';
 declare class PageTimeTracker {
     static instance: PageTimeTracker;
     startTime: number;

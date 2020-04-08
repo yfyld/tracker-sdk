@@ -1,5 +1,4 @@
-import isEqual from 'lodash-es/isEqual';
-import isFunction from 'lodash-es/isFunction';
+import equals from 'ramda/src/equals';
 
 /**
  *判断promise
@@ -9,7 +8,7 @@ import isFunction from 'lodash-es/isFunction';
  * @returns
  */
 export function isThenable(f: any) {
-  return f && isFunction(f.then);
+  return f && typeof f.then === 'function';
 }
 
 /**
@@ -92,7 +91,7 @@ export function setCookie(
 export function notChanged(binding: any) {
   if (binding.oldValue !== undefined) {
     if (typeof binding.value === 'object') {
-      return isEqual(binding.value, binding.oldValue);
+      return equals(binding.value, binding.oldValue);
     } else {
       return binding.value === binding.oldValue;
     }
@@ -161,4 +160,8 @@ export function oneOf(one: any, all: any[]) {
     }
   }
   return false;
+}
+
+export function getGlobal() {
+  return typeof window !== 'undefined' ? window : global;
 }

@@ -1,8 +1,8 @@
-import { getReferrerInfo } from './referrerInfo';
-import { ISetConfigParam } from './../types/index';
+import { getPageInfo } from './pageInfo';
+
 import actionTracker from './actionTracker';
 import pageTimeTracker from './pageTimeTracker';
-import { getConfig, setConfig } from './config';
+import { getConfig, setConfig, ISetConfigParam } from './config';
 import { sendAsync } from './send';
 import hijackHistoryEvent from '../utils/hijackHistoryEvent';
 import { getFlag, setFlag } from '../utils/util';
@@ -88,7 +88,7 @@ const install = function(conf?: ISetConfigParam) {
         ) {
           if (element.tagName === 'A' && element.href) {
             //劫持a链接注入本页面的code
-            const { pageCode } = getReferrerInfo();
+            const { pageCode } = getPageInfo();
             if (typeof pageCode === 'string') {
               if (/\?.*=/.test(element.href)) {
                 element.href = element.href.replace(/\?/, `?refferer-code=${pageCode}&`);

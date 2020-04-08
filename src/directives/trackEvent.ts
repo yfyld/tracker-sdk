@@ -1,5 +1,4 @@
-import { ITrackerParam } from './../types/index';
-import actionTracker from '../core/actionTracker';
+import actionTracker, { ITrackerEventParam } from '../core/actionTracker';
 import { notChanged, isEmpty } from '../utils/util';
 
 export default function(el: HTMLElement, binding: any) {
@@ -7,9 +6,9 @@ export default function(el: HTMLElement, binding: any) {
     return;
   }
 
-  let info: ITrackerParam = {};
+  let info: ITrackerEventParam = {};
   if (typeof binding.value === 'object' && binding.value) {
-    info = binding.value as ITrackerParam;
+    info = binding.value as ITrackerEventParam;
   } else if (typeof binding.value === 'string') {
     info.trackId = binding.value;
   } else if (typeof binding.value === 'number') {
@@ -31,5 +30,5 @@ export default function(el: HTMLElement, binding: any) {
 
 function handleEvent(e: Event) {
   this._trackerInfo.eventName = e.type.toUpperCase();
-  actionTracker.trackDom(this, this._trackerInfo as ITrackerParam);
+  actionTracker.trackDom(this, this._trackerInfo as ITrackerEventParam);
 }

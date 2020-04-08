@@ -1,6 +1,6 @@
 import { getQueryVariable } from 'src/utils/util';
 
-interface IReferrerInfo {
+export interface IPageInfo {
   pageCode: string;
   referrerCode: string;
   referrerUrl: string;
@@ -11,12 +11,12 @@ interface IReferrerInfo {
   hash: string;
 }
 
-interface ISetReferrerInfo {
+interface ISetPageInfo {
   pageCode?: string;
   referrerCode?: string;
   referrerUrl?: string;
 }
-let referrerInfo: IReferrerInfo = {
+let pageInfo: IPageInfo = {
   pageCode: null,
   referrerCode: getQueryVariable('referrer-code'),
   referrerUrl: document.referrer || '',
@@ -27,9 +27,9 @@ let referrerInfo: IReferrerInfo = {
   title: document.title || ''
 };
 
-export const setReferrerInfo = (info: ISetReferrerInfo) => {
-  referrerInfo = {
-    ...referrerInfo,
+export const setPageInfo = (info: ISetPageInfo) => {
+  pageInfo = {
+    ...pageInfo,
     ...info,
     url: location.origin,
     host: location.host,
@@ -39,6 +39,6 @@ export const setReferrerInfo = (info: ISetReferrerInfo) => {
   };
 };
 
-export const getReferrerInfo = () => {
-  return referrerInfo;
+export const getPageInfo = () => {
+  return pageInfo;
 };

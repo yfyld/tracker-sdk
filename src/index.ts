@@ -1,4 +1,4 @@
-if (typeof Symbol === 'undefined' || typeof XMLHttpRequest === 'undefined') {
+if (typeof XMLHttpRequest === 'undefined') {
   throw new Error('tracker requires ie10+');
 }
 
@@ -8,7 +8,6 @@ try {
   const g: any = typeof window !== 'undefined' ? window : global;
   if (typeof g.process === 'undefined') g.process = {};
   g.process.env = {};
-  g._TrackerGlobalData = { _trackerFlag: {} }; //挂载全局变量
 }
-
+console.log(988889);
 export * from './internal';

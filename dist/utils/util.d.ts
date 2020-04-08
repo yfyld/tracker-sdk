@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /**
  *判断promise
  *
@@ -60,3 +61,4 @@ export declare function noop(): void;
 export declare function isString(value: any): boolean;
 export declare function getLocationHref(): string;
 export declare function oneOf(one: any, all: any[]): boolean;
+export declare function getGlobal(): (Window & typeof globalThis) | NodeJS.Global;

@@ -1,10 +1,11 @@
 import typescript from 'rollup-plugin-typescript2';
 import replace from 'rollup-plugin-replace';
-import { uglify } from 'rollup-plugin-uglify';
+
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-const env = process.env.NODE_ENV;
-
+import visualizer from 'rollup-plugin-visualizer';
+import { terser } from 'rollup-plugin-terser';
+const env = JSON.stringify(process.env.NODE_ENV || 'development');
 export default {
   input: './src/index.ts',
   output: {
@@ -18,37 +19,22 @@ export default {
     resolve(),
     commonjs({
       include: /node_modules/,
-      exclude: /lodash-es/,
-      namedExports: {
-        './src/index.ts': [
-          'before',
-          'after',
-          'track',
-          'trackView',
-          'trackEvent',
-          'trackPage',
-          'install',
-
-          'pageTimeTracker',
-          'actionTracker',
-          'setConfig',
-          'getConfig',
-
-          'sendAsync',
-          'send',
-          'sendSync',
-
-          'login',
-          'logout'
-        ]
-      }
-    }),
-    typescript({
-      tsconfig: 'tsconfig.json'
+      exclude: /lodash-es/
     }),
     replace({
-      ENV: JSON.stringify(env || 'development')
+      'process.env.NODE_ENV': env
     }),
-    env === 'production' && uglify()
+
+    typescript({
+      tsconfig: 'tsconfig.json',
+      objectHashIgnoreUnknownHack: true
+    }),
+
+    env === 'production' && terser(),
+    visualizer({
+      filename: './statistics.html',
+      title: 'My Bundle',
+      sourcemap: true
+    })
   ]
 };

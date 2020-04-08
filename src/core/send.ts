@@ -1,21 +1,36 @@
 import { ACTION_TYPE } from './../constant/index';
-import { getReferrerInfo, setReferrerInfo } from './referrerInfo';
+import { getPageInfo, setPageInfo, IPageInfo } from './pageInfo';
 import http from '../utils/http';
-import trackerInfo from './trackerInfo';
+import libInfo from './libInfo';
 import clientInfo from './clientInfo';
-import { getConfig } from './config';
+import { getConfig, IConfig } from './config';
 import { setCookie, getCookie, getUUID } from '../utils/util';
-import { getUserInfo } from './user';
+import { getUserInfo, IUserInfo } from './user';
 import { SEND_TYPE } from '../constant/index';
-import { IConfig, ITrackerData } from '../types';
+import { ITrackerData, ICleintInfo, ILibInfo } from '../types';
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 
-const allData: ITrackerData[] = [];
+export interface ILogDataDataItem extends ITrackerData, IPageInfo {
+  trackTime: number;
+  id: string;
+}
+
+export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
+  data: ILogDataDataItem[];
+  projectId: string;
+  version: string;
+}
+
+const allData: ILogDataDataItem[] = [];
 let timer: any = null;
 const uuid = getUUID();
 let index = 0;
 
+/**
+ * 同步发送
+ * @param data
+ */
 export function send(data: ITrackerData) {
   const config = getConfig();
   const { sendType } = config;
@@ -28,10 +43,13 @@ export function send(data: ITrackerData) {
 
 export function sendSync(data: ITrackerData) {
   const config = getConfig();
-  data = _generateData(data, config);
-  _sendToServer(data);
+  _sendToServer(_generateData(data, config));
 }
 
+/**
+ * 延迟发送
+ * @param data
+ */
 export function sendAsync(data?: ITrackerData) {
   if (!data) {
     if (allData.length > 0) {
@@ -43,8 +61,7 @@ export function sendAsync(data?: ITrackerData) {
   }
 
   const config = getConfig();
-  data = _generateData(data, config);
-  allData.push(data);
+  allData.push(_generateData(data, config));
   clearTimeout(timer);
   timer = setTimeout(() => {
     _sendToServer(allData);
@@ -52,53 +69,64 @@ export function sendAsync(data?: ITrackerData) {
   }, config.delayTime);
 }
 
-//发送到服务器
-function _sendToServer(data: ITrackerData | ITrackerData[], isAjax?: boolean) {
+/**
+ * 发送到服务器
+ * @param data
+ * @param isAjax
+ */
+function _sendToServer(data: ILogDataDataItem | ILogDataDataItem[], isAjax?: boolean) {
   if (!isArray(data)) {
     data = [data];
   }
   return http(JSON.stringify(_wrapperData(data)), isAjax);
 }
 
-function _wrapperData(data: ITrackerData[]) {
+/**
+ * 合并其他信息
+ * @param data
+ */
+function _wrapperData(data: ILogDataDataItem[]): ILogData {
   //console.log(JSON.stringify(data, null, 2));
   const config = getConfig();
   index++;
   return {
     data,
     ...clientInfo(),
-    ...trackerInfo,
+    ...libInfo,
     ...getUserInfo(),
     projectId: config.projectId,
     version: config.version
   };
 }
 
-function _generateData(data: ITrackerData, config: IConfig) {
+/**
+ * 补充埋点信息
+ * @param data
+ * @param config
+ */
+function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem {
   index++;
+  //序列化自定义
   if (isObject(data.custom)) {
-    data.custom = Object.entries(data.custom)
-      .map(([key, val]) => {
-        return `@${key}:${val}`;
-      })
-      .join('');
+    data.custom = JSON.stringify(data.custom);
   }
 
   const resutl = {
     ...data,
-    ...getReferrerInfo(),
+    ...getPageInfo(),
     trackTime: Date.now(),
     id: uuid + '-' + index
   };
 
   //单页面设置referrer
-  if (data.actionType === ACTION_TYPE.PAGE) {
+  if (resutl.actionType === ACTION_TYPE.PAGE) {
     setTimeout(() => {
-      setReferrerInfo({
-        referrerCode: data.trackId,
-        referrerUrl: data.url
+      setPageInfo({
+        referrerCode: resutl.trackId,
+        referrerUrl: resutl.url
       });
     }, 0);
   }
+
   return resutl;
 }
