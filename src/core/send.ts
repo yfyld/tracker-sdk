@@ -1,15 +1,15 @@
-import { ACTION_TYPE } from './../constant/index';
+import { ACTION_TYPE, SAFETY_KEY } from './../constant/index';
 import { getPageInfo, setPageInfo, IPageInfo } from './pageInfo';
 import http from '../utils/http';
 import libInfo from './libInfo';
 import clientInfo from './clientInfo';
 import { getConfig, IConfig } from './config';
-import { setCookie, getCookie, getUUID } from '../utils/util';
+import { getUUID } from '../utils/util';
 import { getUserInfo, IUserInfo } from './user';
 import { SEND_TYPE } from '../constant/index';
 import { ITrackerData, ICleintInfo, ILibInfo } from '../types';
-import isArray from 'lodash/isArray';
-import isObject from 'lodash/isObject';
+import { isArray, isObject } from './../utils/util';
+import pick from 'ramda/src/pick';
 
 export interface ILogDataDataItem extends ITrackerData, IPageInfo {
   trackTime: number;
@@ -17,7 +17,7 @@ export interface ILogDataDataItem extends ITrackerData, IPageInfo {
 }
 
 export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
-  data: ILogDataDataItem[];
+  items: ILogDataDataItem[];
   projectId: string;
   version: string;
 }
@@ -43,7 +43,7 @@ export function send(data: ITrackerData) {
 
 export function sendSync(data: ITrackerData) {
   const config = getConfig();
-  _sendToServer(_generateData(data, config));
+  _sendToServer([_generateData(data, config)]);
 }
 
 /**
@@ -74,10 +74,8 @@ export function sendAsync(data?: ITrackerData) {
  * @param data
  * @param isAjax
  */
-function _sendToServer(data: ILogDataDataItem | ILogDataDataItem[], isAjax?: boolean) {
-  if (!isArray(data)) {
-    data = [data];
-  }
+function _sendToServer(data: ILogDataDataItem[], isAjax?: boolean) {
+  console.log(JSON.stringify(data, null, 2));
   return http(JSON.stringify(_wrapperData(data)), isAjax);
 }
 
@@ -90,7 +88,7 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
   const config = getConfig();
   index++;
   return {
-    data,
+    items: data,
     ...clientInfo(),
     ...libInfo,
     ...getUserInfo(),
@@ -108,11 +106,16 @@ function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem {
   index++;
   //序列化自定义
   if (isObject(data.custom)) {
-    data.custom = JSON.stringify(data.custom);
+    const customStr = JSON.stringify(data.custom);
+    if (customStr.length <= 500) {
+      data.custom = JSON.stringify(data.custom);
+    }
   }
 
+  const newData = pick(SAFETY_KEY, data);
+
   const resutl = {
-    ...data,
+    ...newData,
     ...getPageInfo(),
     trackTime: Date.now(),
     id: uuid + '-' + index
@@ -122,7 +125,7 @@ function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem {
   if (resutl.actionType === ACTION_TYPE.PAGE) {
     setTimeout(() => {
       setPageInfo({
-        referrerCode: resutl.trackId,
+        referrerId: resutl.trackId,
         referrerUrl: resutl.url
       });
     }, 0);

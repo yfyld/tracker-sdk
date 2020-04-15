@@ -165,3 +165,11 @@ export function oneOf(one: any, all: any[]) {
 export function getGlobal() {
   return typeof window !== 'undefined' ? window : global;
 }
+
+export function isArray(o: any) {
+  return Object.prototype.toString.call(o) === '[object Array]';
+}
+
+export function isObject(o: any) {
+  return Object.prototype.toString.call(o) === '[object Object]';
+}

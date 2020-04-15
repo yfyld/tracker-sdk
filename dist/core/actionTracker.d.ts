@@ -7,12 +7,14 @@ export interface ITrackerPageParam {
         [prop: string]: string | number | boolean;
     };
     trackId?: string;
+    score?: number;
 }
 export interface ITrackerViewParam {
     custom?: string | {
         [prop: string]: string | number | boolean;
     };
     trackId?: string;
+    score?: number;
 }
 export interface ITrackerEventParam {
     custom?: string | {
@@ -21,6 +23,7 @@ export interface ITrackerEventParam {
     eventName?: string;
     pageId?: string;
     trackId?: string;
+    score?: number;
 }
 export interface ITrackerDomParam {
     trackId: string;

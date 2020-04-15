@@ -1,12 +1,15 @@
 import { SERVER_URL } from '../constant/index';
 import Base64 from './base64';
+import { getConfig } from 'src/core/config';
 
-export default function http(data: string | string[], isAjax = false, isSendBeacon = true) {
+export default function http(data: string, isAjax = false, isSendBeacon = true) {
+  const config = getConfig();
   return new Promise(resolve => {
     //const dataStr=Base64.encode(JSON.stringify(data));
+    const dataStr = data;
 
-    const dataStr = JSON.stringify(data);
-    const url = `${SERVER_URL}?time=${Date.now()}`;
+    const url = `${SERVER_URL}?${config.store ? `store=${config.store}&` : ''}time=${Date.now()}`;
+
     if (
       window.location.protocol === 'https:' &&
       isSendBeacon &&

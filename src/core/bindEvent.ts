@@ -88,14 +88,14 @@ const install = function(conf?: ISetConfigParam) {
         ) {
           if (element.tagName === 'A' && element.href) {
             //劫持a链接注入本页面的code
-            const { pageCode } = getPageInfo();
-            if (typeof pageCode === 'string') {
+            const { pageId } = getPageInfo();
+            if (typeof pageId === 'string') {
               if (/\?.*=/.test(element.href)) {
-                element.href = element.href.replace(/\?/, `?refferer-code=${pageCode}&`);
+                element.href = element.href.replace(/\?/, `?referrer-id=${pageId}&`);
               } else if (/\?/.test(element.href) === false) {
-                element.href += `?refferer-code=${pageCode}`;
+                element.href += `?referrer-id=${pageId}`;
               } else {
-                element.href = element.href.replace(/\?/, `?refferer-code=${pageCode}`);
+                element.href = element.href.replace(/\?/, `?referrer-id=${pageId}`);
               }
             }
 

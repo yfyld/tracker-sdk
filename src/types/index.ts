@@ -12,7 +12,7 @@ export interface ITrackerData {
   domContent?: string;
   domPath?: string;
   trackId?: string;
-  refferrCode?: string;
+  referrerId?: string;
 }
 
 export interface ICleintInfo {

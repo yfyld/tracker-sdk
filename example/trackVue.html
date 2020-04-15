@@ -7,7 +7,7 @@
     <meta name="tracker-id" content="vue-demo" />
     <title>Document</title>
     <link rel="stylesheet" href="./lib/element.css" />
-    <script src="../dist/telescope.min.js" tracker-key="eyJwcm9qZWN0SWQiOjEyLCJ0b2tlbiI6MTIzMTIzfQ=="></script>
+    <script src="../dist/telescope.min.js" tracker-key="eyJwcm9qZWN0SWQiOjJ9"></script>
     <style></style>
   </head>
   <body>
@@ -15,18 +15,19 @@
     <script src="./lib/element.js"></script>
     <div id="app">
       <template>
-        <div v-track-page="{trackId:'pageId'}">
+        <div v-track-page="{trackId:'zz1'}">
           <!-- <el-card id="a" class="box-card" v-track-view="{trackId:'pid2'}" v-show="value7">
             <div v-for="o in 4" :key="o" class="text item">
               v-show文本
             </div>
           </el-card> -->
-          <p v-track-page="{trackId:'pid3'}" v-if="value7">v-if文本文本文本文本文本</p>
+          <p v-track-page="{trackId:'zz2'}" v-if="value7">v-if文本文本文本文本文本</p>
 
           <el-button @click="value7=!value7" type="primary">切换显示</el-button>
-          <el-button type="primary" id="aaa" v-track-event.focus="{trackId:'123'}">focus</el-button>
-          <el-button type="primary" id="bbbb" v-track-event.click="'123'">click</el-button>
-          <el-button type="primary" id="ccc" v-track-event="trackId">click</el-button>
+          <el-button type="primary" id="aaa" v-track-event.focus="{trackId:'aa1'}">focus</el-button>
+          <el-button type="primary" id="bbbb" v-track-event.click="'aa3'">提交</el-button>
+          <el-button type="primary" id="ccc" v-track-event="'aa4'">保存</el-button>
+          <el-button type="primary" class="aaaaa" @click="handleClick">取消</el-button>
           <br />
           <br />
           <br />
@@ -77,6 +78,15 @@
           trackId: 'dsd',
           value7: false
         };
+      },
+      methods: {
+        handleClick() {
+          telescope.trackEvent({
+            trackId: 'aa5',
+            custom: { bbb: 1, ccc: true },
+            score: 29
+          });
+        }
       }
     };
     var Ctor = Vue.extend(Main);

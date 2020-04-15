@@ -9,5 +9,8 @@ try {
   if (typeof g.process === 'undefined') g.process = {};
   g.process.env = {};
 }
-console.log(988889);
+
+if (typeof _TrackerGlobalData === 'undefined') {
+  window._TrackerGlobalData = {};
+}
 export * from './internal';

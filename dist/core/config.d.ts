@@ -1,4 +1,5 @@
 export interface IConfig {
+    store: string;
     serverUrl: string;
     watchHistoryAndHash: boolean;
     pageTime: boolean;
@@ -21,6 +22,7 @@ export interface IConfig {
     utokenKey: string;
 }
 export interface ISetConfigParam {
+    store?: string;
     watchHistoryAndHash?: boolean;
     pageTime?: boolean;
     env?: string;

@@ -1,6 +1,6 @@
 export interface IPageInfo {
-    pageCode: string;
-    referrerCode: string;
+    pageId?: string;
+    referrerId?: string;
     referrerUrl: string;
     url: string;
     title: string;
@@ -9,8 +9,8 @@ export interface IPageInfo {
     hash: string;
 }
 interface ISetPageInfo {
-    pageCode?: string;
-    referrerCode?: string;
+    pageId?: string;
+    referrerId?: string;
     referrerUrl?: string;
 }
 export declare const setPageInfo: (info: ISetPageInfo) => void;

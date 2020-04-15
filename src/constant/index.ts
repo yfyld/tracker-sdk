@@ -1,8 +1,7 @@
-export const SERVER_URL = 'http://frontlo-collection.qa.91jkys.com/log.gif';
+//日志收集接口
+export const SERVER_URL = 'http://frontlo-collection.qa.91jkys.com/log.gif'; //'http://test.qa.91jkys.com:9342/log.gif';
 
-export const TRACKER_DATA_KEY = 'TRACKER_DATA_KEY';
-
-export const TRACKER_IDENTIFY = 'TRACKER_IDENTIFY';
+export const CUSTOM_TOKEN_KEY = 'TRACKER_IDENTIFY';
 
 export const SEND_TYPE = {
   SYNC: 'SYNC',
@@ -25,3 +24,20 @@ export const ACTION_TYPE = {
 export const DATA_KEY = {
   trackId: 'trackId'
 };
+
+export const SAFETY_KEY = [
+  'custom',
+  'actionType',
+  'eventName',
+  'pageId',
+  'domId',
+  'domClass',
+  'domHref',
+  'domName',
+  'domTag',
+  'domContent',
+  'domPath',
+  'trackId',
+  'referrerId',
+  'score'
+];

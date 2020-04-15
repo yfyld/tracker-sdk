@@ -1,4 +1,4 @@
-import { setPageInfo } from './pageInfo';
+import { setPageInfo, getPageInfo } from './pageInfo';
 
 import { send } from './send';
 import { ACTION_TYPE } from '../constant';
@@ -14,11 +14,13 @@ export type ITrackerParam = { actionType: string } & (ITrackerPageParam | ITrack
 export interface ITrackerPageParam {
   custom?: string | { [prop: string]: string | number | boolean };
   trackId?: string;
+  score?: number;
 }
 
 export interface ITrackerViewParam {
   custom?: string | { [prop: string]: string | number | boolean };
   trackId?: string;
+  score?: number;
 }
 
 export interface ITrackerEventParam {
@@ -26,6 +28,7 @@ export interface ITrackerEventParam {
   eventName?: string;
   pageId?: string;
   trackId?: string;
+  score?: number;
 }
 
 export interface ITrackerDomParam {
@@ -64,10 +67,9 @@ class ActionTracker {
       ...info
     };
 
-    //修改当前pageCode
-    if (data.trackId) {
-      setPageInfo({ pageCode: data.trackId });
-    }
+    //修改当前pageInfo
+    const { pageId } = getPageInfo();
+    setPageInfo({ pageId: data.trackId || null, referrerId: pageId || null });
 
     pageTimeTracker.info = data;
     const config = getConfig();

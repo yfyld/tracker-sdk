@@ -1,6 +1,5 @@
 export declare const SERVER_URL = "http://frontlo-collection.qa.91jkys.com/log.gif";
-export declare const TRACKER_DATA_KEY = "TRACKER_DATA_KEY";
-export declare const TRACKER_IDENTIFY = "TRACKER_IDENTIFY";
+export declare const CUSTOM_TOKEN_KEY = "TRACKER_IDENTIFY";
 export declare const SEND_TYPE: {
     SYNC: string;
     ASYNC: string;
@@ -19,3 +18,4 @@ export declare const ACTION_TYPE: {
 export declare const DATA_KEY: {
     trackId: string;
 };
+export declare const SAFETY_KEY: string[];
