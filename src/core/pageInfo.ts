@@ -41,5 +41,5 @@ export const setPageInfo = (info: ISetPageInfo) => {
 };
 
 export const getPageInfo = () => {
-  return pageInfo;
+  return { ...pageInfo };
 };

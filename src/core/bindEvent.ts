@@ -11,7 +11,7 @@ function routeChange() {
   pageTimeTracker.change();
 }
 
-const install = function(conf?: ISetConfigParam) {
+const install = function (conf?: ISetConfigParam) {
   if (getFlag('install')) return;
   setFlag('install');
   if (conf) {
@@ -31,12 +31,12 @@ const install = function(conf?: ISetConfigParam) {
   //   actionTracker.trackPerformance();
   // }
 
-  //页面时间start
-  if (config.pageTime) {
+  // 页面时间start
+  if (config.pageTime && !pageTimeTracker.info.trackId) {
     pageTimeTracker.start();
   }
 
-  //单页面应用routerchange
+  // 单页面应用routerchange
   if (config.watchHistoryAndHash) {
     if (typeof window.onpopstate === 'undefined') {
       window.addEventListener('hashchange', routeChange);
@@ -46,17 +46,21 @@ const install = function(conf?: ISetConfigParam) {
   }
 
   // onbeforeunload 和 onunload 都触发发送
-  let sended = false;
-  function onLeave() {
-    if (sended) {
-      return;
-    }
-    if (config.pageTime) {
-      pageTimeTracker.end();
-    }
-    sendAsync();
-    sended = true;
-  }
+
+  const onLeave = (() => {
+    let sended = false;
+    return () => {
+      if (sended) {
+        return;
+      }
+      if (config.pageTime) {
+        pageTimeTracker.end();
+      }
+      sendAsync();
+      sended = true;
+    };
+  })();
+
   window.addEventListener('beforeunload', onLeave);
   window.addEventListener('unload', onLeave);
 

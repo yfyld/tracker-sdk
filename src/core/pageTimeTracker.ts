@@ -1,3 +1,4 @@
+import { ITrackerPageParam } from './actionTracker';
 import { send } from './send';
 import { ACTION_TYPE } from '../constant';
 import { getConfig, IConfig } from './config';
@@ -12,6 +13,8 @@ class PageTimeTracker {
   config: IConfig = null;
   info: ITrackerData = {};
 
+  isStart = false;
+
   static getInstance() {
     if (!PageTimeTracker.instance) {
       PageTimeTracker.instance = new PageTimeTracker();
@@ -19,8 +22,18 @@ class PageTimeTracker {
     return PageTimeTracker.instance;
   }
 
-  start() {
-    this.startTime = Date.now();
+  start(data?: ITrackerPageParam) {
+    if (this.info.trackId) {
+      this.end();
+    }
+    if (data) {
+      this.info = data;
+    }
+    if (this.isStart) {
+      this.invalidEndTime = this.invalidStartTime = this.startTime = Date.now();
+      return;
+    }
+    this.isStart = true;
     this.config = getConfig();
     window.addEventListener('visibilitychange', () => {
       var isHidden = document.hidden;
@@ -33,39 +46,37 @@ class PageTimeTracker {
     });
   }
 
-  resetStart() {
-    this.invalidEndTime = this.invalidStartTime = this.startTime = Date.now();
-  }
-
   end() {
-    this.endTime = Date.now();
-    let data = {
-      actionType: ACTION_TYPE.PAGE,
-      startTime: this.startTime,
-      endTime: this.endTime,
-      durationTime: this.endTime - this.startTime - this.totalInvalidTime,
-      ...this.info
-    };
-    if (this.config.autoTrackPage || this.info.trackId) {
-      send(data);
-    }
+    this.invalidEndTime = this.invalidStartTime = this.endTime = Date.now();
+    this.toSend();
   }
 
+  /**
+   * url change 触发
+   */
   change() {
-    this.invalidEndTime = this.invalidStartTime = this.endTime = Date.now();
-    let data = {
-      actionType: ACTION_TYPE.PAGE,
-      startTime: this.startTime,
-      endTime: this.endTime,
-      trackId: this.info.trackId,
-      durationTime: this.endTime - this.startTime - this.totalInvalidTime,
-      ...this.info
-    };
+    this.end();
+    this.start();
+  }
+
+  toSend() {
     if (this.config.autoTrackPage || this.info.trackId) {
+      const durationTime = this.endTime - this.startTime - this.totalInvalidTime;
+      if (durationTime < 100 && this.info.trackId) {
+        // 手动发后100豪秒内不能自动change
+        return;
+      }
+      let data = {
+        actionType: ACTION_TYPE.PAGE,
+        startTime: this.startTime,
+        endTime: this.endTime,
+        trackId: this.info.trackId,
+        durationTime,
+        ...this.info
+      };
       send(data);
       this.info = {};
     }
-    this.startTime = this.endTime;
   }
 }
 

@@ -10,7 +10,7 @@ export default {
   input: './src/index.ts',
   output: {
     file: './dist/telescope.min.js',
-    name: 'telescope',
+    name: 'Telescope',
     format: 'umd',
     minify: true,
     sourcemap: true

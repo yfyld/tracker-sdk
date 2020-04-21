@@ -67,18 +67,17 @@ class ActionTracker {
       ...info
     };
 
-    //修改当前pageInfo
-    const { pageId } = getPageInfo();
-    setPageInfo({ pageId: data.trackId || null, referrerId: pageId || null });
+    // //修改当前pageInfo
+    // const { pageId } = getPageInfo();
+    // setPageInfo({ pageId: data.trackId || null, referrerId: pageId || null });
 
-    pageTimeTracker.info = data;
     const config = getConfig();
 
     //如果不计算pageTime 则直接发送日志
     if (!config.pageTime) {
       send(data);
     } else {
-      pageTimeTracker.resetStart();
+      pageTimeTracker.start(data);
     }
   }
 
@@ -114,7 +113,7 @@ class ActionTracker {
 
     var visobj = VisSense(dom);
     visobj.onPercentageTimeTestPassed(
-      function() {
+      function () {
         send(data);
       },
       {
@@ -151,7 +150,7 @@ class ActionTracker {
   trackLink(linkDom: HTMLLinkElement, info: ITrackerEventParam = {}) {
     linkDom.addEventListener(
       'click',
-      function(e) {
+      function (e) {
         e.preventDefault();
         setTimeout(() => {
           linkDom.click();

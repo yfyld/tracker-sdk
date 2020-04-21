@@ -64,7 +64,7 @@ let config: IConfig = {
   version: null,
   domain: '',
   sendType: SEND_TYPE.ASYNC, //发送日志方式 (同步发,异步延迟发,关闭浏览器前发送)
-  delayTime: 1000, //延迟发送的时间
+  delayTime: 500, //延迟发送的时间
   autoTrackPage: false, //自动埋点页面
   autoTrackClick: false, //自动埋点a,button,input
   autoInstall: true, //自定开始埋点监控

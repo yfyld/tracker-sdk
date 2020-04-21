@@ -43,11 +43,14 @@ export function send(data: ITrackerData) {
 
 export function sendSync(data: ITrackerData) {
   const config = getConfig();
-  _sendToServer([_generateData(data, config)]);
+  clearTimeout(timer);
+  allData.push(_generateData(data, config));
+  _sendToServer(allData);
+  allData.length = 0;
 }
 
 /**
- * 延迟发送
+ * 延迟发送  data不存在则马上发送
  * @param data
  */
 export function sendAsync(data?: ITrackerData) {
@@ -114,9 +117,15 @@ function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem {
 
   const newData = pick(SAFETY_KEY, data);
 
+  const pageInfo = getPageInfo();
+
+  if (data.actionType === 'PAGE') {
+    pageInfo.pageId = null;
+  }
+
   const resutl = {
     ...newData,
-    ...getPageInfo(),
+    ...pageInfo,
     trackTime: Date.now(),
     id: uuid + '-' + index
   };

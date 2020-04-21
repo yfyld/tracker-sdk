@@ -39,5 +39,8 @@ export const SAFETY_KEY = [
   'domPath',
   'trackId',
   'referrerId',
-  'score'
+  'score',
+  'startTime',
+  'endTime',
+  'durationTime'
 ];

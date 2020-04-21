@@ -7,7 +7,7 @@
     <meta name="tracker-id" content="vue-demo" />
     <title>Document</title>
     <link rel="stylesheet" href="./lib/element.css" />
-    <script src="../dist/telescope.min.js" tracker-key="eyJwcm9qZWN0SWQiOjJ9"></script>
+    <script src="../dist/Telescope.min.js" tracker-key="eyJwcm9qZWN0SWQiOjJ9"></script>
     <style></style>
   </head>
   <body>
@@ -67,11 +67,11 @@
   </div> -->
   </body>
   <script>
-    Vue.directive('track-event', telescope.vTrackEvent);
-    Vue.directive('track-view', telescope.vTrackView);
-    Vue.directive('track-page', telescope.vTrackPage);
-    telescope.setConfig({ autoTrakerClick: true });
-    telescope.login(1234);
+    Vue.directive('track-event', Telescope.vTrackEvent);
+    Vue.directive('track-view', Telescope.vTrackView);
+    Vue.directive('track-page', Telescope.vTrackPage);
+    Telescope.setConfig({ autoTrakerClick: true });
+    Telescope.login({ uid: 1234 });
     var Main = {
       data() {
         return {
@@ -81,7 +81,7 @@
       },
       methods: {
         handleClick() {
-          telescope.trackEvent({
+          Telescope.trackEvent({
             trackId: 'aa5',
             custom: { bbb: 1, ccc: true },
             score: 29
