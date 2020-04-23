@@ -1,17 +1,19 @@
+import { getPageInfo } from './pageInfo';
 import { ITrackerPageParam } from './actionTracker';
 import { send } from './send';
 import { ACTION_TYPE } from '../constant';
 import { getConfig, IConfig } from './config';
 import { ITrackerData } from '../types';
+import { actionTracker } from 'src/internal';
 class PageTimeTracker {
   static instance: PageTimeTracker = null;
   startTime = Date.now();
   endTime = Date.now();
-  invalidStartTime = Date.now();
-  invalidEndTime = Date.now();
-  totalInvalidTime = 0;
+  // invalidStartTime = Date.now();
+  // invalidEndTime = Date.now();
+  // totalInvalidTime = 0;
   config: IConfig = null;
-  info: ITrackerData = {};
+  info: ITrackerData = null;
 
   isStart = false;
 
@@ -23,14 +25,11 @@ class PageTimeTracker {
   }
 
   start(data?: ITrackerPageParam) {
-    if (this.info.trackId) {
-      this.end();
-    }
     if (data) {
       this.info = data;
     }
     if (this.isStart) {
-      this.invalidEndTime = this.invalidStartTime = this.startTime = Date.now();
+      this.startTime = Date.now();
       return;
     }
     this.isStart = true;
@@ -38,16 +37,18 @@ class PageTimeTracker {
     window.addEventListener('visibilitychange', () => {
       var isHidden = document.hidden;
       if (isHidden) {
-        this.invalidStartTime = Date.now();
+        this.end();
       } else {
-        this.invalidEndTime = Date.now();
-        this.totalInvalidTime += this.invalidEndTime - this.invalidStartTime;
+        this.start();
       }
     });
   }
 
   end() {
-    this.invalidEndTime = this.invalidStartTime = this.endTime = Date.now();
+    if (!this.info) {
+      return;
+    }
+    this.endTime = Date.now();
     this.toSend();
   }
 
@@ -60,22 +61,22 @@ class PageTimeTracker {
   }
 
   toSend() {
-    if (this.config.autoTrackPage || this.info.trackId) {
-      const durationTime = this.endTime - this.startTime - this.totalInvalidTime;
-      if (durationTime < 100 && this.info.trackId) {
+    if (this.config.autoTrackPage || this.info) {
+      const durationTime = this.endTime - this.startTime;
+      if (durationTime < 100) {
         // 手动发后100豪秒内不能自动change
         return;
       }
       let data = {
-        actionType: ACTION_TYPE.PAGE,
         startTime: this.startTime,
-        endTime: this.endTime,
-        trackId: this.info.trackId,
         durationTime,
-        ...this.info
+        ...this.info,
+        actionType: ACTION_TYPE.DURATION,
+        trackId: ''
       };
+
       send(data);
-      this.info = {};
+      this.info = null;
     }
   }
 }

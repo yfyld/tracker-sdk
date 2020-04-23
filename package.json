@@ -1,8 +1,8 @@
 {
-  "name": "tracker-sdk",
-  "version": "1.0.1",
+  "name": "@zyf2e/telescope",
+  "version": "1.0.2",
   "description": "",
-  "main": "dist/tracker.min.js",
+  "main": "dist/telescope.min.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "rollup -c -w",

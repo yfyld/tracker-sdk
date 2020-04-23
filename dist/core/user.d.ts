@@ -1,9 +1,9 @@
 export interface IUserInfo {
-    uid?: string;
+    uid?: string | number;
     isLogin: boolean;
 }
 export interface ISetUserInfo {
-    uid?: string;
+    uid?: string | number;
 }
 export declare function setUserInfo(info: IUserInfo): void;
 export declare function getUserInfo(): IUserInfo;

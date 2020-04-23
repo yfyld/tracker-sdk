@@ -6,12 +6,13 @@ import { getGlobal } from 'src/utils/util';
 
 export interface IConfig {
   store: string;
+  trackToken: string;
   serverUrl: string;
   watchHistoryAndHash: boolean;
   pageTime: boolean;
   env: string;
   console: boolean;
-  projectId: string;
+  projectId: number;
   version: string;
   domain: string;
   sendType: string;
@@ -23,8 +24,6 @@ export interface IConfig {
   delayLinkTime: number;
   useServerTime: boolean;
   corssSubdomain: boolean;
-  analyseScript: string;
-  performance: boolean;
   utokenKey: string;
 }
 
@@ -34,7 +33,7 @@ export interface ISetConfigParam {
   pageTime?: boolean;
   env?: string;
   console?: boolean;
-  projectId?: string;
+  projectId?: number;
   token?: string;
   version?: string;
   domain?: string;
@@ -47,14 +46,13 @@ export interface ISetConfigParam {
   delayLinkTime?: number;
   useServerTime?: boolean;
   corssSubdomain?: boolean;
-  analyseScript?: string;
   identify?: string;
-  performance?: boolean;
 }
 
 //default config
 let config: IConfig = {
   store: 'test',
+  trackToken: '', //日志验证
   serverUrl: SERVER_URL,
   pageTime: true, //是否记录页面停留时间
   watchHistoryAndHash: true, //单页面应用监听
@@ -64,7 +62,7 @@ let config: IConfig = {
   version: null,
   domain: '',
   sendType: SEND_TYPE.ASYNC, //发送日志方式 (同步发,异步延迟发,关闭浏览器前发送)
-  delayTime: 500, //延迟发送的时间
+  delayTime: 1000, //延迟发送的时间
   autoTrackPage: false, //自动埋点页面
   autoTrackClick: false, //自动埋点a,button,input
   autoInstall: true, //自定开始埋点监控
@@ -72,15 +70,13 @@ let config: IConfig = {
   delayLinkTime: 200,
   useServerTime: true, //使用服务器时间
   corssSubdomain: false, //false 域名不同认作为两个用户
-  analyseScript: '../dist/analyse.min.js',
-  performance: false,
   utokenKey: CUSTOM_TOKEN_KEY
 };
 
 //script tracker-key  config
-let scriptDom = document.querySelector('script[tracker-key]');
+let scriptDom = document.querySelector('script[track-token]');
 if (scriptDom) {
-  let newConfig = Base64.decode(scriptDom.getAttribute('tracker-key') || '');
+  let newConfig = Base64.decode(scriptDom.getAttribute('track-token') || '');
   if (newConfig) {
     config = { ...config, ...JSON.parse(newConfig) };
   }

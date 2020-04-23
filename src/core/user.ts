@@ -2,12 +2,12 @@ import { getCookie, setCookie } from '../utils/util';
 import { getConfig } from './config';
 
 export interface IUserInfo {
-  uid?: string;
+  uid?: string | number;
   isLogin: boolean;
 }
 
 export interface ISetUserInfo {
-  uid?: string;
+  uid?: string | number;
 }
 
 let userInfo: IUserInfo = {

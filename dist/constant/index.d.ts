@@ -13,7 +13,7 @@ export declare const ACTION_TYPE: {
     EVENT: string;
     PAGE: string;
     VIEW: string;
-    PERFORMANCE: string;
+    DURATION: string;
 };
 export declare const DATA_KEY: {
     trackId: string;

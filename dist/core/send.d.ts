@@ -7,7 +7,7 @@ export interface ILogDataDataItem extends ITrackerData, IPageInfo {
 }
 export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
     items: ILogDataDataItem[];
-    projectId: string;
+    projectId: number;
     version: string;
 }
 /**

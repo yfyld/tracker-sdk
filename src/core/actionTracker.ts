@@ -15,12 +15,14 @@ export interface ITrackerPageParam {
   custom?: string | { [prop: string]: string | number | boolean };
   trackId?: string;
   score?: number;
+  channel?: string;
 }
 
 export interface ITrackerViewParam {
   custom?: string | { [prop: string]: string | number | boolean };
   trackId?: string;
   score?: number;
+  channel?: string;
 }
 
 export interface ITrackerEventParam {
@@ -29,6 +31,7 @@ export interface ITrackerEventParam {
   pageId?: string;
   trackId?: string;
   score?: number;
+  channel?: string;
 }
 
 export interface ITrackerDomParam {
@@ -42,6 +45,13 @@ export interface ITrackerDomParam {
   domTag: string;
   domContent: string;
   domPath: string;
+}
+
+export interface ITrackerDurationParam {
+  custom?: string | { [prop: string]: string | number | boolean };
+  pageId?: string;
+  score?: number;
+  channel?: string;
 }
 
 /**
@@ -62,23 +72,35 @@ class ActionTracker {
    * @memberof ActionTracker
    */
   trackPage(info: ITrackerPageParam = {}) {
+    const config = getConfig();
+    if (config.pageTime) {
+      pageTimeTracker.end();
+    }
+
     let data: ITrackerData = {
       actionType: ACTION_TYPE.PAGE,
       ...info
     };
 
-    // //修改当前pageInfo
-    // const { pageId } = getPageInfo();
-    // setPageInfo({ pageId: data.trackId || null, referrerId: pageId || null });
-
-    const config = getConfig();
-
-    //如果不计算pageTime 则直接发送日志
-    if (!config.pageTime) {
-      send(data);
-    } else {
+    //修改当前pageInfo
+    const { pageId, url } = getPageInfo();
+    setPageInfo({ pageId: data.trackId || '', referrerId: pageId || '', referrerUrl: url || '' });
+    send(data);
+    if (config.pageTime) {
       pageTimeTracker.start(data);
     }
+  }
+
+  /**
+   * 时长埋点
+   * @memberof ActionTracker
+   */
+  trackDuration(info: ITrackerDurationParam = {}) {
+    let data: ITrackerData = {
+      actionType: ACTION_TYPE.DURATION,
+      ...info
+    };
+    send(data);
   }
 
   /**

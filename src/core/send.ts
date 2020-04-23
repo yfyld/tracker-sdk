@@ -2,6 +2,7 @@ import { ACTION_TYPE, SAFETY_KEY } from './../constant/index';
 import { getPageInfo, setPageInfo, IPageInfo } from './pageInfo';
 import http from '../utils/http';
 import libInfo from './libInfo';
+import getNetInfo from './netInfo';
 import clientInfo from './clientInfo';
 import { getConfig, IConfig } from './config';
 import { getUUID } from '../utils/util';
@@ -18,7 +19,7 @@ export interface ILogDataDataItem extends ITrackerData, IPageInfo {
 
 export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
   items: ILogDataDataItem[];
-  projectId: string;
+  projectId: number;
   version: string;
 }
 
@@ -54,18 +55,17 @@ export function sendSync(data: ITrackerData) {
  * @param data
  */
 export function sendAsync(data?: ITrackerData) {
-  if (!data) {
-    if (allData.length > 0) {
-      _sendToServer(allData);
-      allData.length = 0;
-    }
-    clearTimeout(timer);
+  const config = getConfig();
+  if (data) {
+    allData.push(_generateData(data, config));
+  }
+  clearTimeout(timer);
+  // 无参数或者大于10条发送发送
+  if ((!data && allData.length > 0) || allData.length >= 10) {
+    _sendToServer(allData);
+    allData.length = 0;
     return;
   }
-
-  const config = getConfig();
-  allData.push(_generateData(data, config));
-  clearTimeout(timer);
   timer = setTimeout(() => {
     _sendToServer(allData);
     allData.length = 0;
@@ -78,7 +78,7 @@ export function sendAsync(data?: ITrackerData) {
  * @param isAjax
  */
 function _sendToServer(data: ILogDataDataItem[], isAjax?: boolean) {
-  console.log(JSON.stringify(data, null, 2));
+  // console.log(JSON.stringify(data, null, 2));
   return http(JSON.stringify(_wrapperData(data)), isAjax);
 }
 
@@ -119,26 +119,21 @@ function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem {
 
   const pageInfo = getPageInfo();
 
+  const netInfo = getNetInfo();
+
   if (data.actionType === 'PAGE') {
     pageInfo.pageId = null;
   }
 
-  const resutl = {
+  const result = {
     ...newData,
     ...pageInfo,
+    ...netInfo,
     trackTime: Date.now(),
     id: uuid + '-' + index
   };
 
-  //单页面设置referrer
-  if (resutl.actionType === ACTION_TYPE.PAGE) {
-    setTimeout(() => {
-      setPageInfo({
-        referrerId: resutl.trackId,
-        referrerUrl: resutl.url
-      });
-    }, 0);
-  }
+  // console.log(JSON.stringify(result, null, 2));
 
-  return resutl;
+  return result;
 }

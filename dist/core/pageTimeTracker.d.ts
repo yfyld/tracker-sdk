@@ -5,9 +5,6 @@ declare class PageTimeTracker {
     static instance: PageTimeTracker;
     startTime: number;
     endTime: number;
-    invalidStartTime: number;
-    invalidEndTime: number;
-    totalInvalidTime: number;
     config: IConfig;
     info: ITrackerData;
     isStart: boolean;

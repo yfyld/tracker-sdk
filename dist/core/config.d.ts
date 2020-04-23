@@ -1,11 +1,12 @@
 export interface IConfig {
     store: string;
+    trackToken: string;
     serverUrl: string;
     watchHistoryAndHash: boolean;
     pageTime: boolean;
     env: string;
     console: boolean;
-    projectId: string;
+    projectId: number;
     version: string;
     domain: string;
     sendType: string;
@@ -17,8 +18,6 @@ export interface IConfig {
     delayLinkTime: number;
     useServerTime: boolean;
     corssSubdomain: boolean;
-    analyseScript: string;
-    performance: boolean;
     utokenKey: string;
 }
 export interface ISetConfigParam {
@@ -27,7 +26,7 @@ export interface ISetConfigParam {
     pageTime?: boolean;
     env?: string;
     console?: boolean;
-    projectId?: string;
+    projectId?: number;
     token?: string;
     version?: string;
     domain?: string;
@@ -40,9 +39,7 @@ export interface ISetConfigParam {
     delayLinkTime?: number;
     useServerTime?: boolean;
     corssSubdomain?: boolean;
-    analyseScript?: string;
     identify?: string;
-    performance?: boolean;
 }
 export declare function getConfig(): IConfig;
 export declare function setConfig(data: ISetConfigParam): void;

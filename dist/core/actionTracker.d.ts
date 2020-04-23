@@ -8,6 +8,7 @@ export interface ITrackerPageParam {
     };
     trackId?: string;
     score?: number;
+    channel?: string;
 }
 export interface ITrackerViewParam {
     custom?: string | {
@@ -15,6 +16,7 @@ export interface ITrackerViewParam {
     };
     trackId?: string;
     score?: number;
+    channel?: string;
 }
 export interface ITrackerEventParam {
     custom?: string | {
@@ -24,6 +26,7 @@ export interface ITrackerEventParam {
     pageId?: string;
     trackId?: string;
     score?: number;
+    channel?: string;
 }
 export interface ITrackerDomParam {
     trackId: string;
@@ -36,6 +39,14 @@ export interface ITrackerDomParam {
     domTag: string;
     domContent: string;
     domPath: string;
+}
+export interface ITrackerDurationParam {
+    custom?: string | {
+        [prop: string]: string | number | boolean;
+    };
+    pageId?: string;
+    score?: number;
+    channel?: string;
 }
 /**
  *埋点入口类
@@ -50,6 +61,11 @@ declare class ActionTracker {
      * @memberof ActionTracker
      */
     trackPage(info?: ITrackerPageParam): void;
+    /**
+     * 时长埋点
+     * @memberof ActionTracker
+     */
+    trackDuration(info?: ITrackerDurationParam): void;
     /**
      *
      *事件埋点

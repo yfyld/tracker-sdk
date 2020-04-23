@@ -18,7 +18,7 @@ export const ACTION_TYPE = {
   EVENT: 'EVENT',
   PAGE: 'PAGE',
   VIEW: 'VIEW',
-  PERFORMANCE: 'PERFORMANCE'
+  DURATION: 'DURATION'
 };
 
 export const DATA_KEY = {
@@ -42,5 +42,7 @@ export const SAFETY_KEY = [
   'score',
   'startTime',
   'endTime',
-  'durationTime'
+  'durationTime',
+  'channel',
+  'netType'
 ];

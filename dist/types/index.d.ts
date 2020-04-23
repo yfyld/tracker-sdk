@@ -4,6 +4,7 @@ export interface ITrackerData {
     };
     actionType?: string;
     eventName?: string;
+    score?: number;
     pageId?: string;
     domId?: string;
     domClass?: string;
@@ -14,6 +15,8 @@ export interface ITrackerData {
     domPath?: string;
     trackId?: string;
     referrerId?: string;
+    netType?: string;
+    channel?: string;
 }
 export interface ICleintInfo {
     clientWidth: number;

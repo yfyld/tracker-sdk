@@ -32,9 +32,9 @@ const install = function (conf?: ISetConfigParam) {
   // }
 
   // 页面时间start
-  if (config.pageTime && !pageTimeTracker.info.trackId) {
-    pageTimeTracker.start();
-  }
+  // if (config.pageTime && !pageTimeTracker.info.trackId) {
+  //   pageTimeTracker.start();
+  // }
 
   // 单页面应用routerchange
   if (config.watchHistoryAndHash) {

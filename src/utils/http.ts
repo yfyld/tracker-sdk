@@ -4,11 +4,13 @@ import { getConfig } from 'src/core/config';
 
 export default function http(data: string, isAjax = false, isSendBeacon = true) {
   const config = getConfig();
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     //const dataStr=Base64.encode(JSON.stringify(data));
     const dataStr = data;
 
-    const url = `${SERVER_URL}?${config.store ? `store=${config.store}&` : ''}time=${Date.now()}`;
+    const url = `${SERVER_URL}?${config.trackToken ? `trackToken=${config.trackToken}&` : ''}${
+      config.store ? `store=${config.store}&` : ''
+    }time=${Date.now()}`;
 
     if (
       window.location.protocol === 'https:' &&
@@ -27,10 +29,10 @@ export default function http(data: string, isAjax = false, isSendBeacon = true) 
       }
     }
 
-    if (isAjax || dataStr.length > 8000) {
+    if (isAjax) {
       const xhr = new XMLHttpRequest();
       xhr.withCredentials = true;
-      xhr.addEventListener('readystatechange', function() {
+      xhr.addEventListener('readystatechange', function () {
         if (this.readyState === 4) {
           resolve();
         }
