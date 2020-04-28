@@ -8,9 +8,7 @@ export default function http(data: string, isAjax = false, isSendBeacon = true) 
     //const dataStr=Base64.encode(JSON.stringify(data));
     const dataStr = data;
 
-    const url = `${SERVER_URL}?${config.trackToken ? `trackToken=${config.trackToken}&` : ''}${
-      config.store ? `store=${config.store}&` : ''
-    }time=${Date.now()}`;
+    const url = `${SERVER_URL}?${config.trackKey ? `trackKey=${config.trackKey}&` : ''}time=${Date.now()}`;
 
     if (
       window.location.protocol === 'https:' &&

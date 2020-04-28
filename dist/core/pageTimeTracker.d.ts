@@ -8,6 +8,7 @@ declare class PageTimeTracker {
     config: IConfig;
     info: ITrackerData;
     isStart: boolean;
+    backInfo: ITrackerData;
     static getInstance(): PageTimeTracker;
     start(data?: ITrackerPageParam): void;
     end(): void;

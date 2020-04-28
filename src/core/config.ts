@@ -1,12 +1,12 @@
 import { CUSTOM_TOKEN_KEY, SERVER_URL } from './../constant/index';
 
 import { SEND_TYPE, ENVIRONMENT } from '../constant';
-import Base64 from '../utils/base64';
-import { getGlobal } from 'src/utils/util';
+// import Base64 from '../utils/base64';
+// import { getGlobal } from 'src/utils/util';
 
 export interface IConfig {
   store: string;
-  trackToken: string;
+  trackKey: string;
   serverUrl: string;
   watchHistoryAndHash: boolean;
   pageTime: boolean;
@@ -29,6 +29,7 @@ export interface IConfig {
 
 export interface ISetConfigParam {
   store?: string;
+  trackKey?: string;
   watchHistoryAndHash?: boolean;
   pageTime?: boolean;
   env?: string;
@@ -52,7 +53,7 @@ export interface ISetConfigParam {
 //default config
 let config: IConfig = {
   store: 'test',
-  trackToken: '', //日志验证
+  trackKey: '', //日志验证
   serverUrl: SERVER_URL,
   pageTime: true, //是否记录页面停留时间
   watchHistoryAndHash: true, //单页面应用监听
@@ -74,11 +75,11 @@ let config: IConfig = {
 };
 
 //script tracker-key  config
-let scriptDom = document.querySelector('script[track-token]');
+let scriptDom = document.querySelector('script[track-key]');
 if (scriptDom) {
-  let newConfig = Base64.decode(scriptDom.getAttribute('track-token') || '');
-  if (newConfig) {
-    config = { ...config, ...JSON.parse(newConfig) };
+  let trackKey = scriptDom.getAttribute('track-key') || '';
+  if (trackKey) {
+    config.trackKey = trackKey;
   }
 }
 

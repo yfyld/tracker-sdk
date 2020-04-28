@@ -19,7 +19,6 @@ export interface ILogDataDataItem extends ITrackerData, IPageInfo {
 
 export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
   items: ILogDataDataItem[];
-  projectId: number;
   version: string;
 }
 
@@ -95,7 +94,6 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
     ...clientInfo(),
     ...libInfo,
     ...getUserInfo(),
-    projectId: config.projectId,
     version: config.version
   };
 }

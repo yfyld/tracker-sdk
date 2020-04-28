@@ -1,6 +1,6 @@
 export interface IConfig {
     store: string;
-    trackToken: string;
+    trackKey: string;
     serverUrl: string;
     watchHistoryAndHash: boolean;
     pageTime: boolean;
@@ -22,6 +22,7 @@ export interface IConfig {
 }
 export interface ISetConfigParam {
     store?: string;
+    trackKey?: string;
     watchHistoryAndHash?: boolean;
     pageTime?: boolean;
     env?: string;

@@ -17,6 +17,8 @@ class PageTimeTracker {
 
   isStart = false;
 
+  backInfo: ITrackerData = null;
+
   static getInstance() {
     if (!PageTimeTracker.instance) {
       PageTimeTracker.instance = new PageTimeTracker();
@@ -37,8 +39,11 @@ class PageTimeTracker {
     window.addEventListener('visibilitychange', () => {
       var isHidden = document.hidden;
       if (isHidden) {
+        this.backInfo = this.info;
         this.end();
       } else {
+        this.info = this.backInfo;
+        // todo 处理pageInfo
         this.start();
       }
     });
