@@ -79,7 +79,7 @@ const install = function (conf?: ISetConfigParam) {
       }
 
       for (let target of e.path) {
-        if (target.tagName === 'BODY' || !target.dataset) {
+        if (target.tagName === 'BODY') {
           break;
         }
 

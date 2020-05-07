@@ -30,7 +30,7 @@ export default {
       objectHashIgnoreUnknownHack: true
     }),
 
-    env === 'production' && terser(),
+    terser(),
     visualizer({
       filename: './statistics.html',
       title: 'My Bundle',

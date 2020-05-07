@@ -23,6 +23,7 @@ export interface IConfig {
 export interface ISetConfigParam {
     store?: string;
     trackKey?: string;
+    serverUrl?: string;
     watchHistoryAndHash?: boolean;
     pageTime?: boolean;
     env?: string;

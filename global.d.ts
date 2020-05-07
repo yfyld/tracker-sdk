@@ -25,3 +25,6 @@ declare module 'vue/types/vue' {
     'v-track-event': string | { trackId: string };
   }
 }
+
+declare const Sailer: any;
+declare const adapt: any;

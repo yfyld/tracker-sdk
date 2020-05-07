@@ -13,4 +13,5 @@ try {
 if (typeof _TrackerGlobalData === 'undefined') {
   window._TrackerGlobalData = {};
 }
+import './91jkys';
 export * from './internal';

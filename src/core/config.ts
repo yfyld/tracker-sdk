@@ -1,6 +1,6 @@
 import { CUSTOM_TOKEN_KEY, SERVER_URL } from './../constant/index';
 
-import { SEND_TYPE, ENVIRONMENT } from '../constant';
+import { SEND_TYPE } from '../constant';
 // import Base64 from '../utils/base64';
 // import { getGlobal } from 'src/utils/util';
 
@@ -30,6 +30,7 @@ export interface IConfig {
 export interface ISetConfigParam {
   store?: string;
   trackKey?: string;
+  serverUrl?: string;
   watchHistoryAndHash?: boolean;
   pageTime?: boolean;
   env?: string;
@@ -57,7 +58,7 @@ let config: IConfig = {
   serverUrl: SERVER_URL,
   pageTime: true, //是否记录页面停留时间
   watchHistoryAndHash: true, //单页面应用监听
-  env: ENVIRONMENT.PRODUCTION,
+  env: 'PRODUCT',
   console: true,
   projectId: null,
   version: null,
