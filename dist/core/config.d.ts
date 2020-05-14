@@ -20,28 +20,5 @@ export interface IConfig {
     corssSubdomain: boolean;
     utokenKey: string;
 }
-export interface ISetConfigParam {
-    store?: string;
-    trackKey?: string;
-    serverUrl?: string;
-    watchHistoryAndHash?: boolean;
-    pageTime?: boolean;
-    env?: string;
-    console?: boolean;
-    projectId?: number;
-    token?: string;
-    version?: string;
-    domain?: string;
-    sendType?: string;
-    delayTime?: number;
-    autoTrackPage?: boolean;
-    autoTrackClick?: boolean;
-    autoInstall?: boolean;
-    delayLink?: boolean;
-    delayLinkTime?: number;
-    useServerTime?: boolean;
-    corssSubdomain?: boolean;
-    identify?: string;
-}
 export declare function getConfig(): IConfig;
-export declare function setConfig(data: ISetConfigParam): void;
+export declare function setConfig(data: Partial<IConfig>): void;

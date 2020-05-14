@@ -2,7 +2,7 @@ import { getPageInfo } from './pageInfo';
 
 import actionTracker from './actionTracker';
 import pageTimeTracker from './pageTimeTracker';
-import { getConfig, setConfig, ISetConfigParam } from './config';
+import { getConfig, setConfig, IConfig } from './config';
 import { sendAsync } from './send';
 import hijackHistoryEvent from '../utils/hijackHistoryEvent';
 import { getFlag, setFlag } from '../utils/util';
@@ -11,7 +11,7 @@ function routeChange() {
   pageTimeTracker.change();
 }
 
-const install = function (conf?: ISetConfigParam) {
+const install = function (conf?: Partial<IConfig>) {
   if (getFlag('install')) return;
   setFlag('install');
   if (conf) {

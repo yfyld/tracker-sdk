@@ -11,11 +11,6 @@ export interface IPageInfo {
   hash: string;
 }
 
-interface ISetPageInfo {
-  pageId?: string;
-  referrerId?: string;
-  referrerUrl?: string;
-}
 let pageInfo: IPageInfo = {
   pageId: null,
   referrerId: getQueryVariable('referrer-id'),
@@ -27,7 +22,7 @@ let pageInfo: IPageInfo = {
   title: document.title || ''
 };
 
-export const setPageInfo = (info: ISetPageInfo) => {
+export const setPageInfo = (info: Partial<IPageInfo>) => {
   pageInfo = {
     ...pageInfo,
     ...info,

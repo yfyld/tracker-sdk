@@ -1,3 +1,3 @@
-import { ISetConfigParam } from './config';
-declare const install: (conf?: ISetConfigParam) => void;
+import { IConfig } from './config';
+declare const install: (conf?: Partial<IConfig>) => void;
 export default install;

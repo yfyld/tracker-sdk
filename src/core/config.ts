@@ -27,30 +27,6 @@ export interface IConfig {
   utokenKey: string;
 }
 
-export interface ISetConfigParam {
-  store?: string;
-  trackKey?: string;
-  serverUrl?: string;
-  watchHistoryAndHash?: boolean;
-  pageTime?: boolean;
-  env?: string;
-  console?: boolean;
-  projectId?: number;
-  token?: string;
-  version?: string;
-  domain?: string;
-  sendType?: string;
-  delayTime?: number;
-  autoTrackPage?: boolean;
-  autoTrackClick?: boolean;
-  autoInstall?: boolean;
-  delayLink?: boolean;
-  delayLinkTime?: number;
-  useServerTime?: boolean;
-  corssSubdomain?: boolean;
-  identify?: string;
-}
-
 //default config
 let config: IConfig = {
   store: 'test',
@@ -88,6 +64,6 @@ export function getConfig() {
   return config;
 }
 
-export function setConfig(data: ISetConfigParam) {
+export function setConfig(data: Partial<IConfig>) {
   config = { ...config, ...data };
 }

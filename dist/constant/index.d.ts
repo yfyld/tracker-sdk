@@ -1,4 +1,4 @@
-export declare const SERVER_URL = "http://frontlo-collection.91jkys.com/log.gif";
+export declare const SERVER_URL: string;
 export declare const CUSTOM_TOKEN_KEY = "TRACKER_IDENTIFY";
 export declare const SEND_TYPE: {
     SYNC: string;

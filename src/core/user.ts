@@ -6,10 +6,6 @@ export interface IUserInfo {
   isLogin: boolean;
 }
 
-export interface ISetUserInfo {
-  uid?: string | number;
-}
-
 let userInfo: IUserInfo = {
   uid: null,
   isLogin: false
@@ -26,7 +22,7 @@ export function getUserInfo() {
   return userInfo;
 }
 
-export function login(info: ISetUserInfo) {
+export function login(info: Partial<IUserInfo>) {
   const config = getConfig();
   if (info.uid) {
     let utoken = localStorage.getItem(config.utokenKey + '__' + info.uid);
