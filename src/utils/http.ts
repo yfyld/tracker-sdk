@@ -1,14 +1,12 @@
-import { SERVER_URL } from '../constant/index';
 import Base64 from './base64';
 import { getConfig } from 'src/core/config';
 
 export default function http(data: string, isAjax = false, isSendBeacon = true) {
-  const config = getConfig();
   return new Promise((resolve) => {
     //const dataStr=Base64.encode(JSON.stringify(data));
     const dataStr = data;
-
-    const url = `${SERVER_URL}?${config.trackKey ? `trackKey=${config.trackKey}&` : ''}time=${Date.now()}`;
+    const config = getConfig();
+    const url = `${config.serverUrl}?${config.trackKey ? `trackKey=${config.trackKey}&` : ''}time=${Date.now()}`;
 
     if (
       window.location.protocol === 'https:' &&

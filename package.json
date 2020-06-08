@@ -1,6 +1,6 @@
 {
   "name": "@zyf2e/telescope",
-  "version": "1.0.8",
+  "version": "1.0.15",
   "description": "",
   "main": "dist/telescope.min.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,8 @@
     "analyse": "rollup -c ./rollup.analyse.config.js --environment NODE_ENV:production",
     "build": "rollup -c --environment NODE_ENV:production",
     "test": "./node_modules/.bin/nightwatch --env",
-    "test-build": "rollup -c ./rollup.oneClass.config.js -w"
+    "test-build": "rollup -c ./rollup.oneClass.config.js -w",
+    "prepublish:": "npm run build"
   },
   "dependencies": {
     "ramda": "^0.27.0",
