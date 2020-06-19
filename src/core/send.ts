@@ -43,8 +43,13 @@ export function send(data: ITrackerData) {
 
 export function sendSync(data: ITrackerData) {
   const config = getConfig();
+  const newData = _generateData(data, config);
+  if (!newData) {
+    return;
+  }
+  allData.push(newData);
   clearTimeout(timer);
-  allData.push(_generateData(data, config));
+
   _sendToServer(allData);
   allData.length = 0;
 }
@@ -56,7 +61,11 @@ export function sendSync(data: ITrackerData) {
 export function sendAsync(data?: ITrackerData) {
   const config = getConfig();
   if (data) {
-    allData.push(_generateData(data, config));
+    const newData = _generateData(data, config);
+    if (!newData) {
+      return;
+    }
+    allData.push(newData);
   }
   clearTimeout(timer);
   // 无参数或者大于10条发送发送
@@ -103,8 +112,16 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
  * @param data
  * @param config
  */
-function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem {
+function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem | void {
   index++;
+
+  if (typeof config.beforeGenerateLog === 'function') {
+    data = config.beforeGenerateLog(data);
+    if (!data) {
+      return;
+    }
+  }
+
   //序列化自定义
   if (isObject(data.custom)) {
     const customStr = JSON.stringify(data.custom);

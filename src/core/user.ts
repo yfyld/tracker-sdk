@@ -4,6 +4,7 @@ import { getConfig } from './config';
 export interface IUserInfo {
   uid?: string | number;
   isLogin: boolean;
+  utoken?: string;
 }
 
 let userInfo: IUserInfo = {
@@ -11,7 +12,7 @@ let userInfo: IUserInfo = {
   isLogin: false
 };
 
-export function setUserInfo(info: IUserInfo) {
+export function setUserInfo(info: Partial<IUserInfo>) {
   userInfo = {
     ...userInfo,
     ...info

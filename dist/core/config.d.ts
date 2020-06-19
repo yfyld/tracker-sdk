@@ -19,6 +19,7 @@ export interface IConfig {
     useServerTime: boolean;
     corssSubdomain: boolean;
     utokenKey: string;
+    beforeGenerateLog: Function | null;
 }
 export declare function getConfig(): IConfig;
 export declare function setConfig(data: Partial<IConfig>): void;

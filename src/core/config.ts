@@ -25,6 +25,7 @@ export interface IConfig {
   useServerTime: boolean;
   corssSubdomain: boolean;
   utokenKey: string;
+  beforeGenerateLog: Function | null;
 }
 
 //default config
@@ -48,7 +49,8 @@ let config: IConfig = {
   delayLinkTime: 200,
   useServerTime: true, //使用服务器时间
   corssSubdomain: false, //false 域名不同认作为两个用户
-  utokenKey: CUSTOM_TOKEN_KEY
+  utokenKey: CUSTOM_TOKEN_KEY,
+  beforeGenerateLog: null
 };
 
 //script tracker-key  config
