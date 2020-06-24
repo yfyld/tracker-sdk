@@ -1,6 +1,6 @@
 import { setPageInfo, getPageInfo } from './pageInfo';
 
-import { send } from './send';
+import { send, sendAsync } from './send';
 import { ACTION_TYPE } from '../constant';
 import { getDomPath } from '../utils/util';
 import { ITrackerData, VisSenseConfig } from '../types';
@@ -170,17 +170,21 @@ class ActionTracker {
    * @param info
    */
   trackLink(linkDom: HTMLLinkElement, info: ITrackerEventParam = {}) {
-    linkDom.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault();
-        setTimeout(() => {
-          linkDom.click();
-        }, 300);
-      },
-      false
-    );
+    const config = getConfig();
+    if (config.delayLink) {
+      linkDom.addEventListener(
+        'click',
+        function (e) {
+          e.preventDefault();
+          setTimeout(() => {
+            linkDom.click();
+          }, config.delayLinkTime);
+        },
+        false
+      );
+    }
     this.trackDom(linkDom, info);
+    sendAsync();
   }
 
   /**

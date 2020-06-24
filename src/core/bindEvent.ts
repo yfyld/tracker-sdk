@@ -102,15 +102,7 @@ const install = function (conf?: Partial<IConfig>) {
                 element.href = element.href.replace(/\?/, `?referrer-id=${pageId}`);
               }
             }
-
-            //延迟跳转 加大上报成功率
-            if (config.delayLink) {
-              e.preventDefault();
-              setTimeout(() => {
-                actionTracker.trackDom(target);
-                element.click();
-              }, config.delayLinkTime);
-            }
+            actionTracker.trackLink(target);
           } else {
             actionTracker.trackDom(target);
           }

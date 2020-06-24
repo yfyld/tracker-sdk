@@ -10,7 +10,7 @@ if (/(pre|qa|127|192|)\.|localhost/.test(window.location.host)) {
 }
 
 if (/DeviceId/.test(ua)) {
-  const deviceIdMatch = ua.match(/DeviceId\((.*)\)/);
+  const deviceIdMatch = ua.match(/DeviceId\((.*?)\)/);
   if (deviceIdMatch && deviceIdMatch.length >= 2) {
     setUserInfo({
       utoken: deviceIdMatch[1]

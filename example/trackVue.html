@@ -26,7 +26,7 @@
           <el-button @click="value7=!value7" type="primary">切换显示</el-button>
           <el-button type="primary" id="aaa" v-track-event.focus="{trackId:'aa1'}">focus</el-button>
           <el-button type="primary" id="bbbb" v-track-event.click="'aa3'">提交</el-button>
-          <el-button type="primary" id="ccc" v-track-event="'aa4'">保存</el-button>
+          <a type="primary" id="ccc" href="http://www.baidu.com" v-track-event="'aa4'">链接</a>
           <el-button type="primary" class="aaaaa" @click="handleClick">取消</el-button>
           <br />
           <br />

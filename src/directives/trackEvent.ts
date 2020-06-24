@@ -1,7 +1,7 @@
 import actionTracker, { ITrackerEventParam } from '../core/actionTracker';
 import { notChanged, isEmpty } from '../utils/util';
 
-export default function(el: HTMLElement, binding: any) {
+export default function (el: HTMLElement, binding: any) {
   if (notChanged(binding) || isEmpty(binding)) {
     return;
   }
@@ -17,7 +17,7 @@ export default function(el: HTMLElement, binding: any) {
   el._trackerInfo = info;
   el._isWatchTrack = true; //去除自动点击埋点
 
-  let events = Object.keys(binding.modifiers).filter(modifier => {
+  let events = Object.keys(binding.modifiers).filter((modifier) => {
     return binding.modifiers[modifier];
   });
   if (!events.length) events.push('click');
@@ -30,5 +30,9 @@ export default function(el: HTMLElement, binding: any) {
 
 function handleEvent(e: Event) {
   this._trackerInfo.eventName = e.type.toUpperCase();
-  actionTracker.trackDom(this, this._trackerInfo as ITrackerEventParam);
+  if (this.tagName === 'A' && this.href) {
+    actionTracker.trackLink(this, this._trackerInfo as ITrackerEventParam);
+  } else {
+    actionTracker.trackDom(this, this._trackerInfo as ITrackerEventParam);
+  }
 }
