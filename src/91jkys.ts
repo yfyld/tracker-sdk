@@ -3,7 +3,7 @@ import { setUserInfo } from './core/user';
 // import { login } from './core/user';
 
 const ua = window.navigator.userAgent;
-if (/(pre|qa|127|192|)\.|localhost/.test(window.location.host)) {
+if (/(pre|qa|127|192)\.|localhost/.test(window.location.host) || /env\((pre|qa)\)/.test(ua)) {
   setConfig({
     serverUrl: `${window.location.protocol === 'http:' ? 'http:' : 'https:'}//frontlo-collection.qa.91jkys.com/log.gif`
   });

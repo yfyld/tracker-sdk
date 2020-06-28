@@ -1,6 +1,6 @@
 {
   "name": "@zyf2e/telescope",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "",
   "main": "dist/telescope.min.js",
   "types": "dist/index.d.ts",
