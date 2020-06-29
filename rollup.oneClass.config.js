@@ -1,6 +1,6 @@
-import babel from 'rollup-plugin-babel'
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
+import babel from 'rollup-plugin-babel';
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
 
 export default {
   input: './example/src/oneClass.js',
@@ -16,10 +16,10 @@ export default {
     babel(),
     commonjs({
       namedExports: {
-        './dist/tracker.min': [
+        './dist/telescope.min': [
           'before',
           'after',
-          'track',
+          'tracker',
           'trackView',
           'trackEvent',
           'trackPage',
@@ -40,4 +40,4 @@ export default {
       }
     })
   ]
-}
+};

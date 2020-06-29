@@ -1,10 +1,11 @@
 import actionTracker from '../core/actionTracker';
 import prop from 'ramda/src/prop';
 import set from 'ramda/src/set';
-const track = (partical: any) => {
+import { lensProp } from 'ramda';
+const tracker = (partical: any) => {
   if (typeof partical === 'function') {
     return (target: Function | Object | string, key: string, descriptor: PropertyDescriptor) => {
-      const value = function(...args: any) {
+      const value = function (...args: any) {
         const fn = partical.call(this, descriptor.value, this);
         if (typeof fn === 'function') {
           //参数为高阶函数
@@ -26,12 +27,13 @@ const track = (partical: any) => {
       //     }
       //   }, descriptor);
       // }
-      return set(prop('value', descriptor), value, descriptor);
+
+      return set(lensProp('value'), value, descriptor);
     };
   } else if (typeof partical === 'object') {
     return (target: any, key: string, descriptor: PropertyDescriptor) => {
       var oldValue = descriptor.value;
-      descriptor.value = function() {
+      descriptor.value = function () {
         const data = {
           ...partical
         };
@@ -44,7 +46,7 @@ const track = (partical: any) => {
     //参数为string 作为tarckId
     return (target: any, key: string, descriptor: PropertyDescriptor) => {
       var oldValue = descriptor.value;
-      descriptor.value = function() {
+      descriptor.value = function () {
         const data = {
           trackId: partical
         };
@@ -56,4 +58,4 @@ const track = (partical: any) => {
   }
 };
 
-export default track;
+export default tracker;

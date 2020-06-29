@@ -7,7 +7,7 @@ import curryN from 'ramda/src/curryN';
 const before = curryN(
   2,
   (trackFn: Function | string | Object, fn: Function) =>
-    function(...args: any) {
+    function (...args: any) {
       if (typeof trackFn === 'function') {
         try {
           let result = trackFn.apply(this, args);
@@ -25,15 +25,19 @@ const before = curryN(
         };
         actionTracker.track(data as ITrackerParam);
       }
-
-      return fn.apply(this, args);
+      const evalF = function () {
+        setTimeout(() => {
+          fn.apply(this, args);
+        }, 300);
+      };
+      return evalF.apply(this);
     }
 );
 
 const after = curryN(
   2,
   (trackFn: Function | string | Object, fn: Function) =>
-    function(...args: any) {
+    function (...args: any) {
       const r: Promise<any> = fn.apply(this, args);
 
       const evalF = () => {
@@ -57,7 +61,7 @@ const after = curryN(
       };
 
       if (isThenable(r)) {
-        return r.then(rr => {
+        return r.then((rr) => {
           evalF();
           return rr;
         });
