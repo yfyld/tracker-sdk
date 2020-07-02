@@ -3652,7 +3652,7 @@
     }
 
     try {
-      "development";
+      "production";
     } catch (e) {
       var g = typeof window !== 'undefined' ? window : commonjsGlobal;
       if (typeof g.process === 'undefined') g.process = {};
