@@ -2,12 +2,21 @@ import actionTracker from '../core/actionTracker';
 import pageTimeTracker from '../core/pageTimeTracker';
 import { notChanged, isEmpty } from '../utils/util';
 
+const findIndex = function (arr: any[], callback: (item: any, index: number) => {}) {
+  for (var i = 0, len = arr.length; i < len; i++) {
+    if (callback(arr[i], i)) {
+      return i;
+    }
+  }
+  return -1;
+};
+
 const generate = function (type: string) {
   let watch: any[] = [];
 
   const track = {
     bind(el: HTMLElement, binding: any, vnode: any) {
-      let index = watch.findIndex((element) => element === el);
+      let index = findIndex(watch, (element) => element === el);
       let isWatched = index !== -1;
       if (el.style.display === 'none') {
         if (!isWatched) watch.push(el);
@@ -33,7 +42,7 @@ const generate = function (type: string) {
       }
     },
     unbind(el: HTMLElement, binding: any) {
-      let index = watch.findIndex((element) => element === el);
+      let index = findIndex(watch, (element) => element === el);
       if (index !== -1) watch.splice(index, 1);
       pageTimeTracker.end();
     },
