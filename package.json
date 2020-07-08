@@ -8,7 +8,7 @@
     "dev": "rollup -c -w",
     "dev-analyse": "rollup -c ./rollup.analyse.config.js -w",
     "analyse": "rollup -c ./rollup.analyse.config.js --environment NODE_ENV:production",
-    "build": "rollup -c --environment NODE_ENV:production&&npm run publish",
+    "build": "rollup -c --environment NODE_ENV:production",
     "build:qa": "rollup -c --environment NODE_ENV:production",
     "publish:": "npm publish",
     "test": "./node_modules/.bin/nightwatch --env",
