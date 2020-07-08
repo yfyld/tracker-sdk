@@ -1,6 +1,6 @@
 {
   "name": "@zyf2e/telescope",
-  "version": "1.0.20",
+  "version": "1.0.22",
   "description": "",
   "main": "dist/telescope.min.js",
   "types": "dist/index.d.ts",
@@ -9,9 +9,22 @@
     "dev-analyse": "rollup -c ./rollup.analyse.config.js -w",
     "analyse": "rollup -c ./rollup.analyse.config.js --environment NODE_ENV:production",
     "build": "rollup -c --environment NODE_ENV:production",
+    "build:qa": "rollup -c --environment NODE_ENV:production",
+    "publish:": "npm publish",
     "test": "./node_modules/.bin/nightwatch --env",
     "test-build": "rollup -c ./rollup.oneClass.config.js -w",
-    "prepublish:": "npm run build"
+    "prepublish:": "npm run build",
+    "release": "release-it"
+  },
+  "release-it": {
+    "git": {
+      "commitArgs": [
+        "--no-verify"
+      ]
+    },
+    "npm": {
+      "publish": true
+    }
   },
   "dependencies": {
     "ramda": "^0.27.0",
@@ -33,6 +46,7 @@
     "chromedriver": "^73.0.0",
     "lodash": "^4.17.11",
     "nightwatch": "^1.0.19",
+    "release-it": "^13.6.4",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-node-resolve": "^4.2.3",
