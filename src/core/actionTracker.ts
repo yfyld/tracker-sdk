@@ -68,12 +68,19 @@ class ActionTracker {
     return ActionTracker.instance;
   }
   /**
-   * 埋点页面,如果需要埋页面时间重置时间 发送放pageChange发
+   * 埋点页面,
    * @memberof ActionTracker
    */
   trackPage(info: ITrackerPageParam = {}) {
+    const { pageId, url, referrerUrl } = getPageInfo();
+
+    if (!info.trackId && referrerUrl === window.location.href) {
+      //防止手动埋点后 自动埋点又埋一遍
+      return;
+    }
     const config = getConfig();
     if (config.pageTime) {
+      //如果需要埋页面时间重置时间 发送放pageChange发
       pageTimeTracker.end();
     }
 
@@ -83,7 +90,7 @@ class ActionTracker {
     };
 
     //修改当前pageInfo
-    const { pageId, url } = getPageInfo();
+
     setPageInfo({ pageId: data.trackId || '', referrerId: pageId || '', referrerUrl: url || '' });
     send(data);
     if (config.pageTime) {

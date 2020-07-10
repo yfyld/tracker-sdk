@@ -7,10 +7,6 @@ import { sendAsync } from './send';
 import hijackHistoryEvent from '../utils/hijackHistoryEvent';
 import { getFlag, setFlag } from '../utils/util';
 
-function routeChange() {
-  pageTimeTracker.change();
-}
-
 const install = function (conf?: Partial<IConfig>) {
   if (getFlag('install')) return;
   setFlag('install');
@@ -35,6 +31,13 @@ const install = function (conf?: Partial<IConfig>) {
   // if (config.pageTime && !pageTimeTracker.info.trackId) {
   //   pageTimeTracker.start();
   // }
+
+  function routeChange() {
+    pageTimeTracker.change();
+    if (config.autoTrackPage) {
+      actionTracker.trackPage();
+    }
+  }
 
   // 单页面应用routerchange
   if (config.watchHistoryAndHash) {

@@ -15,7 +15,7 @@ let pageInfo: IPageInfo = {
   pageId: null,
   referrerId: getQueryVariable('referrer-id'),
   referrerUrl: document.referrer || '',
-  url: location.origin,
+  url: location.href,
   host: location.host,
   path: location.pathname,
   hash: location.hash,
@@ -26,7 +26,7 @@ export const setPageInfo = (info: Partial<IPageInfo>) => {
   pageInfo = {
     ...pageInfo,
     ...info,
-    url: location.origin,
+    url: location.href,
     host: location.host,
     path: location.pathname,
     hash: location.hash,
