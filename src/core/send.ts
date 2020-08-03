@@ -41,13 +41,16 @@ export function send(data: ITrackerData) {
   }
 }
 
-export function sendSync(data: ITrackerData) {
-  const config = getConfig();
-  const newData = _generateData(data, config);
-  if (!newData) {
-    return;
+export function sendSync(data?: ITrackerData) {
+  if (data) {
+    const config = getConfig();
+    const newData = _generateData(data, config);
+    if (!newData) {
+      return;
+    }
+    allData.push(newData);
   }
-  allData.push(newData);
+
   clearTimeout(timer);
 
   _sendToServer(allData);

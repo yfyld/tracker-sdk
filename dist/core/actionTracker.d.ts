@@ -57,7 +57,7 @@ declare class ActionTracker {
     static instance: ActionTracker;
     static getInstance(): ActionTracker;
     /**
-     * 埋点页面,如果需要埋页面时间重置时间 发送放pageChange发
+     * 埋点页面,
      * @memberof ActionTracker
      */
     trackPage(info?: ITrackerPageParam): void;
