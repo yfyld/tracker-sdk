@@ -1,10 +1,6 @@
 {
   "name": "@zyf2e/telescope",
-<<<<<<< HEAD
   "version": "1.0.26",
-=======
-  "version": "1.0.25",
->>>>>>> a81ca157c2429b6a3e1a345869a4b1ebd1491bdd
   "description": "",
   "main": "dist/telescope.min.js",
   "types": "dist/index.d.ts",
