@@ -12,7 +12,7 @@
       <div>
         <div data-track="aa6" class="name">点击埋点id:aa6</div>
         <a data-track="aa7" href="http://www.baidu.com">埋链接</a>
-        <a href="###">自动埋链接</a>
+        <a href="//127.0.0.1:5501/sdk/example/trackDom.html###" id="aaaa">自动埋链接</a>
         <button id="btn" name="1111" value="121311">自动埋按钮</button>
         <div data-track='{"trackId":aa2,"aaa":"aa"}' class="name">
           <button>JSON</button>
@@ -23,6 +23,10 @@
   <script>
     Telescope.setConfig({
       autoTrackClick: true
+    });
+
+    document.getElementById('aaaa').addEventListener('click', function () {
+      console.log(9);
     });
   </script>
 </html>
