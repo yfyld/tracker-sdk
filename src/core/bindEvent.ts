@@ -93,15 +93,15 @@ const install = function (conf?: Partial<IConfig>) {
             (target.tagName === 'A' || target.tagName === 'BUTTON' || target.tagName === 'INPUT') &&
             !target._isWatchTrack)
         ) {
-          if (element.tagName === 'A' && element.href) {
+          if (element.tagName === 'A' && element.href && !/referrer\-id=/.test(element.href)) {
             //劫持a链接注入本页面的code
             const { pageId } = getPageInfo();
-            if (typeof pageId === 'string') {
+            if (pageId && typeof pageId === 'string') {
               if (/\?.*=/.test(element.href)) {
                 element.href = element.href.replace(/\?/, `?referrer-id=${pageId}&`);
               } else if (/\?/.test(element.href) === false) {
                 element.href += `?referrer-id=${pageId}`;
-              } else {
+              } else if (/^#/.test(element.href) === false) {
                 element.href = element.href.replace(/\?/, `?referrer-id=${pageId}`);
               }
             }
