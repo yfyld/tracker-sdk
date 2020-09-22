@@ -182,15 +182,16 @@ class ActionTracker {
       const delayFn = function (e: MouseEvent) {
         e.preventDefault();
         linkDom.removeEventListener('click', delayFn, false);
-        if (linkDom.href && /^https?:\/\//.test(linkDom.href)) {
+        const href = linkDom.getAttribute('href');
+        if (href && /^https?:\/\//.test(href)) {
           setTimeout(() => {
             linkDom.click();
           }, config.delayLinkTime);
-          return;
         }
       };
 
       linkDom.addEventListener('click', delayFn, false);
+      return;
     }
     this.trackDom(linkDom, info);
     sendAsync();

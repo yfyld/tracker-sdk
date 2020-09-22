@@ -105,7 +105,6 @@ const install = function (conf?: Partial<IConfig>) {
                 element.href = element.href.replace(/\?/, `?referrer-id=${pageId}`);
               }
             }
-            e.preventDefault();
             actionTracker.trackLink(target);
           } else {
             actionTracker.trackDom(target);
