@@ -82,7 +82,7 @@ const install = function (conf?: Partial<IConfig>) {
       }
 
       for (let target of e.path) {
-        if (target.tagName === 'BODY') {
+        if (target.tagName === 'BODY' || !target.getAttribute) {
           break;
         }
 
