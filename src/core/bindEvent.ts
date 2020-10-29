@@ -96,15 +96,14 @@ const install = function (conf?: Partial<IConfig>) {
           if (element.tagName === 'A' && element.href && !/referrer\-id=/.test(element.href)) {
             //劫持a链接注入本页面的code
             const { pageId } = getPageInfo();
-            if (pageId && typeof pageId === 'string') {
+            if (pageId && typeof pageId === 'string' && /:\/\//.test(element.href)) {
               if (/\?.*=/.test(element.href)) {
                 element.href = element.href.replace(/\?/, `?referrer-id=${pageId}&`);
               } else if (/\?/.test(element.href) === false) {
                 element.href += `?referrer-id=${pageId}`;
-              } else if (/^#/.test(element.href) === false) {
-                element.href = element.href.replace(/\?/, `?referrer-id=${pageId}`);
               }
             }
+
             actionTracker.trackLink(target);
           } else {
             actionTracker.trackDom(target);

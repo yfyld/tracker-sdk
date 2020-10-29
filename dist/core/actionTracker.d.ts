@@ -84,7 +84,7 @@ declare class ActionTracker {
      */
     track(info: ITrackerParam): void;
     /**
-     * a标签埋点 做300毫秒延迟跳转 确保埋点成功
+     * a标签埋点 做300毫秒延迟跳转 确保埋点成功 (暂时注销)
      * @param linkDom
      * @param info
      */

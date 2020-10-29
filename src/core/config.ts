@@ -24,7 +24,7 @@ export interface IConfig {
   delayLinkTime: number;
   useServerTime: boolean;
   corssSubdomain: boolean;
-  utokenKey: string;
+  deviceIdKey: string;
   beforeGenerateLog: Function | null;
 }
 
@@ -46,17 +46,17 @@ let config: IConfig = {
   autoTrackClick: true, //自动埋点a,button,input
   autoInstall: true, //自定开始埋点监控
   delayLink: true, //跳转延迟
-  delayLinkTime: 200,
+  delayLinkTime: 20000,
   useServerTime: true, //使用服务器时间
   corssSubdomain: false, //false 域名不同认作为两个用户
-  utokenKey: CUSTOM_TOKEN_KEY,
+  deviceIdKey: CUSTOM_TOKEN_KEY,
   beforeGenerateLog: null
 };
 
 //script tracker-key  config
-let scriptDom = document.querySelector('script[track-key]');
+let scriptDom = document.querySelector('script[track-key]') || document.querySelector('script[trackKey]');
 if (scriptDom) {
-  let trackKey = scriptDom.getAttribute('track-key') || '';
+  let trackKey = scriptDom.getAttribute('track-key') || scriptDom.getAttribute('trackKey') || '';
   if (trackKey) {
     config.trackKey = trackKey;
   }

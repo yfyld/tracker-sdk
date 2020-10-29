@@ -172,27 +172,27 @@ class ActionTracker {
   }
 
   /**
-   * a标签埋点 做300毫秒延迟跳转 确保埋点成功
+   * a标签埋点 做300毫秒延迟跳转 确保埋点成功 (暂时注销)
    * @param linkDom
    * @param info
    */
   trackLink(linkDom: HTMLLinkElement, info: ITrackerEventParam = {}) {
-    const config = getConfig();
-    if (config.delayLink) {
-      const delayFn = function (e: MouseEvent) {
-        e.preventDefault();
-        linkDom.removeEventListener('click', delayFn, false);
-        const href = linkDom.getAttribute('href');
-        if (href && /^https?:\/\//.test(href)) {
-          setTimeout(() => {
-            linkDom.click();
-          }, config.delayLinkTime);
-        }
-      };
+    // const config = getConfig();
+    // if (config.delayLink) {
+    //   const delayFn = function (e: MouseEvent) {
+    //     e.preventDefault();
+    //     linkDom.removeEventListener('click', delayFn, false);
+    //     const href = linkDom.getAttribute('href');
+    //     if (href && /^https?:\/\//.test(href)) {
+    //       setTimeout(() => {
+    //         linkDom.click();
+    //       }, config.delayLinkTime);
+    //     }
+    //   };
 
-      linkDom.addEventListener('click', delayFn, false);
-      return;
-    }
+    //   linkDom.addEventListener('click', delayFn, false);
+    //   return;
+    // }
     this.trackDom(linkDom, info);
     sendAsync();
   }

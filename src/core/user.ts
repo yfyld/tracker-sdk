@@ -5,6 +5,7 @@ export interface IUserInfo {
   uid?: string | number;
   isLogin: boolean;
   utoken?: string;
+  deviceId?: string;
 }
 
 let userInfo: IUserInfo = {
@@ -25,22 +26,25 @@ export function getUserInfo() {
 
 export function login(info: Partial<IUserInfo>) {
   const config = getConfig();
-  if (info.uid) {
-    let utoken = localStorage.getItem(config.utokenKey + '__' + info.uid);
-    if (utoken) {
-      setCookie(config.utokenKey, utoken);
-    }
-  }
-  setUserInfo({ ...info, isLogin: true });
+  let deviceId = userInfo.deviceId || getCookie(config.deviceIdKey);
+
+  const newUserInfo = { deviceId, ...info, isLogin: true };
+
+  // let uid = window.localStorage.getItem('UTOKEN_' + deviceId);
+  // if (info.uid && deviceId && uid) {
+  //   if (uid !== info.uid) {
+  //     newUserInfo.utoken = deviceId + '__' + info.uid;
+  //   } else {
+  //     newUserInfo.utoken = deviceId;
+  //   }
+  // }
+  // if (info.uid && !uid && deviceId) {
+  //   //将第一个登录用户utoken映射当前deviceId
+  //   window.localStorage.setItem('UTOKEN_' + deviceId, uid);
+  // }
+  setUserInfo(newUserInfo);
 }
 
-export function logout(moment: boolean = false) {
-  const config = getConfig();
-  const utoken = getCookie(config.utokenKey);
-
-  if (moment) {
-    localStorage.setItem(config.utokenKey + '__' + (userInfo.uid || ''), utoken);
-    setCookie(config.utokenKey, null);
-  }
-  userInfo = { uid: null, isLogin: false };
+export function logout() {
+  setUserInfo({ uid: null, isLogin: false, utoken: null });
 }

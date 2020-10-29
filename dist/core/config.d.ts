@@ -18,7 +18,7 @@ export interface IConfig {
     delayLinkTime: number;
     useServerTime: boolean;
     corssSubdomain: boolean;
-    utokenKey: string;
+    deviceIdKey: string;
     beforeGenerateLog: Function | null;
 }
 export declare function getConfig(): IConfig;
