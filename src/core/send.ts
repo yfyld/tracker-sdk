@@ -129,10 +129,11 @@ function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem | 
 
   //序列化自定义
   if (isObject(data.custom)) {
-    const customStr = JSON.stringify(data.custom);
-    if (customStr.length <= 500) {
-      data.custom = JSON.stringify(data.custom);
-    }
+    data.custom = JSON.stringify(data.custom);
+  }
+
+  if (typeof data.custom === 'string' && data.custom.length > 500) {
+    data.custom = data.custom.substr(0, 500) + '[超出500部分被裁剪]';
   }
 
   const newData = pick(SAFETY_KEY, data);
