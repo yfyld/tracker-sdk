@@ -46,5 +46,5 @@ export function login(info: Partial<IUserInfo>) {
 }
 
 export function logout() {
-  setUserInfo({ uid: null, isLogin: false, utoken: null });
+  setUserInfo({ uid: null, isLogin: false });
 }

@@ -18,6 +18,7 @@ export interface ILogDataDataItem extends ITrackerData, IPageInfo {
 }
 
 export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
+  customTime: number;
   items: ILogDataDataItem[];
   version: string;
 }
@@ -102,6 +103,7 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
   const config = getConfig();
   index++;
   return {
+    customTime: Date.now(),
     items: data,
     ...clientInfo(),
     ...libInfo,

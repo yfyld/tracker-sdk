@@ -5,7 +5,11 @@ import { login } from './core/user';
 try {
   const ua = window.navigator.userAgent;
   //跟进host 判断环境
-  if (/(pre|qa|127|192)\.|localhost/.test(window.location.host) || /env\((pre|qa)\)/.test(ua)) {
+  if (
+    /(pre|qa|127|192)\.|localhost/.test(window.location.host) ||
+    /env\((pre|qa)\)/.test(ua) ||
+    !window.location.host
+  ) {
     setConfig({
       serverUrl: `${
         window.location.protocol === 'http:' ? 'http:' : 'https:'

@@ -6,6 +6,7 @@ export interface ILogDataDataItem extends ITrackerData, IPageInfo {
     id: string;
 }
 export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
+    customTime: number;
     items: ILogDataDataItem[];
     version: string;
 }
