@@ -35,8 +35,9 @@ try {
         login({ uid });
       }
     });
+    //zyyd_login
   } else if (getCookie('login') === 'true') {
-    const uid = getCookie('user_id');
+    const uid = getCookie('user_id') || getCookie('wechat_uid');
     if (uid) {
       login({ uid });
     }
