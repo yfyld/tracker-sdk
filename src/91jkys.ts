@@ -28,7 +28,7 @@ try {
   }
 
   // 获取userId
-  if (typeof Sailer !== 'undefined' && Sailer.inApp) {
+  if (typeof Sailer !== 'undefined' && /AppInfo|tangyi/.test(ua)) {
     Sailer.ready(() => {
       const { uid } = Sailer.getUserInfo();
       if (uid > 0) {
