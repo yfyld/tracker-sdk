@@ -74,24 +74,15 @@ const install = function (conf?: Partial<IConfig>) {
   document.addEventListener(
     'click',
     (e: NewMouseEvent) => {
-      const path = (e as NewMouseEvent).path;
-      const element = e.target as HTMLElement & HTMLLinkElement;
+      let element = e.target as HTMLElement & HTMLLinkElement;
 
-      if (typeof e.path === 'undefined' || !e.isTrusted) {
-        return;
-      }
-
-      for (let target of e.path) {
-        if (target.tagName === 'BODY' || !target.getAttribute) {
-          break;
-        }
-
+      while (element && element.tagName && element.tagName.toUpperCase() !== 'HTML' && element.getAttribute) {
         //是否有埋点属性
         if (
-          target.getAttribute('data-track') ||
+          element.getAttribute('data-track') ||
           (config.autoTrackClick &&
-            (target.tagName === 'A' || target.tagName === 'BUTTON' || target.tagName === 'INPUT') &&
-            !target._isWatchTrack)
+            (element.tagName === 'A' || element.tagName === 'BUTTON' || element.tagName === 'INPUT') &&
+            !element._isWatchTrack)
         ) {
           if (element.tagName === 'A' && element.href && !/referrer\-id=/.test(element.href)) {
             //劫持a链接注入本页面的code
@@ -104,11 +95,13 @@ const install = function (conf?: Partial<IConfig>) {
               }
             }
 
-            actionTracker.trackLink(target);
+            actionTracker.trackLink(element);
           } else {
-            actionTracker.trackDom(target);
+            actionTracker.trackDom(element);
           }
         }
+
+        element = element.parentNode as HTMLElement & HTMLLinkElement;
       }
     },
     false
