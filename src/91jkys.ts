@@ -7,8 +7,7 @@ try {
   //跟进host 判断环境
   if (
     /(pre|qa|127|192)\.|localhost/.test(window.location.host) ||
-    /env\((pre|qa)\)/.test(ua) ||
-    !window.location.host
+    (/env\((pre|qa)\)/i.test(ua) && !window.location.host)
   ) {
     setConfig({
       serverUrl: `${
