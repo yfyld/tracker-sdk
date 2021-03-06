@@ -1,6 +1,6 @@
 //日志收集接口
 export const SERVER_URL = `${
-  window.location.protocol === 'https:' ? 'https:' : 'http:'
+  window.location.protocol === 'http:' ? 'http:' : 'https:'
 }//frontlo-collection.91jkys.com/log.gif`; //'http://test.qa.91jkys.com:9342/log.gif';
 
 export const CUSTOM_TOKEN_KEY = 'TRACKER_IDENTIFY';

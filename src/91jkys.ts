@@ -1,3 +1,4 @@
+import { setSessionInfo } from './core/sessionInfo';
 import { getCookie } from './utils/util';
 import { setConfig } from './core/config';
 import { setUserInfo } from './core/user';
@@ -17,11 +18,21 @@ try {
   }
 
   //获取客户端deviceId
-  if (/DeviceId/.test(ua)) {
+  if (/DeviceId/i.test(ua)) {
     const deviceIdMatch = ua.match(/DeviceId\((.*?)\)/);
     if (deviceIdMatch && deviceIdMatch.length >= 2) {
       setUserInfo({
         deviceId: deviceIdMatch[1]
+      });
+    }
+  }
+
+  if (/AppInfo/i.test(ua)) {
+    const AppInfoMatch = ua.match(/AppInfo\((.*?);(.*?)\)/);
+    if (AppInfoMatch && AppInfoMatch.length >= 3) {
+      setSessionInfo({
+        appId: AppInfoMatch[1],
+        appVersion: AppInfoMatch[2]
       });
     }
   }
