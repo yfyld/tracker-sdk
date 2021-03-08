@@ -35,7 +35,7 @@ try {
       }
     });
     //zyyd_login
-  } else if (getCookie('login') === 'true') {
+  } else {
     const uid = getCookie('user_id') || getCookie('wechat_uid');
     if (uid) {
       login({ uid });
