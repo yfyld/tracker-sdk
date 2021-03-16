@@ -3,6 +3,10 @@ export const SERVER_URL = `${
   window.location.protocol === 'http:' ? 'http:' : 'https:'
 }//frontlo-collection.91jkys.com/log.gif`; //'http://test.qa.91jkys.com:9342/log.gif';
 
+export const DEBUG_SERVER_URL = `${
+  window.location.protocol === 'http:' ? 'http:' : 'https:'
+}//frontlo-collection.91jkys.com/log.gif`;
+
 export const CUSTOM_TOKEN_KEY = 'TRACKER_IDENTIFY';
 
 export const SEND_TYPE = {
@@ -46,5 +50,6 @@ export const SAFETY_KEY = [
   'endTime',
   'durationTime',
   'channel',
-  'netType'
+  'netType',
+  'debug'
 ];

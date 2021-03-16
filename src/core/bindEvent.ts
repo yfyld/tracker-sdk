@@ -1,7 +1,7 @@
 import { getPageInfo } from './pageInfo';
 
 import actionTracker from './actionTracker';
-import pageTimeTracker from './pageTimeTracker';
+import durationTime from './durationTime';
 import { getConfig, setConfig, IConfig } from './config';
 import { sendAsync } from './send';
 import hijackHistoryEvent from '../utils/hijackHistoryEvent';
@@ -23,17 +23,7 @@ const install = function (conf?: Partial<IConfig>) {
     actionTracker.trackPage();
   }
 
-  // if (config.performance) {
-  //   actionTracker.trackPerformance();
-  // }
-
-  // 页面时间start
-  // if (config.pageTime && !pageTimeTracker.info.trackId) {
-  //   pageTimeTracker.start();
-  // }
-
   function routeChange() {
-    pageTimeTracker.change();
     if (config.autoTrackPage) {
       actionTracker.trackPage();
     }
@@ -48,6 +38,18 @@ const install = function (conf?: Partial<IConfig>) {
     window.addEventListener('historyPopstate', routeChange);
   }
 
+  // window.addEventListener('visibilitychange', () => {
+  //   var isHidden = document.hidden;
+  //   if (isHidden) {
+  //     this.backInfo = this.info;
+  //     this.end();
+  //   } else {
+  //     this.info = this.backInfo;
+  //     // todo 处理pageInfo
+  //     this.start();
+  //   }
+  // });
+
   // onbeforeunload 和 onunload 都触发发送
 
   const onLeave = (() => {
@@ -57,7 +59,7 @@ const install = function (conf?: Partial<IConfig>) {
         return;
       }
       if (config.pageTime) {
-        pageTimeTracker.end();
+        durationTime.end();
       }
       sendAsync();
       sended = true;

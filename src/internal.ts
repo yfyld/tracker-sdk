@@ -1,6 +1,6 @@
 import tracker from './decoratiors/tracker';
 import actionTracker from './core/actionTracker';
-import timeTracker from './core/pageTimeTracker';
+
 import { getConfig, setConfig } from './core/config';
 import { sendAsync, send, sendSync } from './core/send';
 import { after, before } from './decoratiors/tools';
@@ -30,7 +30,6 @@ export {
   install,
   //tracker
   actionTracker,
-  timeTracker,
   trackDom,
   trackPage,
   trackEvent,

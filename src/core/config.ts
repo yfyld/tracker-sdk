@@ -1,4 +1,4 @@
-import { CUSTOM_TOKEN_KEY, SERVER_URL } from './../constant/index';
+import { CUSTOM_TOKEN_KEY, DEBUG_SERVER_URL, SERVER_URL } from './../constant/index';
 
 import { SEND_TYPE } from '../constant';
 // import Base64 from '../utils/base64';
@@ -8,6 +8,7 @@ export interface IConfig {
   store: string;
   trackKey: string;
   serverUrl: string;
+  debugServerUrl: string;
   watchHistoryAndHash: boolean;
   pageTime: boolean;
   env: string;
@@ -33,6 +34,7 @@ let config: IConfig = {
   store: 'test',
   trackKey: '', //日志验证
   serverUrl: SERVER_URL,
+  debugServerUrl: DEBUG_SERVER_URL,
   pageTime: true, //是否记录页面停留时间
   watchHistoryAndHash: true, //单页面应用监听
   env: 'PRODUCT',

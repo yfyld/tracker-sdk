@@ -1,7 +1,6 @@
 import actionTracker from '../core/actionTracker';
-import pageTimeTracker from '../core/pageTimeTracker';
 import { notChanged, isEmpty } from '../utils/util';
-
+import durationTime from '../core/durationTime';
 const findIndex = function (arr: any[], callback: (item: any, index: number) => {}) {
   for (var i = 0, len = arr.length; i < len; i++) {
     if (callback(arr[i], i)) {
@@ -44,7 +43,19 @@ const generate = function (type: string) {
     unbind(el: HTMLElement, binding: any) {
       let index = findIndex(watch, (element) => element === el);
       if (index !== -1) watch.splice(index, 1);
-      pageTimeTracker.end();
+      if (type !== 'PAGE') {
+        let info: any = {};
+
+        if (typeof binding.value === 'object') {
+          info = binding.value;
+          //if (value.pageURL) args.push(value.pageURL)
+        } else if (typeof binding.value === 'string' && binding.value) {
+          info.trackId = binding.value;
+        }
+        if (info.trackId) {
+          durationTime.end(info.trackId);
+        }
+      }
     },
     update(el: HTMLElement, binding: any, vnode: any) {}
   };

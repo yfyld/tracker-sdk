@@ -16,11 +16,10 @@
     <div id="app">
       <template>
         <div v-track-page="{trackId:'zz1'}">
-          <!-- <el-card id="a" class="box-card" v-track-view="{trackId:'pid2'}" v-show="value7">
-            <div v-for="o in 4" :key="o" class="text item">
-              v-show文本
-            </div>
-          </el-card> -->
+          <div v-for="o in 40" :key="o" class="text item">滚动</div>
+          <el-card id="a" class="box-card" v-track-view="{trackId:'pid2'}">
+            <div v-for="o in 4" :key="o" class="text item">v-show文本</div>
+          </el-card>
           <p v-track-page="{trackId:'zz2'}" v-if="value7">v-if文本文本文本文本文本</p>
 
           <el-button @click="value7=!value7" type="primary">切换显示</el-button>

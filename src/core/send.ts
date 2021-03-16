@@ -1,9 +1,11 @@
+import { getClientInfo } from './clientInfo';
 import { ACTION_TYPE, SAFETY_KEY } from './../constant/index';
 import { getPageInfo, setPageInfo, IPageInfo } from './pageInfo';
 import http from '../utils/http';
 import libInfo from './libInfo';
 import getNetInfo from './netInfo';
-import clientInfo from './clientInfo';
+import durationTime from './durationTime';
+
 import { getConfig, IConfig } from './config';
 import { getUUID } from '../utils/util';
 import { getUserInfo, IUserInfo } from './user';
@@ -14,6 +16,7 @@ import pick from 'ramda/src/pick';
 
 export interface ILogDataDataItem extends ITrackerData, IPageInfo {
   trackTime: number;
+  startTime?: number;
   id: string;
 }
 
@@ -24,6 +27,7 @@ export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
 }
 
 const allData: ILogDataDataItem[] = [];
+const allDebugData: ILogDataDataItem[] = [];
 let timer: any = null;
 const uuid = getUUID();
 let index = 0;
@@ -45,42 +49,56 @@ export function send(data: ITrackerData) {
 export function sendSync(data?: ITrackerData) {
   if (data) {
     const config = getConfig();
-    const newData = _generateData(data, config);
+    const [newData, debug] = _generateData(data, config);
     if (!newData) {
       return;
     }
-    allData.push(newData);
+    if (debug) {
+      allDebugData.push(newData);
+    } else {
+      allData.push(newData);
+    }
   }
 
   clearTimeout(timer);
 
   _sendToServer(allData);
+  _sendToServer(allDebugData, true);
   allData.length = 0;
+  allDebugData.length = 0;
 }
 
 /**
- * 延迟发送  data不存在则马上发送
+ * 延迟发送  data不存在则马上发送allData
  * @param data
  */
 export function sendAsync(data?: ITrackerData) {
   const config = getConfig();
   if (data) {
-    const newData = _generateData(data, config);
+    const [newData, debug] = _generateData(data, config);
     if (!newData) {
       return;
     }
-    allData.push(newData);
+    if (debug) {
+      allDebugData.push(newData);
+    } else {
+      allData.push(newData);
+    }
   }
   clearTimeout(timer);
   // 无参数或者大于10条发送发送
-  if ((!data && allData.length > 0) || allData.length >= 10) {
+  if ((!data && allData.length > 0) || allData.length >= 10 || allDebugData.length >= 10) {
     _sendToServer(allData);
+    _sendToServer(allDebugData, true);
     allData.length = 0;
+    allDebugData.length = 0;
     return;
   }
   timer = setTimeout(() => {
     _sendToServer(allData);
+    _sendToServer(allDebugData, true);
     allData.length = 0;
+    allDebugData.length = 0;
   }, config.delayTime);
 }
 
@@ -91,6 +109,9 @@ export function sendAsync(data?: ITrackerData) {
  */
 function _sendToServer(data: ILogDataDataItem[], isAjax?: boolean) {
   // console.log(JSON.stringify(data, null, 2));
+  if (!data.length) {
+    return;
+  }
   return http(JSON.stringify(_wrapperData(data)), isAjax);
 }
 
@@ -105,7 +126,7 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
   return {
     customTime: Date.now(),
     items: data,
-    ...clientInfo(),
+    ...getClientInfo(),
     ...libInfo,
     ...getUserInfo(),
     version: config.version
@@ -117,13 +138,13 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
  * @param data
  * @param config
  */
-function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem | void {
+function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, boolean] {
   index++;
 
   if (typeof config.beforeGenerateLog === 'function') {
     data = config.beforeGenerateLog(data);
     if (!data) {
-      return;
+      return [null, !!data.debug];
     }
   }
 
@@ -144,6 +165,8 @@ function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem | 
 
   if (data.actionType === 'PAGE') {
     pageInfo.pageId = null;
+    //修改当前pageInfo
+    setPageInfo({ pageId: data.trackId || '', referrerId: pageInfo.pageId || '', referrerUrl: pageInfo.url || '' });
   }
 
   const result = {
@@ -154,7 +177,15 @@ function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem | 
     id: uuid + '-' + index
   };
 
+  if (result.actionType === 'PAGE' && !data.debug) {
+    const durationLogs = durationTime.end();
+    if (durationLogs && durationLogs.length) {
+      _sendToServer(durationLogs);
+    }
+    durationTime.start(result);
+  }
+
   // console.log(JSON.stringify(result, null, 2));
 
-  return result;
+  return [result, !!data.debug];
 }

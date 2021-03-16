@@ -2,6 +2,7 @@ interface Window {
   test: any;
   Event: any;
   CustomEvent: any;
+  wx: any;
   _trackerFlag: { [propName: string]: any };
   _trackerPageId: string;
   _trackerAnalyseDisableDide: boolean;

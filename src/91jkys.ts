@@ -1,5 +1,5 @@
-import { setSessionInfo } from './core/sessionInfo';
-import { getCookie } from './utils/util';
+import { setClientInfo } from './core/clientInfo';
+import { getCookie, getQueryVariable, inMin, inWechat } from './utils/util';
 import { setConfig } from './core/config';
 import { setUserInfo } from './core/user';
 import { login } from './core/user';
@@ -27,10 +27,11 @@ try {
     }
   }
 
+  //获取appID 和app版本
   if (/AppInfo/i.test(ua)) {
     const AppInfoMatch = ua.match(/AppInfo\((.*?);(.*?)\)/);
     if (AppInfoMatch && AppInfoMatch.length >= 3) {
-      setSessionInfo({
+      setClientInfo({
         appId: AppInfoMatch[1],
         appVersion: AppInfoMatch[2]
       });
@@ -46,7 +47,7 @@ try {
       }
     });
     //zyyd_login
-  } else if (getCookie('login') === 'true') {
+  } else {
     const uid = getCookie('user_id') || getCookie('wechat_uid');
     if (uid) {
       login({ uid });

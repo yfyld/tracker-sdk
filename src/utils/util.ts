@@ -39,7 +39,7 @@ export function getQueryVariable(variable: string) {
  * @returns
  */
 export function getCookie(name: string) {
-  let cookies = document.cookie.split('; ');
+  let cookies = document.cookie.split(';');
   for (let i in cookies) {
     let arr = cookies[i].split('=');
     if (name == arr[0]) {
@@ -118,7 +118,7 @@ export function getFlag(key: string) {
 }
 
 export function getUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
@@ -173,3 +173,7 @@ export function isArray(o: any) {
 export function isObject(o: any) {
   return Object.prototype.toString.call(o) === '[object Object]';
 }
+
+export const inWechat = false;
+
+export const inMin = false;

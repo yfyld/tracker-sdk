@@ -1,10 +1,11 @@
-import { setPageInfo, getPageInfo } from './pageInfo';
+import { getPageInfo } from './pageInfo';
 
 import { send, sendAsync } from './send';
 import { ACTION_TYPE } from '../constant';
 import { getDomPath } from '../utils/util';
 import { ITrackerData, VisSenseConfig } from '../types';
-import pageTimeTracker from './pageTimeTracker';
+
+import durationTime from './durationTime';
 import { getConfig } from './config';
 
 import VisSense from './viewTracker';
@@ -72,34 +73,21 @@ class ActionTracker {
    * @memberof ActionTracker
    */
   trackPage(info: ITrackerPageParam = {}) {
-    const { pageId, url, referrerUrl } = getPageInfo();
-
-    if (!info.trackId && referrerUrl === window.location.href) {
+    const prePageInfo = getPageInfo();
+    if ((!info.trackId || info.trackId === prePageInfo.pageId) && prePageInfo.referrerUrl === window.location.href) {
       //防止手动埋点后 自动埋点又埋一遍
       return;
-    }
-    const config = getConfig();
-    if (config.pageTime) {
-      //如果需要埋页面时间重置时间 发送放pageChange发
-      pageTimeTracker.end();
     }
 
     let data: ITrackerData = {
       actionType: ACTION_TYPE.PAGE,
       ...info
     };
-
-    //修改当前pageInfo
-
-    setPageInfo({ pageId: data.trackId || '', referrerId: pageId || '', referrerUrl: url || '' });
     send(data);
-    if (config.pageTime) {
-      pageTimeTracker.start(data);
-    }
   }
 
   /**
-   * 时长埋点
+   * 时长埋点 待移除
    * @memberof ActionTracker
    */
   trackDuration(info: ITrackerDurationParam = {}) {
@@ -154,7 +142,7 @@ class ActionTracker {
   }
 
   /**
-   *通用埋点入口 埋点类型自行控制
+   *通用埋点入口 根据埋点类型调用
    *
    */
   track(info: ITrackerParam) {

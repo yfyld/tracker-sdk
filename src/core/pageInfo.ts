@@ -25,14 +25,13 @@ let pageInfo: IPageInfo = {
 export const setPageInfo = (info: Partial<IPageInfo>) => {
   pageInfo = {
     ...pageInfo,
-    ...info,
     url: location.href,
     host: location.host,
     path: location.pathname,
     hash: location.hash,
-    title: document.title || ''
+    title: document.title || '',
+    ...info
   };
-  (window as any).aaa = pageInfo;
 };
 
 export const getPageInfo = () => {
