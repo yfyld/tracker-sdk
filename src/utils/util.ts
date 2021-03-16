@@ -118,7 +118,7 @@ export function getFlag(key: string) {
 }
 
 export function getUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
@@ -173,3 +173,7 @@ export function isArray(o: any) {
 export function isObject(o: any) {
   return Object.prototype.toString.call(o) === '[object Object]';
 }
+
+export const inMin = /miniprogram/i.test(window.navigator.userAgent);
+
+export const inWechat = !inMin && /micromessenger/i.test(window.navigator.userAgent);

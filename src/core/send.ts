@@ -3,7 +3,7 @@ import { getPageInfo, setPageInfo, IPageInfo } from './pageInfo';
 import http from '../utils/http';
 import libInfo from './libInfo';
 import getNetInfo from './netInfo';
-import clientInfo from './clientInfo';
+import { getClientInfo } from './clientInfo';
 import { getConfig, IConfig } from './config';
 import { getUUID } from '../utils/util';
 import { getUserInfo, IUserInfo } from './user';
@@ -105,7 +105,7 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
   return {
     customTime: Date.now(),
     items: data,
-    ...clientInfo(),
+    ...getClientInfo(),
     ...libInfo,
     ...getUserInfo(),
     version: config.version
