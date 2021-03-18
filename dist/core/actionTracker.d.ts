@@ -56,13 +56,19 @@ export interface ITrackerDurationParam {
 declare class ActionTracker {
     static instance: ActionTracker;
     static getInstance(): ActionTracker;
+    record: {
+        pageId: string;
+        pageTrackTime: number;
+        eventId: string;
+        eventTrackTime: number;
+    };
     /**
      * 埋点页面,
      * @memberof ActionTracker
      */
     trackPage(info?: ITrackerPageParam): void;
     /**
-     * 时长埋点
+     * 时长埋点 待移除
      * @memberof ActionTracker
      */
     trackDuration(info?: ITrackerDurationParam): void;
@@ -79,7 +85,7 @@ declare class ActionTracker {
      */
     trackView(dom: HTMLElement, info: ITrackerViewParam, visSenseConfig?: VisSenseConfig): void;
     /**
-     *通用埋点入口 埋点类型自行控制
+     *通用埋点入口 根据埋点类型调用
      *
      */
     track(info: ITrackerParam): void;

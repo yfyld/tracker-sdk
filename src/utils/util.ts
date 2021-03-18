@@ -177,3 +177,21 @@ export function isObject(o: any) {
 export const inWechat = false;
 
 export const inMin = false;
+
+export function hashCode(str: string): string {
+  let hash = 0;
+  if (str.length === 0) {
+    return '';
+  }
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+  }
+
+  return String(hash).replace('-', '0');
+}
+
+export function getRealPath(url: string) {
+  return url.replace(/\?.*$/, '').replace(/\/\d+([\/]*$)/, '{param}$1');
+}

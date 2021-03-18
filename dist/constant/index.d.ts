@@ -1,4 +1,5 @@
 export declare const SERVER_URL: string;
+export declare const DEBUG_SERVER_URL: string;
 export declare const CUSTOM_TOKEN_KEY = "TRACKER_IDENTIFY";
 export declare const SEND_TYPE: {
     SYNC: string;

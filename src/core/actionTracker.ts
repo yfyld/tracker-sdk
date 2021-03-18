@@ -2,7 +2,7 @@ import { getPageInfo } from './pageInfo';
 
 import { send, sendAsync } from './send';
 import { ACTION_TYPE } from '../constant';
-import { getDomPath } from '../utils/util';
+import { getDomPath, getRealPath, hashCode } from '../utils/util';
 import { ITrackerData, VisSenseConfig } from '../types';
 
 import durationTime from './durationTime';
@@ -86,6 +86,7 @@ class ActionTracker {
       ...info
     };
     if (!data.trackId) {
+      data.trackId = `zyjk-${hashCode(getRealPath(window.location.href))}`;
     }
 
     // 记录最新的页面曝光
@@ -116,6 +117,10 @@ class ActionTracker {
       eventName: 'CLICK',
       ...info
     };
+    if (!data.trackId && !data.debug) {
+      let code = data.domId || hashCode(data.domTag + data.domPath + data.domContent);
+      data.trackId = `zyjk-${hashCode(getRealPath(window.location.href))}-${code}`;
+    }
     send(data);
   }
 

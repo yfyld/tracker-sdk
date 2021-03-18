@@ -2,6 +2,7 @@ export interface IConfig {
     store: string;
     trackKey: string;
     serverUrl: string;
+    debugServerUrl: string;
     watchHistoryAndHash: boolean;
     pageTime: boolean;
     env: string;

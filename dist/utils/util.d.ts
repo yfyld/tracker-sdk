@@ -64,3 +64,7 @@ export declare function oneOf(one: any, all: any[]): boolean;
 export declare function getGlobal(): (Window & typeof globalThis) | NodeJS.Global;
 export declare function isArray(o: any): boolean;
 export declare function isObject(o: any): boolean;
+export declare const inWechat = false;
+export declare const inMin = false;
+export declare function hashCode(str: string): string;
+export declare function getRealPath(url: string): string;
