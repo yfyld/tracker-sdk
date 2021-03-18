@@ -19,13 +19,16 @@ const install = function (conf?: Partial<IConfig>) {
   hijackHistoryEvent();
 
   //自动埋页面
-  if (config.autoTrackPage) {
-    actionTracker.trackPage();
-  }
+  routeChange();
 
   function routeChange() {
     if (config.autoTrackPage) {
-      actionTracker.trackPage();
+      // 延迟500ms, 如果最近1s内发送过页面曝光则不进行自动埋点
+      setTimeout(() => {
+        if (!actionTracker.record.pageTrackTime || Math.abs(Date.now() - actionTracker.record.pageTrackTime) > 1000) {
+          actionTracker.trackPage();
+        }
+      }, 500);
     }
   }
 

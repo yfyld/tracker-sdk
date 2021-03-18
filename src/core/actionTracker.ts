@@ -68,21 +68,29 @@ class ActionTracker {
     }
     return ActionTracker.instance;
   }
+
+  record = {
+    pageId: '',
+    pageTrackTime: null as number,
+    eventId: '',
+    eventTrackTime: null as number
+  };
+
   /**
    * 埋点页面,
    * @memberof ActionTracker
    */
   trackPage(info: ITrackerPageParam = {}) {
-    const prePageInfo = getPageInfo();
-    if ((!info.trackId || info.trackId === prePageInfo.pageId) && prePageInfo.referrerUrl === window.location.href) {
-      //防止手动埋点后 自动埋点又埋一遍
-      return;
-    }
-
     let data: ITrackerData = {
       actionType: ACTION_TYPE.PAGE,
       ...info
     };
+    if (!data.trackId) {
+    }
+
+    // 记录最新的页面曝光
+    this.record.pageId = data.trackId;
+    this.record.pageTrackTime = Date.now();
     send(data);
   }
 

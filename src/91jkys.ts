@@ -3,6 +3,7 @@ import { getCookie, getQueryVariable, inMin, inWechat } from './utils/util';
 import { setConfig } from './core/config';
 import { setUserInfo } from './core/user';
 import { login } from './core/user';
+import install from './core/bindEvent';
 try {
   const ua = window.navigator.userAgent;
   //跟进host 判断环境
@@ -38,13 +39,18 @@ try {
     }
   }
 
-  // 获取userId
   if (typeof Sailer !== 'undefined' && /AppInfo|tangyi/.test(ua)) {
+    setConfig({
+      autoInstall: false
+    });
+
     Sailer.ready(() => {
+      // 获取userId
       const { uid } = Sailer.getUserInfo();
       if (uid > 0) {
         login({ uid });
       }
+      install();
     });
     //zyyd_login
   } else {
