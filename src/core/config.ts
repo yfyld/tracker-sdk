@@ -48,7 +48,7 @@ let config: IConfig = {
   autoTrackClick: true, //自动埋点a,button,input
   autoInstall: true, //自定开始埋点监控
   delayLink: true, //跳转延迟
-  delayLinkTime: 20000,
+  delayLinkTime: 300,
   useServerTime: true, //使用服务器时间
   corssSubdomain: false, //false 域名不同认作为两个用户
   deviceIdKey: CUSTOM_TOKEN_KEY,

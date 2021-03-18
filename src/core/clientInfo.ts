@@ -13,7 +13,7 @@ export interface IClientInfo {
   channel?: string;
 }
 
-let sessionInfo: IClientInfo = {
+let clientInfo: IClientInfo = {
   clientWidth: window.screen.height,
   clientHeight: window.screen.width,
   radio: window.devicePixelRatio || 1,
@@ -66,8 +66,8 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
 
   const channel = getQueryVariable('channel') || urlInfo.channel || cookieInfo.channel;
 
-  sessionInfo = {
-    ...sessionInfo,
+  clientInfo = {
+    ...clientInfo,
     ...cookieInfo,
     ...urlInfo,
     channel,
@@ -77,11 +77,11 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
   setCookie(
     'TELESCOPE_CACHE_INFO',
     JSON.stringify({
-      appId: sessionInfo.appId,
-      appVersion: sessionInfo.appVersion,
-      marketid: sessionInfo.marketid,
-      channel: sessionInfo.channel,
-      sessionId: sessionInfo.sessionId,
+      appId: clientInfo.appId,
+      appVersion: clientInfo.appVersion,
+      marketid: clientInfo.marketid,
+      channel: clientInfo.channel,
+      sessionId: clientInfo.sessionId,
       expired: Date.now() + 30 * 60 * 1000
     })
   );
@@ -99,5 +99,5 @@ if (inMin) {
 }
 
 export const getClientInfo = () => {
-  return { ...sessionInfo };
+  return { ...clientInfo };
 };

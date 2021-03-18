@@ -3,7 +3,7 @@ import { getPageInfo } from './pageInfo';
 import actionTracker from './actionTracker';
 import durationTime from './durationTime';
 import { getConfig, setConfig, IConfig } from './config';
-import { sendAsync } from './send';
+import { sendAsync, sendSync } from './send';
 import hijackHistoryEvent from '../utils/hijackHistoryEvent';
 import { getFlag, setFlag } from '../utils/util';
 
@@ -64,7 +64,7 @@ const install = function (conf?: Partial<IConfig>) {
       if (config.pageTime) {
         durationTime.end();
       }
-      sendAsync();
+      sendSync();
       sended = true;
     };
   })();

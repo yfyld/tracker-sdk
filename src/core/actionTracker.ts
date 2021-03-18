@@ -89,21 +89,9 @@ class ActionTracker {
       data.trackId = `zyjk-${hashCode(getRealPath(window.location.href))}`;
     }
 
-    // 记录最新的页面曝光
+    // 记录最新的页面曝光 用于防止无痕重复埋点 todo
     this.record.pageId = data.trackId;
     this.record.pageTrackTime = Date.now();
-    send(data);
-  }
-
-  /**
-   * 时长埋点 待移除
-   * @memberof ActionTracker
-   */
-  trackDuration(info: ITrackerDurationParam = {}) {
-    let data: ITrackerData = {
-      actionType: ACTION_TYPE.DURATION,
-      ...info
-    };
     send(data);
   }
 

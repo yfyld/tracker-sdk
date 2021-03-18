@@ -68,11 +68,6 @@ declare class ActionTracker {
      */
     trackPage(info?: ITrackerPageParam): void;
     /**
-     * 时长埋点 待移除
-     * @memberof ActionTracker
-     */
-    trackDuration(info?: ITrackerDurationParam): void;
-    /**
      *
      *事件埋点
      */
