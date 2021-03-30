@@ -16,6 +16,8 @@ export interface ITrackerData {
   netType?: string;
   channel?: string;
   debug?: boolean;
+  isAutoTrack?: boolean;
+  autoTrackId?: string;
 }
 
 export interface ICleintInfo {

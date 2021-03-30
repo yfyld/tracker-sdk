@@ -8,7 +8,7 @@ export interface IClientInfo {
   appId: string;
   appVersion: string;
   appType: string;
-  marketid?: string;
+  marketId?: string;
   sessionId: string;
   channel?: string;
 }
@@ -21,7 +21,7 @@ let clientInfo: IClientInfo = {
   appId: 'H5',
   appVersion: null,
   appType: 'H5',
-  marketid: null,
+  marketId: null,
   sessionId: getUUID(),
   channel: null
 };
@@ -29,10 +29,11 @@ let clientInfo: IClientInfo = {
 export const setClientInfo = (info: Partial<IClientInfo>) => {
   //小程序
   let urlInfoStr = getQueryVariable('telescope-info');
+
   let urlInfo = {} as {
     appId: string;
     appVersion: string;
-    marketid: string;
+    marketId: string;
     sessionId: string;
     channel: string;
   };
@@ -47,7 +48,7 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
   let cookieInfo = {} as {
     appId: string;
     appVersion: string;
-    marketid: string;
+    marketId: string;
     sessionId: string;
     channel: string;
     expired: number;
@@ -57,7 +58,7 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
       cookieInfo = JSON.parse(cookieInfoStr);
     } catch (error) {}
   }
-  if (cookieInfo.expired && cookieInfo.expired < Date.now() + 30 * 60 * 1000) {
+  if (cookieInfo.expired && cookieInfo.expired < Date.now()) {
     // 30分钟过期
     cookieInfo.channel = null;
     cookieInfo.sessionId = getUUID();
@@ -65,7 +66,6 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
   delete cookieInfo.expired;
 
   const channel = getQueryVariable('channel') || urlInfo.channel || cookieInfo.channel;
-
   clientInfo = {
     ...clientInfo,
     ...cookieInfo,
@@ -79,7 +79,7 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
     JSON.stringify({
       appId: clientInfo.appId,
       appVersion: clientInfo.appVersion,
-      marketid: clientInfo.marketid,
+      marketId: clientInfo.marketId,
       channel: clientInfo.channel,
       sessionId: clientInfo.sessionId,
       expired: Date.now() + 30 * 60 * 1000

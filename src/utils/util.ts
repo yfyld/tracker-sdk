@@ -40,9 +40,10 @@ export function getQueryVariable(variable: string) {
  */
 export function getCookie(name: string) {
   let cookies = document.cookie.split(';');
+
   for (let i in cookies) {
     let arr = cookies[i].split('=');
-    if (name == arr[0]) {
+    if (name == arr[0].trim()) {
       return unescape(arr[1]).replace(/&&&&/g, ';');
     }
   }
@@ -55,24 +56,18 @@ export function getCookie(name: string) {
  * @export
  * @param {string} name
  * @param {string} value
- * @param {number} [expires=99999999999999]
+ * @param {number} [expires=99999]
  * @param {string} [path='/']
  * @param {string} [domain]
  */
-export function setCookie(
-  name: string,
-  value: string,
-  expires: number = 99999999999999,
-  path: string = '/',
-  domain?: string
-) {
+export function setCookie(name: string, value: string, expires: number = 99999, path: string = '/', domain?: string) {
   document.cookie =
     name +
     '=' +
     value.replace(/;/g, '&&&&') +
     (expires ? '; expires=' + getExpires(expires) : '') +
     (path ? '; path=' + path : '') +
-    (domain ? '; domain=' + domain : '');
+    ('; domain=' + (domain ? domain : '.' + location.host.replace(/.*\.(.*\..*)$/, '$1')));
 
   function getExpires(hours: number) {
     let date = new Date();
@@ -133,10 +128,24 @@ export function getUUID() {
  * @returns
  */
 export function getDomPath(dom: HTMLElement) {
-  let path = [dom.id ? '#' + dom.id : dom.tagName.toLowerCase()];
+  // let path = [dom.id ? '#' + dom.id : dom.tagName.toLowerCase()];
+  let path = [];
+  if (dom.id && typeof dom.id === 'string') {
+    path.push('#' + dom.id);
+  } else if (dom.className && typeof dom.className === 'string') {
+    path.push(dom.tagName.toLowerCase() + '.' + dom.className.split(' ')[0]);
+  } else {
+    path.push(dom.tagName.toLowerCase());
+  }
   while (dom.parentNode && (dom.parentNode as HTMLElement).tagName !== 'BODY') {
     dom = dom.parentNode as HTMLElement;
-    path.unshift(dom.id ? '#' + dom.id : dom.tagName.toLowerCase());
+    if (dom.id) {
+      path.unshift('#' + dom.id);
+    } else if (dom.className) {
+      path.unshift(dom.tagName.toLowerCase() + '.' + dom.className.split(' ')[0]);
+    } else {
+      path.unshift(dom.tagName.toLowerCase());
+    }
   }
   return path.join('>');
 }
@@ -174,10 +183,6 @@ export function isObject(o: any) {
   return Object.prototype.toString.call(o) === '[object Object]';
 }
 
-export const inWechat = false;
-
-export const inMin = false;
-
 export function hashCode(str: string): string {
   let hash = 0;
   if (str.length === 0) {
@@ -192,6 +197,18 @@ export function hashCode(str: string): string {
   return String(hash).replace('-', '0');
 }
 
-export function getRealPath(url: string) {
-  return url.replace(/\?.*$/, '').replace(/\/\d+([\/]*$)/, '{param}$1');
+export function getRealPath(url: string, offlineUrl: string) {
+  if (/file:/.test(url) && offlineUrl) {
+    url = offlineUrl + url.replace(/^.*(#.*)$/, '$1');
+  }
+
+  return url
+    .replace('https', 'http')
+    .replace(/\?.*$/, '')
+    .replace(/\/\d+([\/]*$)/, '{param}$1')
+    .replace(/index\.html/, '');
 }
+
+export const inMin = /miniprogram/i.test(window.navigator.userAgent);
+
+export const inWechat = !inMin && /micromessenger/i.test(window.navigator.userAgent);

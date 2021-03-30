@@ -29,7 +29,7 @@ export declare function getCookie(name: string): string;
  * @export
  * @param {string} name
  * @param {string} value
- * @param {number} [expires=99999999999999]
+ * @param {number} [expires=99999]
  * @param {string} [path='/']
  * @param {string} [domain]
  */
@@ -64,7 +64,7 @@ export declare function oneOf(one: any, all: any[]): boolean;
 export declare function getGlobal(): (Window & typeof globalThis) | NodeJS.Global;
 export declare function isArray(o: any): boolean;
 export declare function isObject(o: any): boolean;
-export declare const inWechat = false;
-export declare const inMin = false;
 export declare function hashCode(str: string): string;
-export declare function getRealPath(url: string): string;
+export declare function getRealPath(url: string, offlineUrl: string): string;
+export declare const inMin: boolean;
+export declare const inWechat: boolean;

@@ -1,9 +1,10 @@
-import { getQueryVariable } from 'src/utils/util';
+import { getCookie, getQueryVariable } from 'src/utils/util';
 
 export interface IPageInfo {
   pageId?: string;
   referrerId?: string;
   referrerUrl: string;
+  sourceEventId?: string;
   url: string;
   title: string;
   host: string;
@@ -11,9 +12,46 @@ export interface IPageInfo {
   hash: string;
 }
 
+export const getDefaultReferrerId = () => {
+  let referrerId = getQueryVariable('referrer_id');
+  if (referrerId) {
+    return referrerId;
+  } else {
+    try {
+      const referrerData = JSON.parse(localStorage.getItem('referrer_id'));
+      if (referrerData.date + 5000 > Date.now()) {
+        return referrerData.id;
+      }
+    } catch (e) {
+      return null;
+    }
+
+    localStorage.removeItem('referrer_id');
+  }
+};
+
+export const getDefaultSourceEventId = () => {
+  let sourceEventId = getQueryVariable('source_event_id');
+  if (sourceEventId) {
+    return sourceEventId;
+  } else {
+    try {
+      const sourceEventData = JSON.parse(localStorage.getItem('source_event_id'));
+      if (sourceEventData.date + 5000 > Date.now() && sourceEventData.pageId !== pageInfo.pageId) {
+        return sourceEventData.id;
+      }
+    } catch (e) {
+      return null;
+    }
+
+    localStorage.removeItem('source_event_id');
+  }
+};
+
 let pageInfo: IPageInfo = {
   pageId: null,
-  referrerId: getQueryVariable('referrer-id'),
+  referrerId: getDefaultReferrerId(),
+  sourceEventId: null,
   referrerUrl: document.referrer || '',
   url: location.href,
   host: location.host,
@@ -35,5 +73,5 @@ export const setPageInfo = (info: Partial<IPageInfo>) => {
 };
 
 export const getPageInfo = () => {
-  return { ...pageInfo };
+  return { ...pageInfo, sourceEventId: getDefaultSourceEventId() };
 };

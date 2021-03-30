@@ -1,10 +1,8 @@
-import { getPageInfo, IPageInfo } from './pageInfo';
-import { ITrackerPageParam } from './actionTracker';
-import { send } from './send';
-import { ACTION_TYPE } from '../constant';
-import { getConfig, IConfig } from './config';
+import { IPageInfo } from './pageInfo';
 
-import { actionTracker } from 'src/internal';
+import { ACTION_TYPE } from '../constant';
+import { IConfig } from './config';
+
 import { ITrackerData } from 'src/types';
 import { getUUID } from 'src/utils/util';
 
@@ -12,6 +10,7 @@ interface ILogDataDataItem extends ITrackerData, IPageInfo {
   trackTime: number;
   startTime?: number;
   id: string;
+  trackId?: string;
 }
 class DurationTime {
   static instance: DurationTime = null;
@@ -50,9 +49,8 @@ class DurationTime {
       if (!this.timeMap[trackId]) {
         continue;
       }
-
-      this.timeMap[trackId] = null;
       logs.push(this.generateLog(this.timeMap[trackId]));
+      this.timeMap[trackId] = null;
     }
 
     return logs;
@@ -63,6 +61,10 @@ class DurationTime {
       ...info,
       actionType: 'DURATION',
       durationTime: Date.now() - info.startTime,
+      trackTime: Date.now(),
+      masterId: info.id,
+      trackId: '',
+      pageId: info.actionType === ACTION_TYPE.PAGE ? info.trackId : info.pageId,
       id: getUUID()
     };
     return log;

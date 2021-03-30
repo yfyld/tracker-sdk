@@ -4,6 +4,7 @@ import { setConfig } from './core/config';
 import { setUserInfo } from './core/user';
 import { login } from './core/user';
 import install from './core/bindEvent';
+import { is } from 'ramda';
 try {
   const ua = window.navigator.userAgent;
   //跟进host 判断环境
@@ -34,11 +35,11 @@ try {
     if (AppInfoMatch && AppInfoMatch.length >= 3) {
       setClientInfo({
         appId: AppInfoMatch[1],
-        appVersion: AppInfoMatch[2]
+        appVersion: AppInfoMatch[2],
+        appType: 'APP'
       });
     }
   }
-
   if (typeof Sailer !== 'undefined' && /AppInfo|tangyi/.test(ua)) {
     setConfig({
       autoInstall: false

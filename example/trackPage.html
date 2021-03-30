@@ -13,15 +13,16 @@
   <body>
     <div id="aaa">
       <h1>hash</h1>
-      <a href="#/page1">page1</a>
-      <a href="#/page2">page2</a>
-      <a href="#/page3">page3</a>
-      <a href="#/page4">page4</a>
+      <a data-track="damn1" id="a1" href="#/page1">page1</a>
+      <a data-track="damn2" id="a2" href="#/page2">page2</a>
+      <a data-track="damn3" id="a3" href="#/page3">page3</a>
+      <a data-track="damn4" id="a4" href="#/page4">page4</a>
+
       <h1>history</h1>
       <button onclick="window.history.pushState(null, null, 'profile');">push</button>
     </div>
   </body>
   <script>
-    Telescope.trackPage({ trackId: 'zz3' });
+    // Telescope.trackPage({ trackId: 'zz3' });
   </script>
 </html>

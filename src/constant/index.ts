@@ -7,7 +7,7 @@ export const DEBUG_SERVER_URL = `${
   window.location.protocol === 'http:' ? 'http:' : 'https:'
 }//frontlo-collection.91jkys.com/log.gif`;
 
-export const CUSTOM_TOKEN_KEY = 'TRACKER_IDENTIFY';
+export const CUSTOM_TOKEN_KEY = 'TRYCATCH_TOKEN';
 
 export const SEND_TYPE = {
   SYNC: 'SYNC',
@@ -32,6 +32,7 @@ export const DATA_KEY = {
 };
 
 export const SAFETY_KEY = [
+  'version',
   'custom',
   'actionType',
   'eventName',
@@ -51,5 +52,19 @@ export const SAFETY_KEY = [
   'durationTime',
   'channel',
   'netType',
-  'debug'
+  'debug',
+  'seKeywords',
+  'bizId',
+  'isAutoTrack',
+  'autoTrackId',
+  //
+  'contentId',
+  'patientId',
+  'doctorId',
+  'skuId',
+  'prescriptionId',
+  'storeId',
+  'inquiryId',
+  'orderId',
+  'activityId'
 ];

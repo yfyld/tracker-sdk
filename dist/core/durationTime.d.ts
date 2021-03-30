@@ -5,6 +5,7 @@ interface ILogDataDataItem extends ITrackerData, IPageInfo {
     trackTime: number;
     startTime?: number;
     id: string;
+    trackId?: string;
 }
 declare class DurationTime {
     static instance: DurationTime;
@@ -20,15 +21,17 @@ declare class DurationTime {
     generateLog(info: ILogDataDataItem): {
         actionType: string;
         durationTime: number;
-        id: string;
         trackTime: number;
+        masterId: string;
+        trackId: string;
+        pageId: string;
+        id: string;
         startTime?: number;
         custom?: string | {
             [prop: string]: string | number | boolean;
         };
         eventName?: string;
         score?: number;
-        pageId?: string;
         domId?: string;
         domClass?: string;
         domHref?: string;
@@ -36,12 +39,14 @@ declare class DurationTime {
         domTag?: string;
         domContent?: string;
         domPath?: string;
-        trackId?: string;
         referrerId?: string;
         netType?: string;
         channel?: string;
         debug?: boolean;
+        isAutoTrack?: boolean;
+        autoTrackId?: string;
         referrerUrl: string;
+        sourceEventId?: string;
         url: string;
         title: string;
         host: string;

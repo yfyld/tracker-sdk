@@ -1,5 +1,5 @@
 import actionTracker, { ITrackerEventParam } from '../core/actionTracker';
-import { notChanged, isEmpty } from '../utils/util';
+import { notChanged, isEmpty, setCookie } from '../utils/util';
 
 export default function (el: HTMLElement, binding: any) {
   if (notChanged(binding) || isEmpty(binding)) {
@@ -35,4 +35,5 @@ function handleEvent(e: Event) {
   } else {
     actionTracker.trackDom(this, this._trackerInfo as ITrackerEventParam);
   }
+  this._trackerInfo.trackId && setCookie('source_event_id', this._trackerInfo.trackId, 0.0008);
 }

@@ -26,7 +26,8 @@ export function getUserInfo() {
 
 export function login(info: Partial<IUserInfo>) {
   const config = getConfig();
-  let deviceId = userInfo.deviceId || getCookie(config.deviceIdKey);
+  // 兼容老用户优先取 TRACKER_IDENTIFY
+  let deviceId = userInfo.deviceId || getCookie('TRACKER_IDENTIFY') || getCookie(config.deviceIdKey);
 
   if (!deviceId) {
     deviceId = getUUID();

@@ -5,17 +5,11 @@ import { SEND_TYPE } from '../constant';
 // import { getGlobal } from 'src/utils/util';
 
 export interface IConfig {
-  store: string;
   trackKey: string;
   serverUrl: string;
   debugServerUrl: string;
-  watchHistoryAndHash: boolean;
-  pageTime: boolean;
-  env: string;
-  console: boolean;
-  projectId: number;
   version: string;
-  domain: string;
+  offlineUrl: string;
   sendType: string;
   delayTime: number;
   autoTrackPage: boolean;
@@ -23,34 +17,24 @@ export interface IConfig {
   autoInstall: boolean;
   delayLink: boolean;
   delayLinkTime: number;
-  useServerTime: boolean;
-  corssSubdomain: boolean;
   deviceIdKey: string;
   beforeGenerateLog: Function | null;
 }
 
 //default config
 let config: IConfig = {
-  store: 'test',
   trackKey: '', //日志验证
   serverUrl: SERVER_URL,
   debugServerUrl: DEBUG_SERVER_URL,
-  pageTime: true, //是否记录页面停留时间
-  watchHistoryAndHash: true, //单页面应用监听
-  env: 'PRODUCT',
-  console: true,
-  projectId: null,
   version: null,
-  domain: '',
+  offlineUrl: '', // 离线带参数url
   sendType: SEND_TYPE.ASYNC, //发送日志方式 (同步发,异步延迟发,关闭浏览器前发送)
   delayTime: 1000, //延迟发送的时间
   autoTrackPage: true, //自动埋点页面
   autoTrackClick: true, //自动埋点a,button,input
-  autoInstall: true, //自定开始埋点监控
+  autoInstall: true, //自动开始埋点监控
   delayLink: true, //跳转延迟
   delayLinkTime: 300,
-  useServerTime: true, //使用服务器时间
-  corssSubdomain: false, //false 域名不同认作为两个用户
   deviceIdKey: CUSTOM_TOKEN_KEY,
   beforeGenerateLog: null
 };

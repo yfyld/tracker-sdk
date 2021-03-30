@@ -1,15 +1,9 @@
 export interface IConfig {
-    store: string;
     trackKey: string;
     serverUrl: string;
     debugServerUrl: string;
-    watchHistoryAndHash: boolean;
-    pageTime: boolean;
-    env: string;
-    console: boolean;
-    projectId: number;
     version: string;
-    domain: string;
+    offlineUrl: string;
     sendType: string;
     delayTime: number;
     autoTrackPage: boolean;
@@ -17,8 +11,6 @@ export interface IConfig {
     autoInstall: boolean;
     delayLink: boolean;
     delayLinkTime: number;
-    useServerTime: boolean;
-    corssSubdomain: boolean;
     deviceIdKey: string;
     beforeGenerateLog: Function | null;
 }

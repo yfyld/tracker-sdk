@@ -7,6 +7,10 @@
     <meta name="tracker-id" content="vue-demo" />
     <title>Document</title>
     <link rel="stylesheet" href="./lib/element.css" />
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/@zyf2e/capsule-ui/lib/theme-chalk/index.css" />
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/@zyf2e/capsule-ui/lib/index.js"></script>
     <script src="../dist/Telescope.min.js" tracker-key="eyJwcm9qZWN0SWQiOjJ9"></script>
     <style></style>
   </head>
@@ -15,11 +19,20 @@
     <script src="./lib/element.js"></script>
     <div id="app">
       <template>
-        <div v-track-page="{trackId:'zz1'}">
-          <div v-for="o in 40" :key="o" class="text item">滚动</div>
-          <el-card id="a" class="box-card" v-track-view="{trackId:'pid2'}">
+        <div v-track-page="{trackId:'zz1', patientId:'qweqweqwe', custom: { patientId:'qweqweqwe'}}">
+          <div v-for="o in 50" :key="o" class="text item">滚动</div>
+          <!-- <el-card id="vvv" class="box-card" v-track-view="{trackId:'vvvvvv'}"> -->
+          <el-card id="vvv" class="box-card">
             <div v-for="o in 4" :key="o" class="text item">v-show文本</div>
           </el-card>
+          <el-button @click="trackViewEnd" type="primary">结束视区</el-button>
+
+          <!-- <el-carousel height="150px">
+            <el-carousel-item v-for="item in 4" :key="item" v-track-view="{trackId: 'welling:'+item}">
+              <h3 class="small">{{ item }}</h3>
+            </el-carousel-item>
+          </el-carousel> -->
+
           <p v-track-page="{trackId:'zz2'}" v-if="value7">v-if文本文本文本文本文本</p>
 
           <el-button @click="value7=!value7" type="primary">切换显示</el-button>
@@ -71,12 +84,17 @@
     Vue.directive('track-page', Telescope.vTrackPage);
     Telescope.setConfig({ autoTrakerClick: true });
     Telescope.login({ uid: 1234 });
+
     var Main = {
       data() {
         return {
           trackId: 'dsd',
           value7: false
         };
+      },
+      mounted() {
+        const vvv = document.getElementById('vvv');
+        Telescope.trackViewStart(vvv, { custom: 'jjjjjjjvvvvvv', trackId: 'vvvvvv' });
       },
       methods: {
         handleClick() {
@@ -85,6 +103,9 @@
             custom: { bbb: 1, ccc: true },
             score: 29
           });
+        },
+        trackViewEnd() {
+          Telescope.trackViewEnd({ trackId: 'vvv' });
         }
       }
     };

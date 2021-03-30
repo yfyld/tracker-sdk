@@ -1,5 +1,5 @@
 import actionTracker from '../core/actionTracker';
-import { notChanged, isEmpty } from '../utils/util';
+import { notChanged, isEmpty, setCookie } from '../utils/util';
 import durationTime from '../core/durationTime';
 const findIndex = function (arr: any[], callback: (item: any, index: number) => {}) {
   for (var i = 0, len = arr.length; i < len; i++) {
@@ -34,10 +34,11 @@ const generate = function (type: string) {
       } else if (typeof binding.value === 'string' && binding.value) {
         info.trackId = binding.value;
       }
+
       if (type === 'PAGE') {
         actionTracker.trackPage(info);
       } else {
-        actionTracker.trackView(el, info);
+        actionTracker.trackViewStart(el, info);
       }
     },
     unbind(el: HTMLElement, binding: any) {

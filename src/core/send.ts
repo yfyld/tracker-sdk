@@ -7,17 +7,19 @@ import getNetInfo from './netInfo';
 import durationTime from './durationTime';
 
 import { getConfig, IConfig } from './config';
-import { getUUID } from '../utils/util';
+import { getCookie, getQueryVariable, getUUID, setCookie } from '../utils/util';
 import { getUserInfo, IUserInfo } from './user';
 import { SEND_TYPE } from '../constant/index';
 import { ITrackerData, ICleintInfo, ILibInfo } from '../types';
 import { isArray, isObject } from './../utils/util';
 import pick from 'ramda/src/pick';
+import { getBusinessExtension, setBuinessExtension } from './business';
 
 export interface ILogDataDataItem extends ITrackerData, IPageInfo {
   trackTime: number;
   startTime?: number;
   id: string;
+  trackId?: string;
 }
 
 export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
@@ -108,7 +110,6 @@ export function sendAsync(data?: ITrackerData) {
  * @param isAjax
  */
 function _sendToServer(data: ILogDataDataItem[], isAjax?: boolean) {
-  // console.log(JSON.stringify(data, null, 2));
   if (!data.length) {
     return;
   }
@@ -120,10 +121,10 @@ function _sendToServer(data: ILogDataDataItem[], isAjax?: boolean) {
  * @param data
  */
 function _wrapperData(data: ILogDataDataItem[]): ILogData {
-  //console.log(JSON.stringify(data, null, 2));
   const config = getConfig();
   index++;
-  return {
+
+  const wrapperData = {
     customTime: Date.now(),
     items: data,
     ...getClientInfo(),
@@ -131,6 +132,9 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
     ...getUserInfo(),
     version: config.version
   };
+
+  console.log(JSON.stringify(wrapperData, null, 2));
+  return wrapperData;
 }
 
 /**
@@ -158,21 +162,45 @@ function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, 
   }
 
   const newData = pick(SAFETY_KEY, data);
-
-  const pageInfo = getPageInfo();
-
+  let pageInfo = getPageInfo();
   const netInfo = getNetInfo();
 
+  setBuinessExtension({
+    seKeywords: getQueryVariable('seKeywords'),
+    bizId: getQueryVariable('bizId')
+  });
+
+  const businessInfo = getBusinessExtension();
   if (data.actionType === 'PAGE') {
-    pageInfo.pageId = null;
     //修改当前pageInfo
     setPageInfo({ pageId: data.trackId || '', referrerId: pageInfo.pageId || '', referrerUrl: pageInfo.url || '' });
+    pageInfo = getPageInfo();
+    localStorage.setItem(
+      'referrer_id',
+      JSON.stringify({
+        date: Date.now(),
+        id: pageInfo.pageId
+      })
+    );
+    pageInfo.pageId = null;
+  }
+
+  if (data.actionType === 'EVENT') {
+    localStorage.setItem(
+      'source_event_id',
+      JSON.stringify({
+        date: Date.now(),
+        id: data.trackId,
+        pageId: data.pageId
+      })
+    );
   }
 
   const result = {
     ...newData,
     ...pageInfo,
     ...netInfo,
+    ...businessInfo,
     trackTime: Date.now(),
     id: uuid + '-' + index
   };
@@ -181,6 +209,14 @@ function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, 
     const durationLogs = durationTime.end();
     if (durationLogs && durationLogs.length) {
       _sendToServer(durationLogs);
+    }
+    durationTime.start(result);
+  }
+
+  if (result.actionType === ACTION_TYPE.VIEW && !data.debug) {
+    const durationLogs = durationTime.end(data.trackId);
+    if (durationLogs && durationLogs.length) {
+      durationLogs;
     }
     durationTime.start(result);
   }

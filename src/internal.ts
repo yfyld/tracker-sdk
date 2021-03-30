@@ -13,7 +13,8 @@ import { login, logout } from './core/user';
 const trackDom = actionTracker.trackDom;
 const trackPage = actionTracker.trackPage;
 const trackEvent = actionTracker.trackEvent;
-const trackView = actionTracker.trackView;
+const trackViewStart = actionTracker.trackViewStart;
+const trackViewEnd = actionTracker.trackViewEnd;
 const trackLink = actionTracker.trackLink;
 const track = actionTracker.track;
 
@@ -33,7 +34,8 @@ export {
   trackDom,
   trackPage,
   trackEvent,
-  trackView,
+  trackViewStart,
+  trackViewEnd,
   trackLink,
   track,
   //config

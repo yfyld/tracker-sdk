@@ -2,7 +2,7 @@ import { getPageInfo } from './pageInfo';
 
 import { send, sendAsync } from './send';
 import { ACTION_TYPE } from '../constant';
-import { getDomPath, getRealPath, hashCode } from '../utils/util';
+import { getDomPath, getRealPath, hashCode, setCookie } from '../utils/util';
 import { ITrackerData, VisSenseConfig } from '../types';
 
 import durationTime from './durationTime';
@@ -12,21 +12,32 @@ import VisSense from './viewTracker';
 
 export type ITrackerParam = { actionType: string } & (ITrackerPageParam | ITrackerEventParam);
 
-export interface ITrackerPageParam {
+export interface IBusinessParam {
+  patientId?: string; // 患者id
+  doctorId?: string; // 医生id
+  skuId?: string; // 商品id
+  prescriptionId?: string; // 处方id
+  storeId?: string; // 店铺id
+  inquiryId?: string; // 问诊id
+  orderId?: string; // 订单id
+  activityId?: string; // 活动Id
+}
+
+export interface ITrackerPageParam extends IBusinessParam {
   custom?: string | { [prop: string]: string | number | boolean };
   trackId?: string;
   score?: number;
   channel?: string;
 }
 
-export interface ITrackerViewParam {
+export interface ITrackerViewParam extends IBusinessParam {
   custom?: string | { [prop: string]: string | number | boolean };
   trackId?: string;
   score?: number;
   channel?: string;
 }
 
-export interface ITrackerEventParam {
+export interface ITrackerEventParam extends IBusinessParam {
   custom?: string | { [prop: string]: string | number | boolean };
   eventName?: string;
   pageId?: string;
@@ -55,6 +66,15 @@ export interface ITrackerDurationParam {
   channel?: string;
 }
 
+export interface IDomInfo {
+  domId?: string;
+  domClass?: string;
+  domHref?: string;
+  domName?: string;
+  domTag?: string;
+  domContent?: string;
+}
+
 /**
  *埋点入口类
  *
@@ -67,6 +87,12 @@ class ActionTracker {
       ActionTracker.instance = new ActionTracker();
     }
     return ActionTracker.instance;
+  }
+  constructor() {
+    this.trackEvent = this.trackEvent.bind(this);
+    this.trackPage = this.trackPage.bind(this);
+    this.trackViewStart = this.trackViewStart.bind(this);
+    this.trackViewEnd = this.trackViewEnd.bind(this);
   }
 
   record = {
@@ -81,33 +107,52 @@ class ActionTracker {
    * @memberof ActionTracker
    */
   trackPage(info: ITrackerPageParam = {}) {
+    const offlineUrl = getConfig().offlineUrl;
     let data: ITrackerData = {
       actionType: ACTION_TYPE.PAGE,
       ...info
     };
     if (!data.trackId) {
-      data.trackId = `zyjk-${hashCode(getRealPath(window.location.href))}`;
+      data.trackId = `zyjk-page-${hashCode(getRealPath(window.location.href, offlineUrl))}`;
+      data.isAutoTrack = true; // 无痕埋点标记
+    } else {
+      // 同样记录无痕url
+      data.autoTrackId = `zyjk-page-${hashCode(getRealPath(window.location.href, offlineUrl))}`;
     }
 
     // 记录最新的页面曝光 用于防止无痕重复埋点 todo
     this.record.pageId = data.trackId;
     this.record.pageTrackTime = Date.now();
+    // ActionTracker.instance.record.pageId = data.trackId;
+    // ActionTracker.instance.record.pageTrackTime = Date.now();
     send(data);
   }
 
   /**
    *
-   *事件埋点
+   * 事件埋点
    */
   trackEvent(info: ITrackerEventParam = {}) {
+    this._trackEvent(info, {});
+  }
+
+  /**
+   *
+   * 事件埋点传dom
+   *
+   */
+  _trackEvent(info: ITrackerEventParam = {}, domInfo: IDomInfo) {
+    const offlineUrl = getConfig().offlineUrl;
+
     let data: ITrackerData = {
       actionType: ACTION_TYPE.EVENT,
       eventName: 'CLICK',
       ...info
     };
     if (!data.trackId && !data.debug) {
-      let code = data.domId || hashCode(data.domTag + data.domPath + data.domContent);
-      data.trackId = `zyjk-${hashCode(getRealPath(window.location.href))}-${code}`;
+      let code = hashCode(domInfo?.domId + domInfo?.domClass + domInfo?.domTag + domInfo?.domContent);
+      data.trackId = `zyjk-event-${hashCode(getRealPath(window.location.href, offlineUrl))}-${code}`;
+      data.isAutoTrack = true;
     }
     send(data);
   }
@@ -118,28 +163,34 @@ class ActionTracker {
    * @param info
    * @param visSenseConfig
    */
-  trackView(dom: HTMLElement, info: ITrackerViewParam, visSenseConfig: VisSenseConfig = {}) {
-    let data: ITrackerData = {
-      actionType: ACTION_TYPE.VIEW,
-      domId: dom.id,
-      domClass: dom.className,
-      domTag: dom.tagName,
-      domContent: dom.textContent.substr(0, 20),
-      domPath: getDomPath(dom),
-      ...info
-    };
+  trackViewStart(dom: HTMLElement, info: ITrackerViewParam, visSenseConfig: VisSenseConfig = {}) {
+    if (dom) {
+      let data: ITrackerData = {
+        actionType: ACTION_TYPE.VIEW,
+        domId: dom.id,
+        domClass: dom.className,
+        domTag: dom.tagName,
+        domContent: dom.textContent.substr(0, 20),
+        domPath: getDomPath(dom),
+        ...info
+      };
 
-    var visobj = VisSense(dom);
-    visobj.onPercentageTimeTestPassed(
-      function () {
-        send(data);
-      },
-      {
-        percentageLimit: visSenseConfig.percentageLimit || 0.5,
-        timeLimit: visSenseConfig.timeLimit || 1000,
-        interval: 200
-      }
-    );
+      var visobj = VisSense(dom);
+      visobj.onPercentageTimeTestPassed(
+        function () {
+          send(data);
+        },
+        {
+          percentageLimit: visSenseConfig.percentageLimit || 1,
+          timeLimit: visSenseConfig.timeLimit || 0,
+          interval: 200
+        }
+      );
+    }
+  }
+
+  trackViewEnd(trackId: string) {
+    send({ trackId, actionType: ACTION_TYPE.VIEW });
   }
 
   /**
@@ -211,13 +262,16 @@ class ActionTracker {
 
     let trackInfo = {
       trackId: '',
+      domPath: getDomPath(dom)
+    };
+
+    let domInfo: IDomInfo = {
       domId: dom.id,
       domClass: dom.className,
       domHref: (dom as HTMLLinkElement).href || '',
       domName: (dom as HTMLInputElement).name || '',
       domTag: dom.tagName,
-      domContent: dom.textContent.substr(0, 20),
-      domPath: getDomPath(dom)
+      domContent: dom.textContent.substr(0, 20)
     };
 
     let track = dom.getAttribute('data-track');
@@ -230,7 +284,7 @@ class ActionTracker {
     if (info) {
       trackInfo = { ...trackInfo, ...info };
     }
-    this.trackEvent(trackInfo);
+    this._trackEvent(trackInfo, domInfo);
   }
 }
 

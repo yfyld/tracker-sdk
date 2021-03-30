@@ -6,7 +6,7 @@ export interface IClientInfo {
     appId: string;
     appVersion: string;
     appType: string;
-    marketid?: string;
+    marketId?: string;
     sessionId: string;
     channel?: string;
 }
@@ -19,7 +19,7 @@ export declare const getClientInfo: () => {
     appId: string;
     appVersion: string;
     appType: string;
-    marketid?: string;
+    marketId?: string;
     sessionId: string;
     channel?: string;
 };
