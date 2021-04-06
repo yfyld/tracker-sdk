@@ -31,8 +31,9 @@ const install = function (conf?: Partial<IConfig>) {
     if (config.autoTrackPage) {
       // 延迟500ms, 如果最近1s内发送过页面曝光则不进行自动埋点
       setTimeout(() => {
-        const timeee = Math.abs(Date.now() - actionTracker.record.pageTrackTime);
-        if (!actionTracker.record.pageTrackTime || timeee > 1000) {
+        const pageInfo = getPageInfo();
+        const time = Math.abs(Date.now() - actionTracker.record.pageTrackTime);
+        if (!actionTracker.record.pageTrackTime || (time > 2000 && pageInfo.pageId != actionTracker.record.pageId)) {
           actionTracker.trackPage();
         }
       }, 500);

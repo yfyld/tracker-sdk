@@ -117,12 +117,12 @@ class ActionTracker {
       data.isAutoTrack = true; // 无痕埋点标记
     } else {
       // 同样记录无痕url
+      this.record.pageTrackTime = Date.now();
+      this.record.pageId = data.trackId;
       data.autoTrackId = `zyjk-page-${hashCode(getRealPath(window.location.href, offlineUrl))}`;
     }
 
     // 记录最新的页面曝光 用于防止无痕重复埋点 todo
-    this.record.pageId = data.trackId;
-    this.record.pageTrackTime = Date.now();
     // ActionTracker.instance.record.pageId = data.trackId;
     // ActionTracker.instance.record.pageTrackTime = Date.now();
     send(data);

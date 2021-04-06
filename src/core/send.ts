@@ -133,7 +133,7 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
     version: config.version
   };
 
-  console.log(JSON.stringify(wrapperData, null, 2));
+  // console.log(JSON.stringify(wrapperData, null, 2));
   return wrapperData;
 }
 
@@ -173,15 +173,12 @@ function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, 
   const businessInfo = getBusinessExtension();
   if (data.actionType === 'PAGE') {
     //修改当前pageInfo
-    setPageInfo({ pageId: data.trackId || '', referrerId: pageInfo.pageId || '', referrerUrl: pageInfo.url || '' });
+    setPageInfo({
+      pageId: data.trackId || '',
+      referrerId: pageInfo.pageId || pageInfo.referrerId || '',
+      referrerUrl: pageInfo.url || ''
+    });
     pageInfo = getPageInfo();
-    localStorage.setItem(
-      'referrer_id',
-      JSON.stringify({
-        date: Date.now(),
-        id: pageInfo.pageId
-      })
-    );
     pageInfo.pageId = null;
   }
 

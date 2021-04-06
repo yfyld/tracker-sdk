@@ -42,6 +42,7 @@ class DurationTime {
       if (this.timeMap[trackId]) {
         logs.push(this.generateLog(this.timeMap[trackId]));
       }
+
       return logs;
     }
 
@@ -67,6 +68,13 @@ class DurationTime {
       pageId: info.actionType === ACTION_TYPE.PAGE ? info.trackId : info.pageId,
       id: getUUID()
     };
+    localStorage.setItem(
+      'referrer_id',
+      JSON.stringify({
+        date: Date.now(),
+        id: log.pageId
+      })
+    );
     return log;
   }
 }
