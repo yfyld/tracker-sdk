@@ -23,7 +23,7 @@ try {
   if (/DeviceId/i.test(ua)) {
     const deviceIdMatch = ua.match(/DeviceId\((.*?)\)/);
     if (deviceIdMatch && deviceIdMatch.length >= 2) {
-      setUserInfo({
+      setClientInfo({
         deviceId: deviceIdMatch[1]
       });
     }
