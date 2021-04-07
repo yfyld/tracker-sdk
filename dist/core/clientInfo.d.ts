@@ -9,6 +9,7 @@ export interface IClientInfo {
     marketId?: string;
     sessionId: string;
     channel?: string;
+    deviceId?: string;
 }
 export declare const setClientInfo: (info: Partial<IClientInfo>) => void;
 export declare const getClientInfo: () => {
@@ -22,4 +23,5 @@ export declare const getClientInfo: () => {
     marketId?: string;
     sessionId: string;
     channel?: string;
+    deviceId?: string;
 };

@@ -14,7 +14,7 @@ export interface IClientInfo {
   channel?: string;
   deviceId?: string;
 }
-
+const config = getConfig();
 let clientInfo: IClientInfo = {
   clientWidth: window.screen.height,
   clientHeight: window.screen.width,
@@ -26,7 +26,7 @@ let clientInfo: IClientInfo = {
   marketId: null,
   sessionId: getUUID(),
   channel: null,
-  deviceId: ''
+  deviceId: getCookie(config.deviceIdKey)
 };
 
 export const setClientInfo = (info: Partial<IClientInfo>) => {
@@ -81,15 +81,6 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
     const config = getConfig();
     setCookie(config.deviceIdKey, clientInfo.deviceId);
   }
-
-  // const config = getConfig();
-  // // 兼容老用户优先取 TRACKER_IDENTIFY
-  // let deviceId = clientInfo.deviceId || getCookie('TRACKER_IDENTIFY') || getCookie(config.deviceIdKey);
-  // if (!deviceId) {
-  //   deviceId = getUUID();
-  //   setCookie(config.deviceIdKey, deviceId);
-  //   clientInfo.deviceId = deviceId;
-  // }
 
   setCookie(
     'TELESCOPE_CACHE_INFO',

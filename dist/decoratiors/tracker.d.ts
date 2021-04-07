@@ -1,2 +1,2 @@
-declare const tracker: (partical: any) => (target: Function | Object | string, key: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
+declare const tracker: (partical: any) => (target: string | Object | Function, key: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
 export default tracker;

@@ -8,6 +8,9 @@ import hijackHistoryEvent from '../utils/hijackHistoryEvent';
 import { getCookie, getFlag, setCookie, setFlag } from '../utils/util';
 import { setClientInfo } from './clientInfo';
 
+// 立即执行 防止页面重定向
+setClientInfo({});
+
 const install = function (conf?: Partial<IConfig>) {
   if (getFlag('install')) return;
   setFlag('install');
