@@ -103,7 +103,8 @@ declare class ActionTracker {
      * @param info
      * @param visSenseConfig
      */
-    trackViewStart(dom: HTMLElement, info: ITrackerViewParam, visSenseConfig?: VisSenseConfig): void;
+    trackView(dom: HTMLElement, info: ITrackerViewParam, visSenseConfig?: VisSenseConfig): void;
+    trackViewStart(info: ITrackerViewParam): void;
     trackViewEnd(trackId: string): void;
     /**
      *通用埋点入口 根据埋点类型调用

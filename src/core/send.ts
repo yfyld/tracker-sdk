@@ -133,7 +133,7 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
     version: config.version
   };
 
-  // console.log(JSON.stringify(wrapperData, null, 2));
+  console.log(JSON.stringify(wrapperData, null, 2));
   return wrapperData;
 }
 
@@ -171,7 +171,7 @@ function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, 
   });
 
   const businessInfo = getBusinessExtension();
-  if (data.actionType === 'PAGE') {
+  if (data.actionType === ACTION_TYPE.PAGE) {
     //修改当前pageInfo
     setPageInfo({
       pageId: data.trackId || '',
@@ -182,15 +182,25 @@ function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, 
     pageInfo.pageId = null;
   }
 
-  if (data.actionType === 'EVENT') {
-    localStorage.setItem(
-      'source_event_id',
-      JSON.stringify({
-        date: Date.now(),
-        id: data.trackId,
-        pageId: data.pageId
-      })
-    );
+  if (data.actionType === ACTION_TYPE.EVENT) {
+    let sourceEventInfo = {
+      date: Date.now(),
+      id: data.trackId,
+      pageId: pageInfo.pageId,
+      isAutoTrack: data.isAutoTrack
+    };
+    if (data.isAutoTrack) {
+      try {
+        let preSourceEventInfo = JSON.parse(localStorage.getItem('source_event_id'));
+        if (preSourceEventInfo && !preSourceEventInfo.isAutoTrack && preSourceEventInfo.date > Date.now() - 300) {
+          sourceEventInfo = null;
+        }
+      } catch (error) {}
+    }
+
+    if (sourceEventInfo) {
+      localStorage.setItem('source_event_id', JSON.stringify(sourceEventInfo));
+    }
   }
 
   const result = {
@@ -202,12 +212,15 @@ function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, 
     id: uuid + '-' + index
   };
 
-  if (result.actionType === 'PAGE' && !data.debug) {
+  if (result.actionType === ACTION_TYPE.PAGE && !data.debug) {
     const durationLogs = durationTime.end();
     if (durationLogs && durationLogs.length) {
       _sendToServer(durationLogs);
     }
     durationTime.start(result);
+    localStorage.removeItem('source_event_id');
+  } else {
+    result.sourceEventId = null;
   }
 
   if (result.actionType === ACTION_TYPE.VIEW && !data.debug) {
@@ -218,7 +231,7 @@ function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, 
     durationTime.start(result);
   }
 
-  // console.log(JSON.stringify(result, null, 2));
+  //.log(JSON.stringify(result, null, 2));
 
   return [result, !!data.debug];
 }

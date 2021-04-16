@@ -141,7 +141,7 @@ export function getDomPath(dom: HTMLElement) {
     dom = dom.parentNode as HTMLElement;
     if (dom.id) {
       path.unshift('#' + dom.id);
-    } else if (dom.className) {
+    } else if (dom.className && typeof dom.className === 'string') {
       path.unshift(dom.tagName.toLowerCase() + '.' + dom.className.split(' ')[0]);
     } else {
       path.unshift(dom.tagName.toLowerCase());

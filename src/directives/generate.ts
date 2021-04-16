@@ -38,7 +38,7 @@ const generate = function (type: string) {
       if (type === 'PAGE') {
         actionTracker.trackPage(info);
       } else {
-        actionTracker.trackViewStart(el, info);
+        actionTracker.trackView(el, info);
       }
     },
     unbind(el: HTMLElement, binding: any) {

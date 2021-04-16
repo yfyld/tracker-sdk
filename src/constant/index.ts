@@ -24,7 +24,8 @@ export const ACTION_TYPE = {
   EVENT: 'EVENT',
   PAGE: 'PAGE',
   VIEW: 'VIEW',
-  DURATION: 'DURATION'
+  DURATION: 'DURATION',
+  VIEW_DURATION: 'VIEW_DURATION'
 };
 
 export const DATA_KEY = {

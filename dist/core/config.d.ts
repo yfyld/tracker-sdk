@@ -13,6 +13,7 @@ export interface IConfig {
     delayLinkTime: number;
     deviceIdKey: string;
     beforeGenerateLog: Function | null;
+    autoTrackPrefix: string;
 }
 export declare function getConfig(): IConfig;
 export declare function setConfig(data: Partial<IConfig>): void;

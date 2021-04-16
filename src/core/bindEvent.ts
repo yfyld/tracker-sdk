@@ -86,6 +86,7 @@ const install = function (conf?: Partial<IConfig>) {
     (e: NewMouseEvent) => {
       let element = e.target as HTMLElement & HTMLLinkElement;
       const { pageId } = getPageInfo();
+      let hasTrack = false;
       while (element && element.tagName && element.tagName.toUpperCase() !== 'HTML' && element.getAttribute) {
         //是否有埋点属性
         if (
@@ -108,12 +109,20 @@ const install = function (conf?: Partial<IConfig>) {
             }
 
             actionTracker.trackLink(element);
+            hasTrack = true;
           } else {
             actionTracker.trackDom(element);
+            hasTrack = true;
           }
+        } else if (element._isWatchTrack) {
+          hasTrack = true;
         }
 
         element = element.parentNode as HTMLElement & HTMLLinkElement;
+      }
+      //如果没有触发任何无痕埋点 则把当前点击dom进行无痕
+      if (!hasTrack && e.target) {
+        actionTracker.trackDom(e.target as HTMLElement & HTMLLinkElement);
       }
     },
     false

@@ -15,6 +15,7 @@ const trackPage = actionTracker.trackPage;
 const trackEvent = actionTracker.trackEvent;
 const trackViewStart = actionTracker.trackViewStart;
 const trackViewEnd = actionTracker.trackViewEnd;
+const trackView = actionTracker.trackView;
 const trackLink = actionTracker.trackLink;
 const track = actionTracker.track;
 
@@ -35,6 +36,7 @@ export {
   trackPage,
   trackEvent,
   trackViewStart,
+  trackView,
   trackViewEnd,
   trackLink,
   track,

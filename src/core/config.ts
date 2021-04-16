@@ -19,6 +19,7 @@ export interface IConfig {
   delayLinkTime: number;
   deviceIdKey: string;
   beforeGenerateLog: Function | null;
+  autoTrackPrefix: string;
 }
 
 //default config
@@ -31,12 +32,13 @@ let config: IConfig = {
   sendType: SEND_TYPE.ASYNC, //发送日志方式 (同步发,异步延迟发,关闭浏览器前发送)
   delayTime: 1000, //延迟发送的时间
   autoTrackPage: true, //自动埋点页面
-  autoTrackClick: true, //自动埋点a,button,input
+  autoTrackClick: true, //自动埋点a,button,input,attr==='role',e.target
   autoInstall: true, //自动开始埋点监控
   delayLink: true, //跳转延迟
   delayLinkTime: 300,
   deviceIdKey: CUSTOM_TOKEN_KEY,
-  beforeGenerateLog: null
+  beforeGenerateLog: null,
+  autoTrackPrefix: 'zhiyun-'
 };
 
 //script tracker-key  config
@@ -45,6 +47,10 @@ if (scriptDom) {
   let trackKey = scriptDom.getAttribute('track-key') || scriptDom.getAttribute('trackKey') || '';
   if (trackKey) {
     config.trackKey = trackKey;
+  }
+  let autoTrackPrefix = scriptDom.getAttribute('auto-track-prefix');
+  if (autoTrackPrefix) {
+    config.autoTrackPrefix = autoTrackPrefix;
   }
 }
 

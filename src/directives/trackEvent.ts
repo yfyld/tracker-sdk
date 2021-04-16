@@ -35,5 +35,5 @@ function handleEvent(e: Event) {
   } else {
     actionTracker.trackDom(this, this._trackerInfo as ITrackerEventParam);
   }
-  this._trackerInfo.trackId && setCookie('source_event_id', this._trackerInfo.trackId, 0.0008);
+  // this._trackerInfo.trackId && setCookie('source_event_id', this._trackerInfo.trackId, 0.0008); //todo 确认干嘛用的
 }

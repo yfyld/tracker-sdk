@@ -92,6 +92,7 @@ class ActionTracker {
     this.trackEvent = this.trackEvent.bind(this);
     this.trackPage = this.trackPage.bind(this);
     this.trackViewStart = this.trackViewStart.bind(this);
+    this.trackView = this.trackView.bind(this);
     this.trackViewEnd = this.trackViewEnd.bind(this);
   }
 
@@ -107,25 +108,27 @@ class ActionTracker {
    * @memberof ActionTracker
    */
   trackPage(info: ITrackerPageParam = {}) {
-    const offlineUrl = getConfig().offlineUrl;
-    let data: ITrackerData = {
-      actionType: ACTION_TYPE.PAGE,
-      ...info
-    };
-    if (!data.trackId) {
-      data.trackId = `zyjk-page-${hashCode(getRealPath(window.location.href, offlineUrl))}`;
-      data.isAutoTrack = true; // 无痕埋点标记
-    } else {
-      // 同样记录无痕url
-      this.record.pageTrackTime = Date.now();
-      this.record.pageId = data.trackId;
-      data.autoTrackId = `zyjk-page-${hashCode(getRealPath(window.location.href, offlineUrl))}`;
-    }
+    setTimeout(() => {
+      const { offlineUrl, autoTrackPrefix } = getConfig();
+      let data: ITrackerData = {
+        actionType: ACTION_TYPE.PAGE,
+        ...info
+      };
+      if (!data.trackId) {
+        data.trackId = `${autoTrackPrefix}page-${hashCode(getRealPath(window.location.href, offlineUrl))}`;
+        data.isAutoTrack = true; // 无痕埋点标记
+      } else {
+        // 同样记录无痕url
+        this.record.pageTrackTime = Date.now();
+        this.record.pageId = data.trackId;
+        data.autoTrackId = `${autoTrackPrefix}page-${hashCode(getRealPath(window.location.href, offlineUrl))}`;
+      }
 
-    // 记录最新的页面曝光 用于防止无痕重复埋点 todo
-    // ActionTracker.instance.record.pageId = data.trackId;
-    // ActionTracker.instance.record.pageTrackTime = Date.now();
-    send(data);
+      // 记录最新的页面曝光 用于防止无痕重复埋点 todo
+      // ActionTracker.instance.record.pageId = data.trackId;
+      // ActionTracker.instance.record.pageTrackTime = Date.now();
+      send(data);
+    }, 0);
   }
 
   /**
@@ -142,7 +145,7 @@ class ActionTracker {
    *
    */
   _trackEvent(info: ITrackerEventParam = {}, domInfo: IDomInfo) {
-    const offlineUrl = getConfig().offlineUrl;
+    const { offlineUrl, autoTrackPrefix } = getConfig();
 
     let data: ITrackerData = {
       actionType: ACTION_TYPE.EVENT,
@@ -150,8 +153,8 @@ class ActionTracker {
       ...info
     };
     if (!data.trackId && !data.debug) {
-      let code = hashCode(domInfo?.domId + domInfo?.domClass + domInfo?.domTag + domInfo?.domContent);
-      data.trackId = `zyjk-event-${hashCode(getRealPath(window.location.href, offlineUrl))}-${code}`;
+      let code = hashCode(domInfo?.domId + domInfo?.domClass + domInfo?.domTag);
+      data.trackId = `${autoTrackPrefix}event-${hashCode(getRealPath(window.location.href, offlineUrl))}-${code}`;
       data.isAutoTrack = true;
     }
     send(data);
@@ -163,7 +166,7 @@ class ActionTracker {
    * @param info
    * @param visSenseConfig
    */
-  trackViewStart(dom: HTMLElement, info: ITrackerViewParam, visSenseConfig: VisSenseConfig = {}) {
+  trackView(dom: HTMLElement, info: ITrackerViewParam, visSenseConfig: VisSenseConfig = {}) {
     if (dom) {
       let data: ITrackerData = {
         actionType: ACTION_TYPE.VIEW,
@@ -188,9 +191,12 @@ class ActionTracker {
       );
     }
   }
+  trackViewStart(info: ITrackerViewParam) {
+    send({ ...info, actionType: ACTION_TYPE.VIEW });
+  }
 
   trackViewEnd(trackId: string) {
-    send({ trackId, actionType: ACTION_TYPE.VIEW });
+    durationTime.end(trackId);
   }
 
   /**
@@ -262,7 +268,9 @@ class ActionTracker {
 
     let trackInfo = {
       trackId: '',
-      domPath: getDomPath(dom)
+      domPath: getDomPath(dom),
+      domContent: dom.textContent.substr(0, 20),
+      domHref: (dom as HTMLLinkElement).href || null
     };
 
     let domInfo: IDomInfo = {

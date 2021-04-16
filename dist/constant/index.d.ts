@@ -15,6 +15,7 @@ export declare const ACTION_TYPE: {
     PAGE: string;
     VIEW: string;
     DURATION: string;
+    VIEW_DURATION: string;
 };
 export declare const DATA_KEY: {
     trackId: string;

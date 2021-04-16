@@ -43,9 +43,8 @@ export const getDefaultSourceEventId = () => {
     } catch (e) {
       return null;
     }
-
-    localStorage.removeItem('source_event_id');
   }
+  return null;
 };
 
 let pageInfo: IPageInfo = {

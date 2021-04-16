@@ -60,7 +60,7 @@ class DurationTime {
   generateLog(info: ILogDataDataItem) {
     const log = {
       ...info,
-      actionType: 'DURATION',
+      actionType: info.actionType === ACTION_TYPE.PAGE ? ACTION_TYPE.DURATION : ACTION_TYPE.VIEW_DURATION,
       durationTime: Date.now() - info.startTime,
       trackTime: Date.now(),
       masterId: info.id,
