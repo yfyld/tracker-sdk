@@ -38,7 +38,7 @@ let index = 0;
  * 同步发送
  * @param data
  */
-export function send(data: ITrackerData) {
+export function send(data: ITrackerData | ILogDataDataItem) {
   const config = getConfig();
   const { sendType } = config;
   if (sendType === SEND_TYPE.SYNC) {
@@ -224,10 +224,6 @@ function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, 
   }
 
   if (result.actionType === ACTION_TYPE.VIEW && !data.debug) {
-    const durationLogs = durationTime.end(data.trackId);
-    if (durationLogs && durationLogs.length) {
-      durationLogs;
-    }
     durationTime.start(result);
   }
 

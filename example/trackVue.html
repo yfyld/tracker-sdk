@@ -94,7 +94,9 @@
       },
       mounted() {
         const vvv = document.getElementById('vvv');
-        Telescope.trackViewStart(vvv, { custom: 'jjjjjjjvvvvvv', trackId: 'vvvvvv' });
+        setTimeout(() => {
+          Telescope.trackViewStart({ trackId: 'vvv' });
+        }, 1000);
       },
       methods: {
         handleClick() {
@@ -105,7 +107,7 @@
           });
         },
         trackViewEnd() {
-          Telescope.trackViewEnd({ trackId: 'vvv' });
+          Telescope.trackViewEnd('vvv');
         }
       }
     };

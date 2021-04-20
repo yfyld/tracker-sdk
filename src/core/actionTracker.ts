@@ -196,7 +196,10 @@ class ActionTracker {
   }
 
   trackViewEnd(trackId: string) {
-    durationTime.end(trackId);
+    const log = durationTime.end(trackId);
+    if (log && log[0]) {
+      send(log[0]);
+    }
   }
 
   /**
