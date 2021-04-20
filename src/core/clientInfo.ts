@@ -42,7 +42,7 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
   };
   if (urlInfoStr) {
     try {
-      urlInfo = JSON.parse(urlInfoStr);
+      urlInfo = JSON.parse(decodeURIComponent(urlInfoStr));
     } catch (error) {}
   }
 
@@ -107,5 +107,6 @@ if (inMin) {
 }
 
 export const getClientInfo = () => {
+  setClientInfo({});
   return { ...clientInfo };
 };
