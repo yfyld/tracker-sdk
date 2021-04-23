@@ -50,7 +50,9 @@ export default function http(data: string, isAjax = false, isSendBeacon = true, 
 
   const dataStr = data;
   const config = getConfig();
-  const url = `${config.serverUrl}?${config.trackKey ? `trackKey=${config.trackKey}&` : ''}time=${Date.now()}`;
+  const url = `${isAjax ? config.debugServerUrl : config.serverUrl}?${
+    config.trackKey ? `trackKey=${config.trackKey}&` : ''
+  }time=${Date.now()}`;
 
   //使用sendBeacon 出现重复提交
   // if (

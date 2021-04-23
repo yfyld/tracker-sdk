@@ -100,10 +100,17 @@
       },
       methods: {
         handleClick() {
+          console.log('cccccccc');
           Telescope.trackEvent({
             trackId: 'aa5',
             custom: { bbb: 1, ccc: true },
             score: 29
+          });
+
+          Telescope.trackLog({
+            trackKey: 'nokeyfornow',
+            trackNothing: 'ggg',
+            custom: { i: 'am', log: true }
           });
         },
         trackViewEnd() {

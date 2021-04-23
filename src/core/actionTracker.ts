@@ -46,6 +46,15 @@ export interface ITrackerEventParam extends IBusinessParam {
   channel?: string;
 }
 
+export interface ITrackerDebugLogParam {
+  custom?: string | { [prop: string]: string | number | boolean };
+  eventName?: string;
+  pageId?: string;
+  trackId?: string;
+  score?: number;
+  channel?: string;
+}
+
 export interface ITrackerDomParam {
   trackId: string;
   actionType: string;
@@ -94,6 +103,7 @@ class ActionTracker {
     this.trackViewStart = this.trackViewStart.bind(this);
     this.trackView = this.trackView.bind(this);
     this.trackViewEnd = this.trackViewEnd.bind(this);
+    this.trackLog = this.trackLog.bind(this);
   }
 
   record = {
@@ -191,6 +201,7 @@ class ActionTracker {
       );
     }
   }
+
   trackViewStart(info: ITrackerViewParam) {
     send({ ...info, actionType: ACTION_TYPE.VIEW });
   }
@@ -296,6 +307,27 @@ class ActionTracker {
       trackInfo = { ...trackInfo, ...info };
     }
     this._trackEvent(trackInfo, domInfo);
+  }
+
+  /**
+   * 前端日志收集
+   * @memberof ActionTracker
+   */
+  trackLog(info: ITrackerDebugLogParam = {}, domInfo: IDomInfo) {
+    const { offlineUrl, autoTrackPrefix } = getConfig();
+
+    let data: ITrackerData = {
+      debug: true,
+      actionType: ACTION_TYPE.EVENT,
+      eventName: 'CLICK',
+      ...info
+    };
+    if (!data.trackId && !data.debug) {
+      let code = hashCode(domInfo?.domId + domInfo?.domClass + domInfo?.domTag);
+      data.trackId = `${autoTrackPrefix}event-${hashCode(getRealPath(window.location.href, offlineUrl))}-${code}`;
+      data.isAutoTrack = true;
+    }
+    send(data);
   }
 }
 
