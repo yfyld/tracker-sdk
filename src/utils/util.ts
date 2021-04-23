@@ -137,7 +137,11 @@ export function getDomPath(dom: HTMLElement) {
   } else {
     path.push(dom.tagName.toLowerCase());
   }
-  while (dom.parentNode && (dom.parentNode as HTMLElement).tagName !== 'BODY') {
+  while (
+    dom.parentNode &&
+    (dom.parentNode as HTMLElement).tagName &&
+    (dom.parentNode as HTMLElement).tagName !== 'BODY'
+  ) {
     dom = dom.parentNode as HTMLElement;
     if (dom.id) {
       path.unshift('#' + dom.id);

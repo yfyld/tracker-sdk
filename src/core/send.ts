@@ -133,7 +133,7 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
     version: config.version
   };
 
-  console.log(JSON.stringify(wrapperData, null, 2));
+  //console.log(JSON.stringify(wrapperData, null, 2));
   return wrapperData;
 }
 
