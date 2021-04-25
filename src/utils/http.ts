@@ -50,6 +50,7 @@ export default function http(data: string, isAjax = false, isSendBeacon = true, 
 
   const dataStr = data;
   const config = getConfig();
+
   const url = `${isAjax ? config.debugServerUrl : config.serverUrl}?${
     config.trackKey ? `trackKey=${config.trackKey}&` : ''
   }time=${Date.now()}`;

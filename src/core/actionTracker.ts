@@ -317,9 +317,9 @@ class ActionTracker {
     const { offlineUrl, autoTrackPrefix } = getConfig();
 
     let data: ITrackerData = {
-      debug: true,
       actionType: ACTION_TYPE.EVENT,
       eventName: 'CLICK',
+      debug: true,
       ...info
     };
     if (!data.trackId && !data.debug) {
@@ -327,6 +327,7 @@ class ActionTracker {
       data.trackId = `${autoTrackPrefix}event-${hashCode(getRealPath(window.location.href, offlineUrl))}-${code}`;
       data.isAutoTrack = true;
     }
+
     send(data);
   }
 }
