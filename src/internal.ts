@@ -1,6 +1,6 @@
 import tracker from './decoratiors/tracker';
 import actionTracker from './core/actionTracker';
-import timeTracker from './core/pageTimeTracker';
+
 import { getConfig, setConfig } from './core/config';
 import { sendAsync, send, sendSync } from './core/send';
 import { after, before } from './decoratiors/tools';
@@ -13,6 +13,9 @@ import { login, logout } from './core/user';
 const trackDom = actionTracker.trackDom;
 const trackPage = actionTracker.trackPage;
 const trackEvent = actionTracker.trackEvent;
+const trackLog = actionTracker.trackLog;
+const trackViewStart = actionTracker.trackViewStart;
+const trackViewEnd = actionTracker.trackViewEnd;
 const trackView = actionTracker.trackView;
 const trackLink = actionTracker.trackLink;
 const track = actionTracker.track;
@@ -30,11 +33,13 @@ export {
   install,
   //tracker
   actionTracker,
-  timeTracker,
   trackDom,
   trackPage,
   trackEvent,
+  trackLog,
+  trackViewStart,
   trackView,
+  trackViewEnd,
   trackLink,
   track,
   //config

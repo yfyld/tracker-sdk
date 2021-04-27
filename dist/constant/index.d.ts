@@ -1,5 +1,6 @@
 export declare const SERVER_URL: string;
-export declare const CUSTOM_TOKEN_KEY = "TRACKER_IDENTIFY";
+export declare const DEBUG_SERVER_URL: string;
+export declare const CUSTOM_TOKEN_KEY = "TRYCATCH_TOKEN";
 export declare const SEND_TYPE: {
     SYNC: string;
     ASYNC: string;
@@ -14,6 +15,7 @@ export declare const ACTION_TYPE: {
     PAGE: string;
     VIEW: string;
     DURATION: string;
+    VIEW_DURATION: string;
 };
 export declare const DATA_KEY: {
     trackId: string;

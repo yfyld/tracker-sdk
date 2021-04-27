@@ -1,20 +1,25 @@
+import { getClientInfo } from './clientInfo';
 import { ACTION_TYPE, SAFETY_KEY } from './../constant/index';
 import { getPageInfo, setPageInfo, IPageInfo } from './pageInfo';
 import http from '../utils/http';
 import libInfo from './libInfo';
 import getNetInfo from './netInfo';
-import { getClientInfo } from './clientInfo';
+import durationTime from './durationTime';
+
 import { getConfig, IConfig } from './config';
-import { getUUID } from '../utils/util';
+import { getCookie, getQueryVariable, getUUID, setCookie } from '../utils/util';
 import { getUserInfo, IUserInfo } from './user';
 import { SEND_TYPE } from '../constant/index';
 import { ITrackerData, ICleintInfo, ILibInfo } from '../types';
 import { isArray, isObject } from './../utils/util';
 import pick from 'ramda/src/pick';
+import { getBusinessExtension, setBuinessExtension } from './business';
 
 export interface ILogDataDataItem extends ITrackerData, IPageInfo {
   trackTime: number;
+  startTime?: number;
   id: string;
+  trackId?: string;
 }
 
 export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
@@ -24,6 +29,7 @@ export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
 }
 
 const allData: ILogDataDataItem[] = [];
+const allDebugData: ILogDataDataItem[] = [];
 let timer: any = null;
 const uuid = getUUID();
 let index = 0;
@@ -32,7 +38,7 @@ let index = 0;
  * 同步发送
  * @param data
  */
-export function send(data: ITrackerData) {
+export function send(data: ITrackerData | ILogDataDataItem) {
   const config = getConfig();
   const { sendType } = config;
   if (sendType === SEND_TYPE.SYNC) {
@@ -45,42 +51,56 @@ export function send(data: ITrackerData) {
 export function sendSync(data?: ITrackerData) {
   if (data) {
     const config = getConfig();
-    const newData = _generateData(data, config);
+    const [newData, debug] = _generateData(data, config);
     if (!newData) {
       return;
     }
-    allData.push(newData);
+    if (debug) {
+      allDebugData.push(newData);
+    } else {
+      allData.push(newData);
+    }
   }
 
   clearTimeout(timer);
 
   _sendToServer(allData);
+  _sendToServer(allDebugData, true);
   allData.length = 0;
+  allDebugData.length = 0;
 }
 
 /**
- * 延迟发送  data不存在则马上发送
+ * 延迟发送  data不存在则马上发送allData
  * @param data
  */
 export function sendAsync(data?: ITrackerData) {
   const config = getConfig();
   if (data) {
-    const newData = _generateData(data, config);
+    const [newData, debug] = _generateData(data, config);
     if (!newData) {
       return;
     }
-    allData.push(newData);
+    if (debug) {
+      allDebugData.push(newData);
+    } else {
+      allData.push(newData);
+    }
   }
   clearTimeout(timer);
   // 无参数或者大于10条发送发送
-  if ((!data && allData.length > 0) || allData.length >= 10) {
+  if ((!data && allData.length > 0) || allData.length >= 10 || allDebugData.length >= 10) {
     _sendToServer(allData);
+    _sendToServer(allDebugData, true);
     allData.length = 0;
+    allDebugData.length = 0;
     return;
   }
   timer = setTimeout(() => {
     _sendToServer(allData);
+    _sendToServer(allDebugData, true);
     allData.length = 0;
+    allDebugData.length = 0;
   }, config.delayTime);
 }
 
@@ -90,7 +110,9 @@ export function sendAsync(data?: ITrackerData) {
  * @param isAjax
  */
 function _sendToServer(data: ILogDataDataItem[], isAjax?: boolean) {
-  // console.log(JSON.stringify(data, null, 2));
+  if (!data.length) {
+    return;
+  }
   return http(JSON.stringify(_wrapperData(data)), isAjax);
 }
 
@@ -99,10 +121,10 @@ function _sendToServer(data: ILogDataDataItem[], isAjax?: boolean) {
  * @param data
  */
 function _wrapperData(data: ILogDataDataItem[]): ILogData {
-  //console.log(JSON.stringify(data, null, 2));
   const config = getConfig();
   index++;
-  return {
+
+  const wrapperData = {
     customTime: Date.now(),
     items: data,
     ...getClientInfo(),
@@ -110,6 +132,9 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
     ...getUserInfo(),
     version: config.version
   };
+
+  //console.log(JSON.stringify(wrapperData, null, 2));
+  return wrapperData;
 }
 
 /**
@@ -117,13 +142,13 @@ function _wrapperData(data: ILogDataDataItem[]): ILogData {
  * @param data
  * @param config
  */
-function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem | void {
+function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, boolean] {
   index++;
 
   if (typeof config.beforeGenerateLog === 'function') {
     data = config.beforeGenerateLog(data);
     if (!data) {
-      return;
+      return [null, !!data.debug];
     }
   }
 
@@ -137,24 +162,72 @@ function _generateData(data: ITrackerData, config: IConfig): ILogDataDataItem | 
   }
 
   const newData = pick(SAFETY_KEY, data);
-
-  const pageInfo = getPageInfo();
-
+  let pageInfo = getPageInfo();
   const netInfo = getNetInfo();
 
-  if (data.actionType === 'PAGE') {
+  setBuinessExtension({
+    seKeywords: getQueryVariable('seKeywords'),
+    bizId: getQueryVariable('bizId')
+  });
+
+  const businessInfo = getBusinessExtension();
+  if (data.actionType === ACTION_TYPE.PAGE) {
+    //修改当前pageInfo
+    setPageInfo({
+      pageId: data.trackId || '',
+      referrerId: pageInfo.pageId || pageInfo.referrerId || '',
+      referrerUrl: pageInfo.url || ''
+    });
+    pageInfo = getPageInfo();
     pageInfo.pageId = null;
+  }
+
+  if (data.actionType === ACTION_TYPE.EVENT) {
+    let sourceEventInfo = {
+      date: Date.now(),
+      id: data.trackId,
+      pageId: pageInfo.pageId,
+      isAutoTrack: data.isAutoTrack
+    };
+    if (data.isAutoTrack) {
+      try {
+        let preSourceEventInfo = JSON.parse(localStorage.getItem('source_event_id'));
+        if (preSourceEventInfo && !preSourceEventInfo.isAutoTrack && preSourceEventInfo.date > Date.now() - 300) {
+          sourceEventInfo = null;
+        }
+      } catch (error) {}
+    }
+
+    if (sourceEventInfo) {
+      localStorage.setItem('source_event_id', JSON.stringify(sourceEventInfo));
+    }
   }
 
   const result = {
     ...newData,
     ...pageInfo,
     ...netInfo,
+    ...businessInfo,
     trackTime: Date.now(),
     id: uuid + '-' + index
   };
 
-  // console.log(JSON.stringify(result, null, 2));
+  if (result.actionType === ACTION_TYPE.PAGE && !data.debug) {
+    const durationLogs = durationTime.end();
+    if (durationLogs && durationLogs.length) {
+      _sendToServer(durationLogs);
+    }
+    durationTime.start(result);
+    localStorage.removeItem('source_event_id');
+  } else {
+    result.sourceEventId = null;
+  }
 
-  return result;
+  if (result.actionType === ACTION_TYPE.VIEW && !data.debug) {
+    durationTime.start(result);
+  }
+
+  //.log(JSON.stringify(result, null, 2));
+
+  return [result, !!data.debug];
 }

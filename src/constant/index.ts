@@ -1,9 +1,13 @@
 //日志收集接口
 export const SERVER_URL = `${
-  window.location.protocol === 'https:' ? 'https:' : 'http:'
+  window.location.protocol === 'http:' ? 'http:' : 'https:'
 }//frontlo-collection.91jkys.com/log.gif`; //'http://test.qa.91jkys.com:9342/log.gif';
 
-export const CUSTOM_TOKEN_KEY = 'TRACKER_IDENTIFY';
+export const DEBUG_SERVER_URL = `${
+  window.location.protocol === 'http:' ? 'http:' : 'https:'
+}//frontlo-collection.91jkys.com/f2e/log.gif`;
+
+export const CUSTOM_TOKEN_KEY = 'TRYCATCH_TOKEN';
 
 export const SEND_TYPE = {
   SYNC: 'SYNC',
@@ -20,7 +24,8 @@ export const ACTION_TYPE = {
   EVENT: 'EVENT',
   PAGE: 'PAGE',
   VIEW: 'VIEW',
-  DURATION: 'DURATION'
+  DURATION: 'DURATION',
+  VIEW_DURATION: 'VIEW_DURATION'
 };
 
 export const DATA_KEY = {
@@ -28,6 +33,7 @@ export const DATA_KEY = {
 };
 
 export const SAFETY_KEY = [
+  'version',
   'custom',
   'actionType',
   'eventName',
@@ -46,5 +52,20 @@ export const SAFETY_KEY = [
   'endTime',
   'durationTime',
   'channel',
-  'netType'
+  'netType',
+  'debug',
+  'seKeywords',
+  'bizId',
+  'isAutoTrack',
+  'autoTrackId',
+  //
+  'contentId',
+  'patientId',
+  'doctorId',
+  'skuId',
+  'prescriptionId',
+  'storeId',
+  'inquiryId',
+  'orderId',
+  'activityId'
 ];

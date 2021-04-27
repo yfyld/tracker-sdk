@@ -1,12 +1,4 @@
-// export default function () {
-//   return {
-//     clientWidth: window.screen.height,
-//     clientHeight: window.screen.width,
-//     radio: window.devicePixelRatio || 1,
-//     domain: document.domain || ''
-//   };
-// }
-
+import { getConfig } from 'src/core/config';
 import { getCookie, getQueryVariable, inMin, setCookie, inWechat, getUUID } from './../utils/util';
 
 export interface IClientInfo {
@@ -17,11 +9,12 @@ export interface IClientInfo {
   appId: string;
   appVersion: string;
   appType: string;
-  marketid?: string;
+  marketId?: string;
   sessionId: string;
   channel?: string;
+  deviceId?: string;
 }
-
+const config = getConfig();
 let clientInfo: IClientInfo = {
   clientWidth: window.screen.height,
   clientHeight: window.screen.width,
@@ -30,18 +23,20 @@ let clientInfo: IClientInfo = {
   appId: 'H5',
   appVersion: null,
   appType: 'H5',
-  marketid: null,
+  marketId: null,
   sessionId: getUUID(),
-  channel: null
+  channel: null,
+  deviceId: getCookie(config.deviceIdKey)
 };
 
 export const setClientInfo = (info: Partial<IClientInfo>) => {
   //小程序
   let urlInfoStr = getQueryVariable('telescope-info');
+
   let urlInfo = {} as {
     appId: string;
     appVersion: string;
-    marketid: string;
+    marketId: string;
     sessionId: string;
     channel: string;
   };
@@ -56,7 +51,7 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
   let cookieInfo = {} as {
     appId: string;
     appVersion: string;
-    marketid: string;
+    marketId: string;
     sessionId: string;
     channel: string;
     expired: number;
@@ -74,7 +69,6 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
   delete cookieInfo.expired;
 
   const channel = getQueryVariable('channel') || urlInfo.channel || cookieInfo.channel;
-
   clientInfo = {
     ...clientInfo,
     ...cookieInfo,
@@ -83,12 +77,17 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
     ...info
   };
 
+  if (clientInfo.deviceId) {
+    const config = getConfig();
+    setCookie(config.deviceIdKey, clientInfo.deviceId);
+  }
+
   setCookie(
     'TELESCOPE_CACHE_INFO',
     JSON.stringify({
       appId: clientInfo.appId,
       appVersion: clientInfo.appVersion,
-      marketid: clientInfo.marketid,
+      marketId: clientInfo.marketId,
       channel: clientInfo.channel,
       sessionId: clientInfo.sessionId,
       expired: Date.now() + 30 * 60 * 1000

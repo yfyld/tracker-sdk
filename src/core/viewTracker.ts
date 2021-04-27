@@ -2,7 +2,7 @@ import vissense from 'vissense';
 import { VisSenseConfig } from '../types';
 const VisSense = vissense(window);
 const VisSenseUtils = VisSense.Utils;
-const createInnerMonitor = function(outerMonitor: any, callback: Function, config: VisSenseConfig) {
+const createInnerMonitor = function (outerMonitor: any, callback: Function, config: VisSenseConfig) {
   let timeElapsed = 0;
   let timeStarted: any = null;
   let timeLimit = config.timeLimit;
@@ -11,7 +11,7 @@ const createInnerMonitor = function(outerMonitor: any, callback: Function, confi
 
   return VisSense.VisMon.Builder(outerMonitor.visobj())
     .strategy(new VisSense.VisMon.Strategy.PollingStrategy({ interval: interval }))
-    .on('update', function(monitor: any) {
+    .on('update', function (monitor: any) {
       let percentage = monitor.state().percentage;
       if (percentage < percentageLimit) {
         timeStarted = null;
@@ -27,13 +27,13 @@ const createInnerMonitor = function(outerMonitor: any, callback: Function, confi
         callback(monitor);
       }
     })
-    .on('stop', function() {
+    .on('stop', function () {
       timeStarted = null;
     })
     .build();
 };
 
-const onPercentageTimeTestPassed = function(visobj: any, callback: Function, config: VisSenseConfig) {
+const onPercentageTimeTestPassed = function (visobj: any, callback: Function, config: VisSenseConfig) {
   const _config = VisSenseUtils.defaults(config, {
     percentageLimit: 1,
     timeLimit: 1000,
@@ -53,18 +53,18 @@ const onPercentageTimeTestPassed = function(visobj: any, callback: Function, con
     })
   )
     .set('strategy', _config.strategy)
-    .on('visible', function(monitor: any) {
+    .on('visible', function (monitor: any) {
       if (innerMonitor === null) {
         innerMonitor = createInnerMonitor(monitor, callback, _config);
       }
       innerMonitor.start();
     })
-    .on('hidden', function() {
+    .on('hidden', function () {
       if (innerMonitor !== null) {
         innerMonitor.stop();
       }
     })
-    .on('stop', function() {
+    .on('stop', function () {
       if (innerMonitor !== null) {
         innerMonitor.stop();
       }
@@ -73,13 +73,13 @@ const onPercentageTimeTestPassed = function(visobj: any, callback: Function, con
 
   outerMonitor.start();
 
-  return function() {
+  return function () {
     outerMonitor.stop();
     innerMonitor = null;
   };
 };
 
-VisSense.fn.onPercentageTimeTestPassed = function(callback: Function, config: VisSenseConfig) {
+VisSense.fn.onPercentageTimeTestPassed = function (callback: Function, config: VisSenseConfig) {
   onPercentageTimeTestPassed(this, callback, config);
 };
 

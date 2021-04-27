@@ -1,14 +1,9 @@
 export interface IConfig {
-    store: string;
     trackKey: string;
     serverUrl: string;
-    watchHistoryAndHash: boolean;
-    pageTime: boolean;
-    env: string;
-    console: boolean;
-    projectId: number;
+    debugServerUrl: string;
     version: string;
-    domain: string;
+    offlineUrl: string;
     sendType: string;
     delayTime: number;
     autoTrackPage: boolean;
@@ -16,10 +11,9 @@ export interface IConfig {
     autoInstall: boolean;
     delayLink: boolean;
     delayLinkTime: number;
-    useServerTime: boolean;
-    corssSubdomain: boolean;
     deviceIdKey: string;
     beforeGenerateLog: Function | null;
+    autoTrackPrefix: string;
 }
 export declare function getConfig(): IConfig;
 export declare function setConfig(data: Partial<IConfig>): void;

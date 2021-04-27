@@ -5,7 +5,7 @@ export default function () {
     (window as any).navigator.webkitConnection ||
     {};
 
-  if (connection) {
+  if (!connection) {
     return {};
   }
   const type = connection.type || connection.effectiveType;
