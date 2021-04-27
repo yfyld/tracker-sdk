@@ -315,9 +315,9 @@ class ActionTracker {
    */
   trackLog(info: ITrackerDebugLogParam = {}) {
     let data: ITrackerData = {
-      debug: true,
       actionType: ACTION_TYPE.EVENT,
       eventName: 'CLICK',
+      debug: true,
       ...info
     };
 
