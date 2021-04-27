@@ -15,7 +15,10 @@ try {
     setConfig({
       serverUrl: `${
         window.location.protocol === 'http:' ? 'http:' : 'https:'
-      }//frontlo-collection.qa.91jkys.com/log.gif`
+      }//frontlo-collection.qa.91jkys.com/log.gif`,
+      debugServerUrl: `${
+        window.location.protocol === 'http:' ? 'http:' : 'https:'
+      }//frontlo-collection.qa.91jkys.com/f2e/log.gif`
     });
   }
 

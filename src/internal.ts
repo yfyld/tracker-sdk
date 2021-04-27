@@ -13,6 +13,7 @@ import { login, logout } from './core/user';
 const trackDom = actionTracker.trackDom;
 const trackPage = actionTracker.trackPage;
 const trackEvent = actionTracker.trackEvent;
+const trackLog = actionTracker.trackLog;
 const trackViewStart = actionTracker.trackViewStart;
 const trackViewEnd = actionTracker.trackViewEnd;
 const trackView = actionTracker.trackView;
@@ -35,6 +36,7 @@ export {
   trackDom,
   trackPage,
   trackEvent,
+  trackLog,
   trackViewStart,
   trackView,
   trackViewEnd,

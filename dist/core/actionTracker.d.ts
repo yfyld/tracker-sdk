@@ -38,6 +38,16 @@ export interface ITrackerEventParam extends IBusinessParam {
     score?: number;
     channel?: string;
 }
+export interface ITrackerDebugLogParam extends IBusinessParam {
+    custom?: string | {
+        [prop: string]: string | number | boolean;
+    };
+    eventName?: string;
+    pageId?: string;
+    trackId?: string;
+    score?: number;
+    channel?: string;
+}
 export interface ITrackerDomParam {
     trackId: string;
     actionType: string;
@@ -126,6 +136,11 @@ declare class ActionTracker {
      * @memberof ActionTracker
      */
     trackDom(dom: HTMLLinkElement | HTMLInputElement | HTMLLinkElement, info?: ITrackerEventParam): void;
+    /**
+     * 前端日志收集
+     * @memberof ActionTracker
+     */
+    trackLog(info?: ITrackerDebugLogParam): void;
 }
 declare let instance: ActionTracker;
 export default instance;

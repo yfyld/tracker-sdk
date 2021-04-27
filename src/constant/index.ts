@@ -5,7 +5,7 @@ export const SERVER_URL = `${
 
 export const DEBUG_SERVER_URL = `${
   window.location.protocol === 'http:' ? 'http:' : 'https:'
-}//frontlo-collection.91jkys.com/log.gif`;
+}//frontlo-collection.91jkys.com/f2e/log.gif`;
 
 export const CUSTOM_TOKEN_KEY = 'TRYCATCH_TOKEN';
 
