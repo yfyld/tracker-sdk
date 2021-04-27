@@ -11,7 +11,7 @@ import { login, logout } from './core/user';
 declare const trackDom: (dom: HTMLLinkElement | HTMLInputElement, info?: import("./core/actionTracker").ITrackerEventParam) => void;
 declare const trackPage: (info?: import("./core/actionTracker").ITrackerPageParam) => void;
 declare const trackEvent: (info?: import("./core/actionTracker").ITrackerEventParam) => void;
-declare const trackLog: (info: import("./core/actionTracker").ITrackerDebugLogParam, domInfo: import("./core/actionTracker").IDomInfo) => void;
+declare const trackLog: (info?: import("./core/actionTracker").ITrackerDebugLogParam) => void;
 declare const trackViewStart: (info: import("./core/actionTracker").ITrackerViewParam) => void;
 declare const trackViewEnd: (trackId: string) => void;
 declare const trackView: (dom: HTMLElement, info: import("./core/actionTracker").ITrackerViewParam, visSenseConfig?: import("./types").VisSenseConfig) => void;
