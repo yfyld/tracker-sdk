@@ -76,6 +76,10 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
     channel,
     ...info
   };
+  // 兼容小程序ua不准 没法判断是否是小程序
+  if (/_mini_/.test(clientInfo.appId)) {
+    clientInfo.appType = 'MINI';
+  }
 
   if (clientInfo.deviceId) {
     const config = getConfig();

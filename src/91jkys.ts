@@ -1,5 +1,5 @@
 import { setClientInfo } from './core/clientInfo';
-import { getCookie, getQueryVariable, inMin, inWechat } from './utils/util';
+import { getCookie, getQueryVariable } from './utils/util';
 import { setConfig } from './core/config';
 import { setUserInfo } from './core/user';
 import { login } from './core/user';
@@ -43,6 +43,7 @@ try {
       });
     }
   }
+
   if (typeof Sailer !== 'undefined' && /AppInfo|tangyi/.test(ua)) {
     setConfig({
       autoInstall: false

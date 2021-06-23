@@ -140,7 +140,8 @@ export function getDomPath(dom: HTMLElement) {
   while (
     dom.parentNode &&
     (dom.parentNode as HTMLElement).tagName &&
-    (dom.parentNode as HTMLElement).tagName !== 'BODY'
+    (dom.parentNode as HTMLElement).tagName !== 'BODY' &&
+    !dom.id
   ) {
     dom = dom.parentNode as HTMLElement;
     if (dom.id) {

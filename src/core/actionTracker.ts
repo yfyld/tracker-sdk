@@ -80,8 +80,9 @@ export interface IDomInfo {
   domClass?: string;
   domHref?: string;
   domName?: string;
-  domTag?: string;
+  domTag: string;
   domContent?: string;
+  domPath: string;
 }
 
 /**
@@ -146,7 +147,7 @@ class ActionTracker {
    * 事件埋点
    */
   trackEvent(info: ITrackerEventParam = {}) {
-    this._trackEvent(info, {});
+    this._trackEvent(info);
   }
 
   /**
@@ -154,7 +155,7 @@ class ActionTracker {
    * 事件埋点传dom
    *
    */
-  _trackEvent(info: ITrackerEventParam = {}, domInfo: IDomInfo) {
+  _trackEvent(info: ITrackerEventParam = {}, domInfo?: IDomInfo) {
     const { offlineUrl, autoTrackPrefix } = getConfig();
 
     let data: ITrackerData = {
@@ -162,8 +163,8 @@ class ActionTracker {
       eventName: 'CLICK',
       ...info
     };
-    if (!data.trackId && !data.debug) {
-      let code = hashCode(domInfo?.domId + domInfo?.domClass + domInfo?.domTag);
+    if (!data.trackId && !data.debug && domInfo) {
+      let code = domInfo.domId ? hashCode(domInfo.domId) : hashCode(domInfo.domPath + domInfo.domTag);
       data.trackId = `${autoTrackPrefix}event-${hashCode(getRealPath(window.location.href, offlineUrl))}-${code}`;
       data.isAutoTrack = true;
     }
@@ -279,10 +280,10 @@ class ActionTracker {
     _dom.DELAY_TRACK_TIME = setTimeout(() => {
       _dom.IS_TRACKED = false;
     }, 1000);
-
+    let domPath = getDomPath(dom);
     let trackInfo = {
       trackId: '',
-      domPath: getDomPath(dom),
+      domPath,
       domContent: dom.textContent.substr(0, 20),
       domHref: (dom as HTMLLinkElement).href || null
     };
@@ -293,6 +294,7 @@ class ActionTracker {
       domHref: (dom as HTMLLinkElement).href || '',
       domName: (dom as HTMLInputElement).name || '',
       domTag: dom.tagName,
+      domPath,
       domContent: dom.textContent.substr(0, 20)
     };
 
