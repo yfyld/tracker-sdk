@@ -285,13 +285,13 @@ class ActionTracker {
       trackId: '',
       domPath,
       domContent: dom.textContent.substr(0, 20),
-      domHref: (dom as HTMLLinkElement).href || null
+      domHref: (dom as HTMLLinkElement).href || (dom as unknown as HTMLImageElement).src || null
     };
 
     let domInfo: IDomInfo = {
       domId: dom.id,
       domClass: dom.className,
-      domHref: (dom as HTMLLinkElement).href || '',
+      domHref: (dom as HTMLLinkElement).href || (dom as unknown as HTMLImageElement).src || '',
       domName: (dom as HTMLInputElement).name || '',
       domTag: dom.tagName,
       domPath,
