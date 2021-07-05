@@ -56,22 +56,22 @@ export default function http(data: string, isAjax = false, isSendBeacon = true, 
   }time=${Date.now()}`;
 
   //使用sendBeacon 出现重复提交
-  // if (
-  //   window.location.protocol === 'https:' &&
-  //   isSendBeacon &&
-  //   typeof window.navigator.sendBeacon === 'function' &&
-  //   typeof Blob === 'function'
-  // ) {
-  //   const headers = {
-  //     type: 'text/plain; charset=UTF-8'
-  //   };
-  //   const blob = new Blob([dataStr], headers);
-  //   const success = window.navigator.sendBeacon(url, blob);
-  //   if (success) {
-  //     cb();
-  //     return;
-  //   }
-  // }
+  if (
+    window.location.protocol === 'https:' &&
+    isSendBeacon &&
+    typeof window.navigator.sendBeacon === 'function' &&
+    typeof Blob === 'function'
+  ) {
+    const headers = {
+      type: 'text/plain; charset=UTF-8'
+    };
+    const blob = new Blob([dataStr], headers);
+    const success = window.navigator.sendBeacon(url, blob);
+    if (success) {
+      cb();
+      return;
+    }
+  }
 
   if (isAjax || dataStr.length > 2000) {
     const xhr = new XMLHttpRequest();

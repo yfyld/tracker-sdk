@@ -73,8 +73,9 @@ export interface IDomInfo {
     domClass?: string;
     domHref?: string;
     domName?: string;
-    domTag?: string;
+    domTag: string;
     domContent?: string;
+    domPath: string;
 }
 /**
  *埋点入口类
@@ -106,7 +107,7 @@ declare class ActionTracker {
      * 事件埋点传dom
      *
      */
-    _trackEvent(info: ITrackerEventParam, domInfo: IDomInfo): void;
+    _trackEvent(info?: ITrackerEventParam, domInfo?: IDomInfo): void;
     /**
      * 视窗埋点 暂时不启用
      * @param dom
