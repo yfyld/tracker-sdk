@@ -74,12 +74,12 @@ const install = function (conf?: Partial<IConfig>) {
     };
   })();
 
-  const beatUpload = () => {
-    const logs = durationTime.beat();
-    sendQuick(logs);
-    setTimeout(beatUpload, 3000);
-  };
-  setTimeout(beatUpload, 3000);
+  // const beatUpload = () => {
+  //   const logs = durationTime.beat();
+  //   sendQuick(logs);
+  //   setTimeout(beatUpload, 3000);
+  // };
+  // setTimeout(beatUpload, 3000);
 
   window.addEventListener('beforeunload', onLeave);
   window.addEventListener('unload', onLeave);
