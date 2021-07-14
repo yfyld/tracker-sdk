@@ -3,7 +3,7 @@ import { getPageInfo, setPageInfo } from './pageInfo';
 import actionTracker from './actionTracker';
 import durationTime from './durationTime';
 import { getConfig, setConfig, IConfig } from './config';
-import { sendAsync, sendSync } from './send';
+import { send, sendAsync, sendQuick, sendSync } from './send';
 import hijackHistoryEvent from '../utils/hijackHistoryEvent';
 import { getCookie, getFlag, setCookie, setFlag } from '../utils/util';
 import { setClientInfo } from './clientInfo';
@@ -68,11 +68,18 @@ const install = function (conf?: Partial<IConfig>) {
       if (sended) {
         return;
       }
-      durationTime.end();
-      sendSync();
+      const logs = durationTime.end();
+      sendQuick(logs);
       sended = true;
     };
   })();
+
+  const beatUpload = () => {
+    const logs = durationTime.beat();
+    sendQuick(logs);
+    setTimeout(beatUpload, 3000);
+  };
+  setTimeout(beatUpload, 3000);
 
   window.addEventListener('beforeunload', onLeave);
   window.addEventListener('unload', onLeave);

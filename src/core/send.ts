@@ -48,6 +48,14 @@ export function send(data: ITrackerData | ILogDataDataItem) {
   }
 }
 
+// 发送时长心跳
+export function sendQuick(data: ILogDataDataItem[]) {
+  sendToServer(allData.concat(data));
+  allData.length = 0;
+  sendToServer(allDebugData, true);
+  allDebugData.length = 0;
+}
+
 export function sendSync(data?: ITrackerData) {
   if (data) {
     const config = getConfig();
@@ -64,14 +72,14 @@ export function sendSync(data?: ITrackerData) {
 
   clearTimeout(timer);
 
-  _sendToServer(allData);
-  _sendToServer(allDebugData, true);
+  sendToServer(allData);
+  sendToServer(allDebugData, true);
   allData.length = 0;
   allDebugData.length = 0;
 }
 
 /**
- * 延迟发送  data不存在则马上发送allData
+ * 延迟发送  data不存在则马上发送本地allData
  * @param data
  */
 export function sendAsync(data?: ITrackerData) {
@@ -90,15 +98,15 @@ export function sendAsync(data?: ITrackerData) {
   clearTimeout(timer);
   // 无参数或者大于10条发送发送
   if ((!data && allData.length > 0) || allData.length >= 10 || allDebugData.length >= 10) {
-    _sendToServer(allData);
-    _sendToServer(allDebugData, true);
+    sendToServer(allData);
+    sendToServer(allDebugData, true);
     allData.length = 0;
     allDebugData.length = 0;
     return;
   }
   timer = setTimeout(() => {
-    _sendToServer(allData);
-    _sendToServer(allDebugData, true);
+    sendToServer(allData);
+    sendToServer(allDebugData, true);
     allData.length = 0;
     allDebugData.length = 0;
   }, config.delayTime);
@@ -109,7 +117,7 @@ export function sendAsync(data?: ITrackerData) {
  * @param data
  * @param isAjax
  */
-function _sendToServer(data: ILogDataDataItem[], isAjax?: boolean) {
+function sendToServer(data: ILogDataDataItem[], isAjax?: boolean) {
   if (!data.length) {
     return;
   }
@@ -215,7 +223,7 @@ function _generateData(data: ITrackerData, config: IConfig): [ILogDataDataItem, 
   if (result.actionType === ACTION_TYPE.PAGE && !data.debug) {
     const durationLogs = durationTime.end();
     if (durationLogs && durationLogs.length) {
-      _sendToServer(durationLogs);
+      sendToServer(durationLogs);
     }
     durationTime.start(result);
     localStorage.removeItem('source_event_id');

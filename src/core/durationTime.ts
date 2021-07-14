@@ -36,6 +36,17 @@ class DurationTime {
     };
   }
 
+  beat() {
+    let logs: ILogDataDataItem[] = [];
+    for (let trackId in this.timeMap) {
+      if (!this.timeMap[trackId]) {
+        continue;
+      }
+      logs.push(this.generateLog(this.timeMap[trackId]));
+    }
+    return logs;
+  }
+
   end(trackId?: string) {
     let logs: ILogDataDataItem[] = [];
     if (trackId) {

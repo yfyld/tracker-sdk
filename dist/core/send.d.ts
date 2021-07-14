@@ -17,9 +17,10 @@ export interface ILogData extends ICleintInfo, IUserInfo, ILibInfo {
  * @param data
  */
 export declare function send(data: ITrackerData | ILogDataDataItem): void;
+export declare function sendQuick(data: ILogDataDataItem[]): void;
 export declare function sendSync(data?: ITrackerData): void;
 /**
- * 延迟发送  data不存在则马上发送allData
+ * 延迟发送  data不存在则马上发送本地allData
  * @param data
  */
 export declare function sendAsync(data?: ITrackerData): void;
