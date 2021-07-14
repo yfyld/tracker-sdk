@@ -7,18 +7,35 @@ import install from './core/bindEvent';
 import { is } from 'ramda';
 try {
   const ua = window.navigator.userAgent;
+  const protocol = window.location.protocol === 'http:' ? 'http:' : 'https:';
+  const host = window.location.host;
   //跟进host 判断环境
-  if (
-    /(pre|qa|127|192)\.|localhost/.test(window.location.host) ||
-    (/env\((pre|qa)\)/i.test(ua) && !window.location.host)
-  ) {
+  if (/(pre|qa|127|192)\.|localhost/.test(host) || (/env\((pre|qa)\)/i.test(ua) && !host)) {
     setConfig({
-      serverUrl: `${
-        window.location.protocol === 'http:' ? 'http:' : 'https:'
-      }//frontlo-collection.qa.91jkys.com/log.gif`,
-      debugServerUrl: `${
-        window.location.protocol === 'http:' ? 'http:' : 'https:'
-      }//frontlo-collection.qa.91jkys.com/f2e/log.gif`
+      serverUrl: `${protocol}//frontlo-collection.qa.91jkys.com/log.gif`,
+      debugServerUrl: `${protocol}//frontlo-collection.qa.91jkys.com/f2e/log.gif`
+    });
+  } else if (/zyhealth\.com/.test(host)) {
+    setConfig({
+      serverUrl: `${protocol}//frontlo-collection.zyhealth.com/log.gif`,
+      debugServerUrl: `${protocol}//frontlo-collection.zyhealth.com/f2e/log.gif`
+    });
+  }
+  // else if (/dia-solution\.com/.test(host)) {
+  //   setConfig({
+  //     serverUrl: `${protocol}//frontlo-collection.dia-solution.com/log.gif`,
+  //     debugServerUrl: `${protocol}//frontlo-collection.dia-solution.com/f2e/log.gif`
+  //   });
+  // }
+  else if (/c4-91jkys\.com/.test(host)) {
+    setConfig({
+      serverUrl: `${protocol}//frontlo-collection.c4-91jkys.com/log.gif`,
+      debugServerUrl: `${protocol}//frontlo-collection.c4-91jkys.com/f2e/log.gif`
+    });
+  } else if (/c10-91jkys\.com/.test(host)) {
+    setConfig({
+      serverUrl: `${protocol}//frontlo-collection.c10-91jkys.com/log.gif`,
+      debugServerUrl: `${protocol}//frontlo-collection.c10-91jkys.com/f2e/log.gif`
     });
   }
 

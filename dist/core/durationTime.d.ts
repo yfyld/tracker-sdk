@@ -17,6 +17,7 @@ declare class DurationTime {
     };
     static getInstance(): DurationTime;
     start(info: ILogDataDataItem): void;
+    beat(): ILogDataDataItem[];
     end(trackId?: string): ILogDataDataItem[];
     generateLog(info: ILogDataDataItem): {
         actionType: string;
