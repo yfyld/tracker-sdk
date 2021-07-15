@@ -20,12 +20,14 @@ try {
       serverUrl: `${protocol}//frontlo-collection.zyhealth.com/log.gif`,
       debugServerUrl: `${protocol}//frontlo-collection.zyhealth.com/f2e/log.gif`
     });
-  } else if (/dia-solution\.com/.test(host)) {
-    setConfig({
-      serverUrl: `${protocol}//frontlo-collection.dia-solution.com/log.gif`,
-      debugServerUrl: `${protocol}//frontlo-collection.dia-solution.com/f2e/log.gif`
-    });
-  } else if (/c4-91jkys\.com/.test(host)) {
+  }
+  // else if (/dia-solution\.com/.test(host)) {
+  //   setConfig({
+  //     serverUrl: `${protocol}//frontlo-collection.dia-solution.com/log.gif`,
+  //     debugServerUrl: `${protocol}//frontlo-collection.dia-solution.com/f2e/log.gif`
+  //   });
+  // }
+  else if (/c4-91jkys\.com/.test(host)) {
     setConfig({
       serverUrl: `${protocol}//frontlo-collection.c4-91jkys.com/log.gif`,
       debugServerUrl: `${protocol}//frontlo-collection.c4-91jkys.com/f2e/log.gif`
