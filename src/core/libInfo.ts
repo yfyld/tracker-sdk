@@ -1,4 +1,4 @@
 export default {
-  libVersion: '2.0.14',
+  libVersion: '2.0.15',
   libType: 'js'
 };
