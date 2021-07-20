@@ -1,6 +1,19 @@
 import { getConfig } from 'src/core/config';
 import { getCookie, getQueryVariable, inMin, setCookie, inWechat, getUUID } from './../utils/util';
 
+function getDeviceId() {
+  const config = getConfig();
+  let deviceId =
+    getCookie(config.deviceIdKey) ||
+    localStorage.getItem(config.deviceIdKey) ||
+    (config.localGenerateDeviceId ? getUUID() : null);
+  if (deviceId) {
+    setCookie(config.deviceIdKey, deviceId);
+    localStorage.setItem(config.deviceIdKey, deviceId);
+  }
+  return deviceId;
+}
+
 export interface IClientInfo {
   clientWidth: number;
   clientHeight: number;
@@ -26,7 +39,7 @@ let clientInfo: IClientInfo = {
   marketId: null,
   sessionId: getUUID(),
   channel: null,
-  deviceId: getCookie(config.deviceIdKey)
+  deviceId: getDeviceId()
 };
 
 export const setClientInfo = (info: Partial<IClientInfo>) => {
@@ -39,6 +52,7 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
     marketId: string;
     sessionId: string;
     channel: string;
+    deviceId: string;
   };
   if (urlInfoStr) {
     try {
@@ -55,6 +69,7 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
     sessionId: string;
     channel: string;
     expired: number;
+    deviceId: string;
   };
   if (cookieInfoStr) {
     try {
@@ -84,6 +99,9 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
   if (clientInfo.deviceId) {
     const config = getConfig();
     setCookie(config.deviceIdKey, clientInfo.deviceId);
+    localStorage.setItem(config.deviceIdKey, clientInfo.deviceId);
+  } else {
+    clientInfo.deviceId = getDeviceId();
   }
 
   setCookie(
@@ -94,6 +112,7 @@ export const setClientInfo = (info: Partial<IClientInfo>) => {
       marketId: clientInfo.marketId,
       channel: clientInfo.channel,
       sessionId: clientInfo.sessionId,
+      deviceId: clientInfo.deviceId,
       expired: Date.now() + 30 * 60 * 1000
     })
   );

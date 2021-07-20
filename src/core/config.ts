@@ -20,6 +20,7 @@ export interface IConfig {
   deviceIdKey: string;
   beforeGenerateLog: Function | null;
   autoTrackPrefix: string;
+  localGenerateDeviceId: boolean;
 }
 
 //default config
@@ -38,7 +39,8 @@ let config: IConfig = {
   delayLinkTime: 300,
   deviceIdKey: CUSTOM_TOKEN_KEY,
   beforeGenerateLog: null,
-  autoTrackPrefix: 'zhiyun-'
+  autoTrackPrefix: 'zhiyun-',
+  localGenerateDeviceId: false
 };
 
 //script tracker-key  config

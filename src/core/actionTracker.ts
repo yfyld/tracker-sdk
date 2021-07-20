@@ -47,7 +47,7 @@ export interface ITrackerEventParam extends IBusinessParam {
 }
 
 export interface ITrackerDebugLogParam extends IBusinessParam {
-  custom?: string | { [prop: string]: string | number | boolean };
+  custom?: { [prop: string]: any };
   eventName?: string;
   pageId?: string;
   trackId?: string;
